@@ -1,0 +1,2323 @@
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🇩🇪 Deutsch Quest — A1 7-Day Mission</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
+
+:root {
+  --bg: #0a0a12;
+  --surface: #12121e;
+  --surface2: #1a1a2e;
+  --surface3: #22223a;
+  --accent: #f7c948;
+  --accent2: #e84393;
+  --accent3: #3af0c0;
+  --accent4: #7b61ff;
+  --text: #f0eeff;
+  --muted: #7a7a9a;
+  --danger: #ff4f6d;
+  --success: #3af0c0;
+  --warn: #f7c948;
+  --border: #2a2a45;
+  --glow-y: 0 0 20px rgba(247,201,72,0.3);
+  --glow-p: 0 0 20px rgba(123,97,255,0.3);
+  --glow-g: 0 0 20px rgba(58,240,192,0.3);
+  --glow-r: 0 0 20px rgba(232,67,147,0.3);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Space Mono',monospace;
+  min-height:100vh;
+  overflow-x:hidden;
+  background-image:
+    radial-gradient(ellipse at 20% 20%, rgba(123,97,255,0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 80%, rgba(58,240,192,0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(232,67,147,0.04) 0%, transparent 60%);
+}
+
+/* ─── SCROLLBAR ─── */
+::-webkit-scrollbar{width:6px;}
+::-webkit-scrollbar-track{background:var(--surface);}
+::-webkit-scrollbar-thumb{background:var(--accent4);border-radius:3px;}
+
+/* ─── SCREEN SYSTEM ─── */
+.screen{display:none;min-height:100vh;}
+.screen.active{display:flex;flex-direction:column;animation:fadeIn 0.4s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+
+/* ─── LANDING ─── */
+#screen-landing{
+  align-items:center;justify-content:center;text-align:center;
+  padding:40px 20px;position:relative;overflow:hidden;
+}
+.landing-grid{
+  position:absolute;inset:0;
+  background-image:linear-gradient(rgba(123,97,255,0.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(123,97,255,0.04) 1px,transparent 1px);
+  background-size:40px 40px;
+  animation:gridScroll 20s linear infinite;
+}
+@keyframes gridScroll{from{transform:translateY(0);}to{transform:translateY(40px);}}
+.flag-emoji{font-size:80px;animation:bounce 2s ease-in-out infinite;}
+@keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+.landing-title{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(2.5rem,8vw,5rem);
+  font-weight:800;
+  line-height:1;
+  background:linear-gradient(135deg,var(--accent),var(--accent2),var(--accent4));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  margin:20px 0 10px;
+  filter:drop-shadow(0 0 30px rgba(247,201,72,0.4));
+}
+.landing-sub{
+  font-size:1rem;color:var(--muted);margin-bottom:30px;letter-spacing:2px;
+  text-transform:uppercase;
+}
+.landing-badges{
+  display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:40px;
+}
+.badge{
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:30px;padding:6px 16px;font-size:0.75rem;color:var(--accent3);
+  letter-spacing:1px;
+}
+.btn-start{
+  background:linear-gradient(135deg,var(--accent),#f0a500);
+  color:#000;font-family:'Syne',sans-serif;font-weight:800;
+  font-size:1.2rem;padding:18px 50px;border:none;border-radius:50px;
+  cursor:pointer;transition:all 0.3s;letter-spacing:2px;
+  box-shadow:0 0 40px rgba(247,201,72,0.4);
+  position:relative;overflow:hidden;
+}
+.btn-start:hover{transform:scale(1.05);box-shadow:0 0 60px rgba(247,201,72,0.6);}
+.btn-start::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,transparent,rgba(255,255,255,0.2),transparent);
+  transform:translateX(-100%);transition:0.5s;
+}
+.btn-start:hover::after{transform:translateX(100%);}
+.landing-stats{
+  display:flex;gap:30px;margin-top:50px;flex-wrap:wrap;justify-content:center;
+}
+.stat-box{
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:12px;padding:20px 30px;text-align:center;
+}
+.stat-num{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;color:var(--accent);}
+.stat-label{font-size:0.7rem;color:var(--muted);letter-spacing:1px;margin-top:5px;}
+
+/* ─── DAY SELECT ─── */
+#screen-days{
+  padding:40px 20px;align-items:center;
+}
+.page-header{text-align:center;margin-bottom:40px;}
+.page-header h2{
+  font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;
+  color:var(--accent);
+}
+.page-header p{color:var(--muted);margin-top:8px;}
+.days-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  gap:16px;max-width:1000px;width:100%;
+}
+.day-card{
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:16px;padding:24px;cursor:pointer;
+  transition:all 0.3s;position:relative;overflow:hidden;
+}
+.day-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--accent4),var(--accent2));
+  transform:scaleX(0);transform-origin:left;transition:0.3s;
+}
+.day-card:hover::before,.day-card.unlocked:hover::before{transform:scaleX(1);}
+.day-card:hover{border-color:var(--accent4);transform:translateY(-2px);box-shadow:var(--glow-p);}
+.day-card.completed{border-color:var(--accent3);background:rgba(58,240,192,0.05);}
+.day-card.completed::before{transform:scaleX(1);background:linear-gradient(90deg,var(--accent3),var(--accent4));}
+.day-card.locked{opacity:0.5;cursor:not-allowed;}
+.day-card.locked:hover{transform:none;box-shadow:none;}
+.day-number{
+  font-family:'Syne',sans-serif;font-size:0.75rem;font-weight:700;
+  letter-spacing:3px;color:var(--accent4);text-transform:uppercase;
+}
+.day-title{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:700;margin:8px 0;}
+.day-desc{font-size:0.75rem;color:var(--muted);line-height:1.6;}
+.day-meta{
+  display:flex;gap:12px;margin-top:16px;flex-wrap:wrap;
+}
+.day-tag{
+  background:var(--surface3);border-radius:20px;padding:4px 12px;
+  font-size:0.65rem;color:var(--accent3);letter-spacing:1px;
+}
+.day-progress-bar{
+  height:4px;background:var(--surface3);border-radius:2px;margin-top:16px;overflow:hidden;
+}
+.day-progress-fill{height:100%;background:linear-gradient(90deg,var(--accent4),var(--accent3));border-radius:2px;transition:width 0.5s;}
+.day-lock-icon{float:right;font-size:1.2rem;}
+.day-complete-icon{float:right;font-size:1.2rem;color:var(--accent3);}
+
+/* ─── GAME SCREEN ─── */
+#screen-game{padding:0;flex-direction:column;}
+.game-topbar{
+  background:var(--surface);border-bottom:1px solid var(--border);
+  padding:12px 20px;display:flex;align-items:center;gap:16px;
+  position:sticky;top:0;z-index:100;flex-wrap:wrap;
+}
+.topbar-day{font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;color:var(--accent);letter-spacing:2px;}
+.topbar-title{font-size:0.8rem;color:var(--muted);flex:1;}
+.lives-display{display:flex;gap:4px;}
+.life-heart{font-size:1.2rem;transition:all 0.3s;}
+.life-heart.lost{opacity:0.3;filter:grayscale(1);transform:scale(0.8);}
+.xp-bar-container{flex:1;min-width:100px;max-width:200px;}
+.xp-bar-label{font-size:0.6rem;color:var(--muted);margin-bottom:4px;}
+.xp-bar{height:8px;background:var(--surface3);border-radius:4px;overflow:hidden;}
+.xp-bar-fill{height:100%;background:linear-gradient(90deg,var(--accent4),var(--accent));border-radius:4px;transition:width 0.5s;}
+.streak-badge{
+  background:linear-gradient(135deg,#ff6b35,var(--accent));
+  border-radius:20px;padding:4px 12px;font-size:0.75rem;font-weight:700;color:#000;
+}
+.btn-back{
+  background:var(--surface3);border:1px solid var(--border);color:var(--muted);
+  font-family:'Space Mono',monospace;font-size:0.75rem;padding:6px 14px;
+  border-radius:8px;cursor:pointer;transition:all 0.2s;
+}
+.btn-back:hover{color:var(--text);border-color:var(--muted);}
+
+/* ─── LESSON INTRO ─── */
+.lesson-intro{
+  flex:1;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;padding:40px 20px;text-align:center;
+}
+.lesson-intro h2{
+  font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;
+  color:var(--accent);margin-bottom:12px;
+}
+.lesson-intro p{color:var(--muted);max-width:500px;line-height:1.7;}
+.word-preview-chips{
+  display:flex;flex-wrap:wrap;gap:8px;justify-content:center;
+  margin:24px 0;max-width:600px;
+}
+.word-chip{
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:20px;padding:6px 14px;font-size:0.8rem;color:var(--accent3);
+}
+.btn-begin{
+  background:linear-gradient(135deg,var(--accent4),var(--accent2));
+  color:#fff;font-family:'Syne',sans-serif;font-weight:800;
+  font-size:1rem;padding:16px 40px;border:none;border-radius:50px;
+  cursor:pointer;transition:all 0.3s;letter-spacing:1px;
+  box-shadow:var(--glow-p);
+}
+.btn-begin:hover{transform:scale(1.05);}
+
+/* ─── EXERCISE AREA ─── */
+.exercise-area{
+  flex:1;display:flex;flex-direction:column;align-items:center;
+  padding:20px;gap:20px;
+}
+.exercise-counter{
+  font-size:0.75rem;color:var(--muted);letter-spacing:2px;
+  text-align:center;
+}
+.exercise-card{
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:20px;padding:30px;width:100%;max-width:680px;
+  position:relative;overflow:hidden;
+}
+.exercise-type-label{
+  font-size:0.65rem;letter-spacing:3px;color:var(--accent4);
+  text-transform:uppercase;margin-bottom:16px;
+}
+.exercise-prompt{
+  font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:700;
+  margin-bottom:8px;line-height:1.3;
+}
+.exercise-context{
+  font-size:0.8rem;color:var(--muted);margin-bottom:24px;
+  line-height:1.6;font-style:italic;
+  background:var(--surface3);border-radius:8px;padding:10px 14px;
+  border-left:3px solid var(--accent4);
+}
+.exercise-example{
+  font-size:0.85rem;color:var(--accent3);margin-bottom:24px;
+  line-height:1.6;
+  background:rgba(58,240,192,0.05);border-radius:8px;padding:10px 14px;
+  border-left:3px solid var(--accent3);
+}
+
+/* ─── MULTI CHOICE ─── */
+.choices-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:12px;
+}
+.choice-btn{
+  background:var(--surface3);border:2px solid var(--border);
+  color:var(--text);font-family:'Space Mono',monospace;font-size:0.9rem;
+  padding:16px;border-radius:12px;cursor:pointer;
+  transition:all 0.2s;text-align:left;line-height:1.4;
+}
+.choice-btn:hover{border-color:var(--accent4);background:rgba(123,97,255,0.1);transform:translateY(-1px);}
+.choice-btn.correct{border-color:var(--success);background:rgba(58,240,192,0.15);color:var(--success);animation:correctPulse 0.5s;}
+.choice-btn.wrong{border-color:var(--danger);background:rgba(255,79,109,0.15);color:var(--danger);animation:shake 0.4s;}
+.choice-btn.disabled{pointer-events:none;}
+.choice-btn.show-correct{border-color:var(--success);background:rgba(58,240,192,0.1);}
+@keyframes correctPulse{0%{transform:scale(1);}50%{transform:scale(1.03);}100%{transform:scale(1);}}
+@keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-6px);}75%{transform:translateX(6px);}}
+
+/* ─── TYPE ANSWER ─── */
+.type-input-wrap{position:relative;}
+.type-input{
+  width:100%;background:var(--surface3);border:2px solid var(--border);
+  color:var(--text);font-family:'Space Mono',monospace;font-size:1.1rem;
+  padding:16px 50px 16px 16px;border-radius:12px;outline:none;
+  transition:border-color 0.2s;
+}
+.type-input:focus{border-color:var(--accent4);}
+.type-input.correct{border-color:var(--success);}
+.type-input.wrong{border-color:var(--danger);}
+.type-submit{
+  position:absolute;right:12px;top:50%;transform:translateY(-50%);
+  background:var(--accent4);border:none;color:#fff;
+  width:32px;height:32px;border-radius:8px;cursor:pointer;
+  font-size:1rem;transition:0.2s;
+}
+.type-submit:hover{background:var(--accent2);}
+.hint-btn{
+  background:none;border:1px dashed var(--muted);color:var(--muted);
+  font-family:'Space Mono',monospace;font-size:0.7rem;padding:4px 12px;
+  border-radius:20px;cursor:pointer;margin-top:8px;transition:0.2s;
+}
+.hint-btn:hover{border-color:var(--accent);color:var(--accent);}
+
+/* ─── MATCH PAIRS ─── */
+.match-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.match-col{display:flex;flex-direction:column;gap:8px;}
+.match-item{
+  background:var(--surface3);border:2px solid var(--border);
+  border-radius:10px;padding:12px 16px;cursor:pointer;
+  transition:all 0.2s;font-size:0.85rem;text-align:center;
+  user-select:none;
+}
+.match-item:hover{border-color:var(--accent4);background:rgba(123,97,255,0.1);}
+.match-item.selected{border-color:var(--accent);background:rgba(247,201,72,0.1);color:var(--accent);}
+.match-item.matched{border-color:var(--success);background:rgba(58,240,192,0.1);color:var(--success);pointer-events:none;}
+.match-item.wrong-flash{border-color:var(--danger);animation:shake 0.4s;}
+
+/* ─── FILL BLANK ─── */
+.fill-sentence{
+  font-size:1.1rem;line-height:2;font-family:'Syne',sans-serif;font-weight:600;
+}
+.fill-blank{
+  display:inline-block;
+  background:var(--surface3);border-bottom:2px solid var(--accent4);
+  min-width:120px;padding:2px 8px;margin:0 4px;
+  font-family:'Space Mono',monospace;font-size:0.95rem;
+  border-radius:4px;outline:none;color:var(--accent);
+  text-align:center;
+}
+.fill-blank:focus{border-color:var(--accent);background:rgba(247,201,72,0.05);}
+.fill-blank.correct{border-color:var(--success);color:var(--success);}
+.fill-blank.wrong{border-color:var(--danger);color:var(--danger);}
+
+/* ─── FLASHCARD ─── */
+.flashcard-wrap{perspective:1000px;cursor:pointer;}
+.flashcard{
+  width:100%;min-height:200px;position:relative;
+  transform-style:preserve-3d;transition:transform 0.6s;
+}
+.flashcard.flipped{transform:rotateY(180deg);}
+.card-front,.card-back{
+  position:absolute;width:100%;min-height:200px;
+  backface-visibility:hidden;
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:20px;padding:40px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
+}
+.card-back{
+  transform:rotateY(180deg);
+  background:linear-gradient(135deg,rgba(123,97,255,0.1),rgba(58,240,192,0.05));
+  border-color:var(--accent4);
+}
+.card-front-word{
+  font-family:'Syne',sans-serif;font-size:2.5rem;font-weight:800;
+  color:var(--accent);
+}
+.card-front-hint{font-size:0.75rem;color:var(--muted);margin-top:8px;letter-spacing:1px;}
+.card-back-translation{
+  font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:700;color:var(--accent3);
+}
+.card-back-example{
+  font-size:0.85rem;color:var(--muted);margin-top:16px;line-height:1.6;
+  border-top:1px solid var(--border);padding-top:16px;width:100%;
+}
+.card-back-example em{color:var(--accent);font-style:normal;}
+.flashcard-actions{display:flex;gap:12px;margin-top:16px;}
+.fc-btn{
+  flex:1;padding:12px;border:2px solid;border-radius:12px;
+  font-family:'Syne',sans-serif;font-weight:700;font-size:0.85rem;
+  cursor:pointer;transition:0.2s;
+}
+.fc-btn.easy{border-color:var(--success);color:var(--success);background:rgba(58,240,192,0.05);}
+.fc-btn.easy:hover{background:rgba(58,240,192,0.15);}
+.fc-btn.hard{border-color:var(--warn);color:var(--warn);background:rgba(247,201,72,0.05);}
+.fc-btn.hard:hover{background:rgba(247,201,72,0.15);}
+.fc-btn.again{border-color:var(--danger);color:var(--danger);background:rgba(255,79,109,0.05);}
+.fc-btn.again:hover{background:rgba(255,79,109,0.15);}
+
+/* ─── WORD ORDER ─── */
+.word-order-bank{
+  display:flex;flex-wrap:wrap;gap:8px;min-height:50px;margin-bottom:16px;
+}
+.word-order-answer{
+  display:flex;flex-wrap:wrap;gap:8px;min-height:50px;
+  border:2px dashed var(--border);border-radius:12px;padding:10px;
+  transition:border-color 0.2s;
+}
+.word-order-answer.over{border-color:var(--accent4);}
+.word-tile{
+  background:var(--surface3);border:2px solid var(--border);
+  border-radius:8px;padding:8px 14px;font-size:0.85rem;
+  cursor:pointer;transition:all 0.2s;user-select:none;
+}
+.word-tile:hover{border-color:var(--accent4);transform:translateY(-2px);}
+.word-tile.in-answer{border-color:var(--accent4);background:rgba(123,97,255,0.1);}
+.word-tile.correct{border-color:var(--success);color:var(--success);}
+.word-tile.wrong{border-color:var(--danger);color:var(--danger);}
+
+/* ─── FEEDBACK ─── */
+.feedback-panel{
+  width:100%;max-width:680px;border-radius:16px;padding:20px;
+  display:none;animation:slideUp 0.3s ease;
+}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+.feedback-panel.correct-fb{
+  background:rgba(58,240,192,0.1);border:2px solid var(--success);
+}
+.feedback-panel.wrong-fb{
+  background:rgba(255,79,109,0.08);border:2px solid var(--danger);
+}
+.feedback-title{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;margin-bottom:8px;}
+.feedback-title.correct-fb{color:var(--success);}
+.feedback-title.wrong-fb{color:var(--danger);}
+.feedback-explanation{font-size:0.82rem;color:var(--muted);line-height:1.6;}
+.feedback-example{
+  font-size:0.82rem;color:var(--accent3);margin-top:8px;
+  font-style:italic;
+}
+.btn-continue{
+  display:block;width:100%;max-width:680px;
+  background:linear-gradient(135deg,var(--accent4),var(--accent2));
+  color:#fff;font-family:'Syne',sans-serif;font-weight:800;
+  font-size:1rem;padding:16px;border:none;border-radius:14px;
+  cursor:pointer;transition:all 0.3s;letter-spacing:1px;
+  box-shadow:var(--glow-p);display:none;
+}
+.btn-continue:hover{transform:scale(1.02);}
+.btn-check{
+  display:block;width:100%;max-width:680px;
+  background:var(--surface2);border:2px solid var(--accent4);
+  color:var(--accent4);font-family:'Syne',sans-serif;font-weight:800;
+  font-size:1rem;padding:16px;border-radius:14px;
+  cursor:pointer;transition:all 0.3s;letter-spacing:1px;
+}
+.btn-check:hover{background:rgba(123,97,255,0.1);}
+
+/* ─── BONUS ROUND ─── */
+.bonus-banner{
+  text-align:center;padding:20px;
+  background:linear-gradient(135deg,rgba(247,201,72,0.1),rgba(232,67,147,0.1));
+  border:1px solid var(--accent);border-radius:16px;
+  margin-bottom:20px;
+}
+.bonus-banner h3{font-family:'Syne',sans-serif;font-size:1.3rem;color:var(--accent);}
+.bonus-timer{
+  font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;
+  color:var(--accent2);
+}
+.speed-bar{
+  height:8px;background:var(--surface3);border-radius:4px;overflow:hidden;margin:8px 0;
+}
+.speed-bar-fill{
+  height:100%;background:linear-gradient(90deg,var(--success),var(--accent),var(--danger));
+  border-radius:4px;transition:width 0.1s;
+}
+
+/* ─── RESULTS ─── */
+#screen-result{
+  padding:40px 20px;align-items:center;justify-content:center;text-align:center;
+}
+.result-stars{font-size:3rem;margin-bottom:16px;animation:starPop 0.6s ease;}
+@keyframes starPop{from{transform:scale(0);}to{transform:scale(1);}}
+.result-title{
+  font-family:'Syne',sans-serif;font-size:2.5rem;font-weight:800;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.result-subtitle{color:var(--muted);margin:12px 0 30px;}
+.result-stats{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:16px;
+  max-width:500px;width:100%;margin-bottom:30px;
+}
+.result-stat{
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:12px;padding:20px;
+}
+.result-stat-num{font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:800;}
+.result-stat-label{font-size:0.65rem;color:var(--muted);margin-top:4px;letter-spacing:1px;}
+.result-mistakes{
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:16px;padding:24px;max-width:600px;width:100%;
+  margin-bottom:24px;text-align:left;
+}
+.result-mistakes h3{font-family:'Syne',sans-serif;font-size:1rem;color:var(--accent2);margin-bottom:16px;}
+.mistake-item{
+  display:flex;align-items:center;gap:12px;padding:10px 0;
+  border-bottom:1px solid var(--border);font-size:0.82rem;
+}
+.mistake-item:last-child{border-bottom:none;}
+.mistake-german{color:var(--accent);font-weight:700;}
+.mistake-english{color:var(--muted);}
+.btn-next-day,.btn-retry{
+  padding:14px 36px;border:none;border-radius:50px;
+  font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;
+  cursor:pointer;transition:all 0.3s;letter-spacing:1px;
+  margin:8px;
+}
+.btn-next-day{background:linear-gradient(135deg,var(--accent),#f0a500);color:#000;box-shadow:var(--glow-y);}
+.btn-next-day:hover{transform:scale(1.05);}
+.btn-retry{background:var(--surface2);border:2px solid var(--muted);color:var(--text);}
+.btn-retry:hover{border-color:var(--accent4);}
+.btn-home{
+  padding:10px 24px;background:none;border:1px solid var(--border);
+  color:var(--muted);border-radius:30px;font-family:'Space Mono',monospace;
+  font-size:0.8rem;cursor:pointer;transition:0.2s;display:block;margin:8px auto;
+}
+.btn-home:hover{border-color:var(--accent);color:var(--accent);}
+
+/* ─── ACHIEVEMENT TOAST ─── */
+.achievement-toast{
+  position:fixed;top:20px;right:20px;z-index:1000;
+  background:var(--surface2);border:2px solid var(--accent);
+  border-radius:16px;padding:16px 20px;
+  max-width:300px;
+  animation:toastIn 0.4s ease, toastOut 0.4s ease 3.6s forwards;
+  box-shadow:var(--glow-y);
+}
+@keyframes toastIn{from{transform:translateX(120%);}to{transform:translateX(0);}}
+@keyframes toastOut{from{transform:translateX(0);}to{transform:translateX(120%);}}
+.toast-title{font-family:'Syne',sans-serif;font-weight:800;color:var(--accent);font-size:0.9rem;}
+.toast-body{font-size:0.75rem;color:var(--muted);margin-top:4px;}
+
+/* ─── XP POPUP ─── */
+.xp-popup{
+  position:fixed;pointer-events:none;
+  font-family:'Syne',sans-serif;font-weight:800;font-size:1.2rem;color:var(--accent);
+  animation:xpFloat 1.5s ease forwards;
+  z-index:500;
+}
+@keyframes xpFloat{
+  0%{opacity:1;transform:translateY(0);}
+  100%{opacity:0;transform:translateY(-80px);}
+}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:600px){
+  .choices-grid{grid-template-columns:1fr;}
+  .result-stats{grid-template-columns:repeat(3,1fr);}
+  .match-grid{grid-template-columns:1fr 1fr;}
+  .exercise-prompt{font-size:1.2rem;}
+  .card-front-word{font-size:2rem;}
+  .card-back-translation{font-size:1.4rem;}
+  .game-topbar{gap:8px;}
+}
+
+/* ─── PROGRESS SECTION ─── */
+.overall-progress{
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:16px;padding:24px;max-width:1000px;width:100%;
+  margin-bottom:24px;
+}
+.overall-progress h3{font-family:'Syne',sans-serif;color:var(--accent);margin-bottom:16px;}
+.progress-row{display:flex;align-items:center;gap:12px;margin-bottom:8px;}
+.progress-label{font-size:0.75rem;color:var(--muted);width:80px;flex-shrink:0;}
+.progress-bar{flex:1;height:8px;background:var(--surface3);border-radius:4px;overflow:hidden;}
+.progress-bar-fill{height:100%;border-radius:4px;transition:width 0.6s;}
+.progress-value{font-size:0.75rem;color:var(--accent);width:40px;text-align:right;flex-shrink:0;}
+
+/* ─── SECTION HEADERS in exercises ─── */
+.section-divider{
+  text-align:center;padding:10px 0;color:var(--accent4);
+  font-size:0.7rem;letter-spacing:3px;text-transform:uppercase;
+}
+
+/* Comprehension reading exercise */
+.reading-passage{
+  background:var(--surface3);border-radius:12px;padding:20px;
+  font-size:0.9rem;line-height:1.8;margin-bottom:20px;
+  border-left:3px solid var(--accent4);
+}
+.reading-passage .german{color:var(--text);}
+.reading-passage .english{color:var(--muted);font-size:0.8rem;}
+
+/* Gender tag */
+.gender-der{color:#7b9fff;}
+.gender-die{color:#ff7baf;}
+.gender-das{color:#7bffb8;}
+
+/* Conjugation table */
+.conj-table{width:100%;border-collapse:collapse;font-size:0.82rem;margin-top:12px;}
+.conj-table th{background:var(--surface3);padding:8px 12px;text-align:left;color:var(--accent4);font-weight:600;}
+.conj-table td{padding:8px 12px;border-top:1px solid var(--border);}
+.conj-table tr:hover td{background:rgba(123,97,255,0.05);}
+
+/* Streak fire */
+.streak-fire{animation:flicker 0.5s ease-in-out infinite alternate;}
+@keyframes flicker{from{filter:hue-rotate(0deg);}to{filter:hue-rotate(30deg) brightness(1.2);}}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SCREEN: LANDING
+═══════════════════════════════════════════════════════════════ -->
+<div id="screen-landing" class="screen active">
+  <div class="landing-grid"></div>
+  <div style="position:relative;z-index:1;">
+    <div class="flag-emoji">🇩🇪</div>
+    <h1 class="landing-title">DEUTSCH QUEST</h1>
+    <p class="landing-sub">A1 Complete · 7-Day Mission · All Vocabulary</p>
+    <div class="landing-badges">
+      <span class="badge">⚡ ADHD-FRIENDLY</span>
+      <span class="badge">🧠 SPACED REPETITION</span>
+      <span class="badge">📖 EXAMPLE SENTENCES</span>
+      <span class="badge">🎮 GAMIFIED XP</span>
+      <span class="badge">❤️ LIVES SYSTEM</span>
+      <span class="badge">🔥 STREAKS</span>
+      <span class="badge">🌐 OFFLINE</span>
+    </div>
+    <button class="btn-start" onclick="goToDays()">BEGIN MISSION →</button>
+    <div class="landing-stats">
+      <div class="stat-box">
+        <div class="stat-num">700+</div>
+        <div class="stat-label">VOCABULARY WORDS</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">7</div>
+        <div class="stat-label">MISSION DAYS</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">6</div>
+        <div class="stat-label">EXERCISE TYPES</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SCREEN: DAY SELECT
+═══════════════════════════════════════════════════════════════ -->
+<div id="screen-days" class="screen">
+  <div class="page-header">
+    <h2>📅 CHOOSE YOUR MISSION DAY</h2>
+    <p>Complete each day to unlock the next. Don't skip!</p>
+  </div>
+  <div id="overall-progress-section"></div>
+  <div class="days-grid" id="days-grid"></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SCREEN: GAME
+═══════════════════════════════════════════════════════════════ -->
+<div id="screen-game" class="screen">
+  <div class="game-topbar">
+    <button class="btn-back" onclick="goToDays()">← DAYS</button>
+    <span class="topbar-day" id="topbar-day-label"></span>
+    <span class="topbar-title" id="topbar-title"></span>
+    <div class="lives-display" id="lives-display"></div>
+    <div class="xp-bar-container">
+      <div class="xp-bar-label">XP <span id="xp-label">0</span></div>
+      <div class="xp-bar"><div class="xp-bar-fill" id="xp-bar-fill" style="width:0%"></div></div>
+    </div>
+    <div class="streak-badge" id="streak-badge">🔥 <span id="streak-count">0</span></div>
+  </div>
+  <div id="game-content" style="flex:1;display:flex;flex-direction:column;align-items:center;padding:20px;gap:16px;"></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SCREEN: RESULT
+═══════════════════════════════════════════════════════════════ -->
+<div id="screen-result" class="screen">
+  <div id="result-content"></div>
+</div>
+
+<script>
+'use strict';
+
+// ═══════════════════════════════════════════════════════════
+// MASTER VOCABULARY DATABASE — ALL A1 WORDS WITH EXAMPLES
+// ═══════════════════════════════════════════════════════════
+const VOCAB = [
+  // ─── PRONOUNS ───
+  {g:"ich",e:"I",ex:"Ich bin Student.",exE:"I am a student.",cat:"pronouns"},
+  {g:"du",e:"you (informal singular)",ex:"Du bist nett.",exE:"You are nice.",cat:"pronouns"},
+  {g:"er",e:"he",ex:"Er heißt Thomas.",exE:"He is called Thomas.",cat:"pronouns"},
+  {g:"sie",e:"she",ex:"Sie wohnt in Berlin.",exE:"She lives in Berlin.",cat:"pronouns"},
+  {g:"es",e:"it",ex:"Es ist kalt.",exE:"It is cold.",cat:"pronouns"},
+  {g:"wir",e:"we",ex:"Wir lernen Deutsch.",exE:"We are learning German.",cat:"pronouns"},
+  {g:"ihr",e:"you (informal plural)",ex:"Ihr seid müde.",exE:"You (all) are tired.",cat:"pronouns"},
+  {g:"Sie",e:"you (formal)",ex:"Sprechen Sie Deutsch?",exE:"Do you speak German? (formal)",cat:"pronouns"},
+  {g:"sie",e:"they",ex:"Sie kommen aus Österreich.",exE:"They come from Austria.",cat:"pronouns"},
+  {g:"mir",e:"to me / me (dative)",ex:"Das gehört mir.",exE:"That belongs to me.",cat:"pronouns"},
+  {g:"dir",e:"to you / you (dative)",ex:"Ich gebe dir das Buch.",exE:"I give you the book.",cat:"pronouns"},
+  {g:"ihm",e:"to him / him (dative)",ex:"Ich helfe ihm.",exE:"I help him.",cat:"pronouns"},
+  {g:"ihr",e:"to her / her (dative)",ex:"Er gibt ihr einen Kaffee.",exE:"He gives her a coffee.",cat:"pronouns"},
+  {g:"uns",e:"to us / us (dative)",ex:"Sie erklärt uns das.",exE:"She explains that to us.",cat:"pronouns"},
+  {g:"euch",e:"to you / you (plural dative)",ex:"Ich zeige euch die Stadt.",exE:"I show you (all) the city.",cat:"pronouns"},
+  {g:"ihnen",e:"to them / them (dative)",ex:"Ich danke ihnen.",exE:"I thank them.",cat:"pronouns"},
+  {g:"mich",e:"me (accusative)",ex:"Er sieht mich.",exE:"He sees me.",cat:"pronouns"},
+  {g:"dich",e:"you (accusative)",ex:"Ich vermisse dich.",exE:"I miss you.",cat:"pronouns"},
+  {g:"ihn",e:"him (accusative)",ex:"Kennst du ihn?",exE:"Do you know him?",cat:"pronouns"},
+
+  // ─── CORE VERBS ───
+  {g:"sein",e:"to be / his",ex:"Ich bin zwanzig Jahre alt.",exE:"I am twenty years old.",cat:"verbs"},
+  {g:"haben",e:"to have",ex:"Ich habe ein Auto.",exE:"I have a car.",cat:"verbs"},
+  {g:"werden",e:"to become / will (future)",ex:"Es wird kalt.",exE:"It is getting cold.",cat:"verbs"},
+  {g:"können",e:"can / to be able to",ex:"Ich kann Deutsch sprechen.",exE:"I can speak German.",cat:"verbs"},
+  {g:"müssen",e:"must / to have to",ex:"Du musst jetzt gehen.",exE:"You must go now.",cat:"verbs"},
+  {g:"wollen",e:"to want to",ex:"Ich will Kaffee trinken.",exE:"I want to drink coffee.",cat:"verbs"},
+  {g:"sollen",e:"should / to be supposed to",ex:"Du sollst nicht lügen.",exE:"You should not lie.",cat:"verbs"},
+  {g:"dürfen",e:"may / to be allowed to",ex:"Hier darf man nicht rauchen.",exE:"One may not smoke here.",cat:"verbs"},
+  {g:"mögen",e:"to like",ex:"Ich mag Pizza.",exE:"I like pizza.",cat:"verbs"},
+  {g:"möchten",e:"would like to",ex:"Ich möchte bitte Wasser.",exE:"I would like water, please.",cat:"verbs"},
+  {g:"machen",e:"to do / to make",ex:"Was machst du heute?",exE:"What are you doing today?",cat:"verbs"},
+  {g:"gehen",e:"to go",ex:"Ich gehe in die Schule.",exE:"I go to school.",cat:"verbs"},
+  {g:"kommen",e:"to come",ex:"Sie kommt aus Spanien.",exE:"She comes from Spain.",cat:"verbs"},
+  {g:"sehen",e:"to see",ex:"Ich sehe einen Vogel.",exE:"I see a bird.",cat:"verbs"},
+  {g:"geben",e:"to give",ex:"Er gibt mir das Geld.",exE:"He gives me the money.",cat:"verbs"},
+  {g:"wissen",e:"to know (a fact)",ex:"Ich weiß nicht, wo er ist.",exE:"I don't know where he is.",cat:"verbs"},
+  {g:"kennen",e:"to know (a person/place)",ex:"Kennst du Berlin?",exE:"Do you know Berlin?",cat:"verbs"},
+  {g:"sagen",e:"to say",ex:"Was sagst du?",exE:"What are you saying?",cat:"verbs"},
+  {g:"fragen",e:"to ask",ex:"Ich frage den Lehrer.",exE:"I ask the teacher.",cat:"verbs"},
+  {g:"antworten",e:"to answer",ex:"Sie antwortet auf meine Frage.",exE:"She answers my question.",cat:"verbs"},
+  {g:"arbeiten",e:"to work",ex:"Ich arbeite von neun bis fünf.",exE:"I work from nine to five.",cat:"verbs"},
+  {g:"wohnen",e:"to live / to reside",ex:"Ich wohne in München.",exE:"I live in Munich.",cat:"verbs"},
+  {g:"heißen",e:"to be called / named",ex:"Ich heiße Anna.",exE:"My name is Anna.",cat:"verbs"},
+  {g:"trinken",e:"to drink",ex:"Er trinkt Kaffee.",exE:"He drinks coffee.",cat:"verbs"},
+  {g:"essen",e:"to eat",ex:"Wir essen Mittag.",exE:"We are eating lunch.",cat:"verbs"},
+  {g:"kaufen",e:"to buy",ex:"Ich kaufe ein Buch.",exE:"I buy a book.",cat:"verbs"},
+  {g:"verkaufen",e:"to sell",ex:"Er verkauft sein Auto.",exE:"He is selling his car.",cat:"verbs"},
+  {g:"verstehen",e:"to understand",ex:"Ich verstehe das nicht.",exE:"I don't understand that.",cat:"verbs"},
+  {g:"sprechen",e:"to speak",ex:"Sprichst du Englisch?",exE:"Do you speak English?",cat:"verbs"},
+  {g:"lesen",e:"to read",ex:"Sie liest jeden Tag Zeitung.",exE:"She reads the newspaper every day.",cat:"verbs"},
+  {g:"schreiben",e:"to write",ex:"Ich schreibe einen Brief.",exE:"I am writing a letter.",cat:"verbs"},
+  {g:"lernen",e:"to learn",ex:"Ich lerne Deutsch.",exE:"I am learning German.",cat:"verbs"},
+  {g:"hören",e:"to hear / to listen",ex:"Ich höre Musik.",exE:"I listen to music.",cat:"verbs"},
+  {g:"brauchen",e:"to need",ex:"Ich brauche Hilfe.",exE:"I need help.",cat:"verbs"},
+  {g:"fahren",e:"to drive / to travel",ex:"Ich fahre mit dem Zug.",exE:"I travel by train.",cat:"verbs"},
+  {g:"nehmen",e:"to take",ex:"Ich nehme den Bus.",exE:"I take the bus.",cat:"verbs"},
+  {g:"suchen",e:"to look for",ex:"Ich suche meine Schlüssel.",exE:"I am looking for my keys.",cat:"verbs"},
+  {g:"finden",e:"to find",ex:"Ich finde das Buch.",exE:"I find the book.",cat:"verbs"},
+  {g:"helfen",e:"to help",ex:"Kannst du mir helfen?",exE:"Can you help me?",cat:"verbs"},
+  {g:"öffnen",e:"to open",ex:"Bitte öffnen Sie die Tür.",exE:"Please open the door.",cat:"verbs"},
+  {g:"schließen",e:"to close",ex:"Er schließt das Fenster.",exE:"He closes the window.",cat:"verbs"},
+  {g:"anrufen",e:"to call (by phone)",ex:"Ich rufe dich morgen an.",exE:"I will call you tomorrow.",cat:"verbs"},
+  {g:"spielen",e:"to play",ex:"Die Kinder spielen im Garten.",exE:"The children play in the garden.",cat:"verbs"},
+  {g:"kochen",e:"to cook",ex:"Meine Mutter kocht gut.",exE:"My mother cooks well.",cat:"verbs"},
+  {g:"bleiben",e:"to stay / to remain",ex:"Ich bleibe heute zu Hause.",exE:"I'm staying home today.",cat:"verbs"},
+  {g:"bringen",e:"to bring",ex:"Kannst du das bringen?",exE:"Can you bring that?",cat:"verbs"},
+  {g:"denken",e:"to think",ex:"Ich denke, er hat Recht.",exE:"I think he is right.",cat:"verbs"},
+  {g:"glauben",e:"to believe / to think",ex:"Ich glaube, ja.",exE:"I think so.",cat:"verbs"},
+  {g:"zeigen",e:"to show",ex:"Zeig mir den Weg.",exE:"Show me the way.",cat:"verbs"},
+  {g:"stehen",e:"to stand",ex:"Er steht vor der Tür.",exE:"He is standing in front of the door.",cat:"verbs"},
+  {g:"sitzen",e:"to sit",ex:"Sie sitzt am Tisch.",exE:"She is sitting at the table.",cat:"verbs"},
+  {g:"liegen",e:"to lie (down)",ex:"Das Buch liegt auf dem Tisch.",exE:"The book is lying on the table.",cat:"verbs"},
+  {g:"laufen",e:"to run / to walk",ex:"Ich laufe jeden Morgen.",exE:"I run every morning.",cat:"verbs"},
+  {g:"schlafen",e:"to sleep",ex:"Das Kind schläft.",exE:"The child is sleeping.",cat:"verbs"},
+  {g:"aufstehen",e:"to get up / to stand up",ex:"Ich stehe um sieben auf.",exE:"I get up at seven.",cat:"verbs"},
+  {g:"ankommen",e:"to arrive",ex:"Wann kommt der Zug an?",exE:"When does the train arrive?",cat:"verbs"},
+  {g:"abfahren",e:"to depart",ex:"Der Bus fährt um acht ab.",exE:"The bus departs at eight.",cat:"verbs"},
+  {g:"einsteigen",e:"to board / to get in",ex:"Bitte einsteigen!",exE:"Please board!",cat:"verbs"},
+  {g:"aussteigen",e:"to get off / to exit",ex:"Hier musst du aussteigen.",exE:"You have to get off here.",cat:"verbs"},
+  {g:"umsteigen",e:"to transfer / to change (transport)",ex:"Sie müssen in Hamburg umsteigen.",exE:"You have to transfer in Hamburg.",cat:"verbs"},
+  {g:"bezahlen",e:"to pay",ex:"Ich möchte bezahlen.",exE:"I would like to pay.",cat:"verbs"},
+  {g:"bestellen",e:"to order",ex:"Ich bestelle einen Kaffee.",exE:"I order a coffee.",cat:"verbs"},
+  {g:"reservieren",e:"to reserve / to book",ex:"Ich möchte einen Tisch reservieren.",exE:"I would like to reserve a table.",cat:"verbs"},
+  {g:"beginnen",e:"to begin",ex:"Der Film beginnt um acht.",exE:"The film begins at eight.",cat:"verbs"},
+  {g:"enden",e:"to end",ex:"Das Konzert endet um zehn.",exE:"The concert ends at ten.",cat:"verbs"},
+  {g:"warten",e:"to wait",ex:"Ich warte auf den Bus.",exE:"I am waiting for the bus.",cat:"verbs"},
+  {g:"treffen",e:"to meet",ex:"Wir treffen uns um drei.",exE:"We meet at three.",cat:"verbs"},
+  {g:"einladen",e:"to invite",ex:"Er lädt uns zum Essen ein.",exE:"He invites us to dinner.",cat:"verbs"},
+  {g:"danken",e:"to thank",ex:"Ich danke dir sehr.",exE:"I thank you very much.",cat:"verbs"},
+  {g:"entschuldigen",e:"to excuse / to apologize",ex:"Entschuldigen Sie bitte.",exE:"Excuse me, please.",cat:"verbs"},
+  {g:"wiederholen",e:"to repeat",ex:"Kannst du das wiederholen?",exE:"Can you repeat that?",cat:"verbs"},
+  {g:"erklären",e:"to explain",ex:"Bitte erklär mir das.",exE:"Please explain that to me.",cat:"verbs"},
+  {g:"bedeuten",e:"to mean",ex:"Was bedeutet dieses Wort?",exE:"What does this word mean?",cat:"verbs"},
+  {g:"vergessen",e:"to forget",ex:"Ich habe meine Tasche vergessen.",exE:"I forgot my bag.",cat:"verbs"},
+  {g:"erinnern",e:"to remember",ex:"Ich erinnere mich an ihn.",exE:"I remember him.",cat:"verbs"},
+  {g:"verlieren",e:"to lose",ex:"Ich habe meinen Schlüssel verloren.",exE:"I have lost my key.",cat:"verbs"},
+  {g:"gewinnen",e:"to win",ex:"Unsere Mannschaft hat gewonnen!",exE:"Our team has won!",cat:"verbs"},
+  {g:"reisen",e:"to travel",ex:"Ich reise gern.",exE:"I like to travel.",cat:"verbs"},
+  {g:"besuchen",e:"to visit",ex:"Wir besuchen die Großeltern.",exE:"We visit the grandparents.",cat:"verbs"},
+  {g:"fotografieren",e:"to photograph",ex:"Ich fotografiere die Kirche.",exE:"I photograph the church.",cat:"verbs"},
+  {g:"rechnen",e:"to calculate",ex:"Kannst du das rechnen?",exE:"Can you calculate that?",cat:"verbs"},
+  {g:"unterschreiben",e:"to sign",ex:"Bitte hier unterschreiben.",exE:"Please sign here.",cat:"verbs"},
+  {g:"ausfüllen",e:"to fill in / to fill out",ex:"Füllen Sie das Formular aus.",exE:"Fill out the form.",cat:"verbs"},
+  {g:"mitnehmen",e:"to take along",ex:"Nimm einen Regenschirm mit!",exE:"Take an umbrella with you!",cat:"verbs"},
+  {g:"zurückkommen",e:"to come back",ex:"Wann kommst du zurück?",exE:"When are you coming back?",cat:"verbs"},
+  {g:"weitergehen",e:"to continue / to go on",ex:"Gehen wir weiter?",exE:"Shall we go on?",cat:"verbs"},
+
+  // ─── PEOPLE & FAMILY ───
+  {g:"der Mann",e:"the man",ex:"Der Mann liest die Zeitung.",exE:"The man reads the newspaper.",cat:"people"},
+  {g:"die Frau",e:"the woman",ex:"Die Frau kauft Brot.",exE:"The woman buys bread.",cat:"people"},
+  {g:"das Kind",e:"the child",ex:"Das Kind spielt im Park.",exE:"The child plays in the park.",cat:"people"},
+  {g:"der Junge",e:"the boy",ex:"Der Junge ist zehn Jahre alt.",exE:"The boy is ten years old.",cat:"people"},
+  {g:"das Mädchen",e:"the girl",ex:"Das Mädchen liest ein Buch.",exE:"The girl reads a book.",cat:"people"},
+  {g:"der Erwachsene",e:"the adult (male)",ex:"Der Erwachsene zahlt.",exE:"The adult pays.",cat:"people"},
+  {g:"die Erwachsene",e:"the adult (female)",ex:"Die Erwachsene erklärt es.",exE:"The adult explains it.",cat:"people"},
+  {g:"die Familie",e:"the family",ex:"Meine Familie wohnt in Wien.",exE:"My family lives in Vienna.",cat:"people"},
+  {g:"die Mutter",e:"the mother",ex:"Meine Mutter kocht sehr gut.",exE:"My mother cooks very well.",cat:"people"},
+  {g:"der Vater",e:"the father",ex:"Mein Vater arbeitet in Berlin.",exE:"My father works in Berlin.",cat:"people"},
+  {g:"die Eltern",e:"the parents",ex:"Meine Eltern sind nett.",exE:"My parents are nice.",cat:"people"},
+  {g:"die Schwester",e:"the sister",ex:"Ich habe eine Schwester.",exE:"I have a sister.",cat:"people"},
+  {g:"der Bruder",e:"the brother",ex:"Mein Bruder ist jung.",exE:"My brother is young.",cat:"people"},
+  {g:"die Tochter",e:"the daughter",ex:"Ihre Tochter studiert Medizin.",exE:"Her daughter studies medicine.",cat:"people"},
+  {g:"der Sohn",e:"the son",ex:"Sein Sohn ist sehr klug.",exE:"His son is very clever.",cat:"people"},
+  {g:"die Großmutter",e:"the grandmother",ex:"Meine Großmutter ist achtzig.",exE:"My grandmother is eighty.",cat:"people"},
+  {g:"der Großvater",e:"the grandfather",ex:"Der Großvater erzählt Geschichten.",exE:"The grandfather tells stories.",cat:"people"},
+  {g:"die Großeltern",e:"the grandparents",ex:"Wir besuchen die Großeltern.",exE:"We visit the grandparents.",cat:"people"},
+  {g:"die Tante",e:"the aunt",ex:"Meine Tante wohnt in Hamburg.",exE:"My aunt lives in Hamburg.",cat:"people"},
+  {g:"der Onkel",e:"the uncle",ex:"Mein Onkel hat ein Auto.",exE:"My uncle has a car.",cat:"people"},
+  {g:"die Cousine",e:"the female cousin",ex:"Meine Cousine kommt morgen.",exE:"My cousin is coming tomorrow.",cat:"people"},
+  {g:"der Cousin",e:"the male cousin",ex:"Mein Cousin spielt Fußball.",exE:"My cousin plays football.",cat:"people"},
+  {g:"die Freundin",e:"the (female) friend / girlfriend",ex:"Meine Freundin heißt Lisa.",exE:"My friend's name is Lisa.",cat:"people"},
+  {g:"der Freund",e:"the (male) friend / boyfriend",ex:"Mein Freund ist sehr lustig.",exE:"My friend is very funny.",cat:"people"},
+  {g:"der Nachbar",e:"the neighbour (male)",ex:"Mein Nachbar ist sehr nett.",exE:"My neighbour is very nice.",cat:"people"},
+  {g:"die Nachbarin",e:"the neighbour (female)",ex:"Die Nachbarin hat einen Hund.",exE:"The neighbour has a dog.",cat:"people"},
+  {g:"der Kollege",e:"the colleague (male)",ex:"Mein Kollege heißt Stefan.",exE:"My colleague's name is Stefan.",cat:"people"},
+  {g:"die Kollegin",e:"the colleague (female)",ex:"Meine Kollegin ist sehr freundlich.",exE:"My colleague is very friendly.",cat:"people"},
+  {g:"der Chef",e:"the boss (male)",ex:"Mein Chef ist streng.",exE:"My boss is strict.",cat:"people"},
+  {g:"die Chefin",e:"the boss (female)",ex:"Die Chefin hat ein Meeting.",exE:"The boss has a meeting.",cat:"people"},
+  {g:"der Arzt",e:"the doctor (male)",ex:"Der Arzt kommt gleich.",exE:"The doctor is coming right away.",cat:"people"},
+  {g:"die Ärztin",e:"the doctor (female)",ex:"Die Ärztin verschreibt Tabletten.",exE:"The doctor prescribes tablets.",cat:"people"},
+  {g:"der Lehrer",e:"the teacher (male)",ex:"Der Lehrer erklärt die Grammatik.",exE:"The teacher explains the grammar.",cat:"people"},
+  {g:"die Lehrerin",e:"the teacher (female)",ex:"Die Lehrerin ist sehr geduldig.",exE:"The teacher is very patient.",cat:"people"},
+  {g:"der Schüler",e:"the pupil (male)",ex:"Der Schüler lernt Mathe.",exE:"The pupil studies maths.",cat:"people"},
+  {g:"die Schülerin",e:"the pupil (female)",ex:"Die Schülerin schreibt eine Prüfung.",exE:"The pupil is writing a test.",cat:"people"},
+  {g:"der Student",e:"the student (male)",ex:"Der Student studiert in Wien.",exE:"The student studies in Vienna.",cat:"people"},
+  {g:"die Studentin",e:"the student (female)",ex:"Die Studentin wohnt in einem Wohnheim.",exE:"The student lives in a dormitory.",cat:"people"},
+  {g:"der Verkäufer",e:"the salesperson (male)",ex:"Der Verkäufer hilft mir.",exE:"The salesperson helps me.",cat:"people"},
+  {g:"die Verkäuferin",e:"the salesperson (female)",ex:"Die Verkäuferin ist freundlich.",exE:"The salesperson is friendly.",cat:"people"},
+  {g:"der Kellner",e:"the waiter",ex:"Der Kellner bringt die Speisekarte.",exE:"The waiter brings the menu.",cat:"people"},
+  {g:"die Kellnerin",e:"the waitress",ex:"Die Kellnerin lächelt.",exE:"The waitress smiles.",cat:"people"},
+  {g:"der Koch",e:"the cook / chef (male)",ex:"Der Koch macht eine Suppe.",exE:"The chef makes a soup.",cat:"people"},
+  {g:"die Köchin",e:"the cook / chef (female)",ex:"Die Köchin kocht ausgezeichnet.",exE:"The chef cooks excellently.",cat:"people"},
+  {g:"der Polizist",e:"the police officer (male)",ex:"Der Polizist hilft dem Kind.",exE:"The police officer helps the child.",cat:"people"},
+  {g:"die Polizistin",e:"the police officer (female)",ex:"Die Polizistin regelt den Verkehr.",exE:"The police officer directs traffic.",cat:"people"},
+  {g:"der Mechaniker",e:"the mechanic (male)",ex:"Der Mechaniker repariert das Auto.",exE:"The mechanic repairs the car.",cat:"people"},
+  {g:"die Mechanikerin",e:"the mechanic (female)",ex:"Die Mechanikerin ist sehr kompetent.",exE:"The mechanic is very competent.",cat:"people"},
+  {g:"der Journalist",e:"the journalist (male)",ex:"Der Journalist schreibt einen Artikel.",exE:"The journalist writes an article.",cat:"people"},
+  {g:"die Journalistin",e:"the journalist (female)",ex:"Die Journalistin interviewt den Politiker.",exE:"The journalist interviews the politician.",cat:"people"},
+
+  // ─── ADJECTIVES ───
+  {g:"gut",e:"good",ex:"Das Essen ist gut.",exE:"The food is good.",cat:"adjectives"},
+  {g:"schlecht",e:"bad",ex:"Das Wetter ist heute schlecht.",exE:"The weather is bad today.",cat:"adjectives"},
+  {g:"schön",e:"beautiful / nice",ex:"Die Stadt ist sehr schön.",exE:"The city is very beautiful.",cat:"adjectives"},
+  {g:"hässlich",e:"ugly",ex:"Das Gebäude ist hässlich.",exE:"The building is ugly.",cat:"adjectives"},
+  {g:"groß",e:"big / tall",ex:"Mein Bruder ist sehr groß.",exE:"My brother is very tall.",cat:"adjectives"},
+  {g:"klein",e:"small / short",ex:"Die Wohnung ist klein.",exE:"The apartment is small.",cat:"adjectives"},
+  {g:"neu",e:"new",ex:"Ich habe ein neues Handy.",exE:"I have a new phone.",cat:"adjectives"},
+  {g:"alt",e:"old",ex:"Das Haus ist sehr alt.",exE:"The house is very old.",cat:"adjectives"},
+  {g:"jung",e:"young",ex:"Sie ist noch jung.",exE:"She is still young.",cat:"adjectives"},
+  {g:"teuer",e:"expensive",ex:"Das Auto ist sehr teuer.",exE:"The car is very expensive.",cat:"adjectives"},
+  {g:"billig",e:"cheap / inexpensive",ex:"Dieser Laden ist billig.",exE:"This shop is cheap.",cat:"adjectives"},
+  {g:"schnell",e:"fast",ex:"Der Zug ist sehr schnell.",exE:"The train is very fast.",cat:"adjectives"},
+  {g:"langsam",e:"slow",ex:"Bitte sprich langsam!",exE:"Please speak slowly!",cat:"adjectives"},
+  {g:"einfach",e:"easy / simple",ex:"Die Aufgabe ist einfach.",exE:"The task is easy.",cat:"adjectives"},
+  {g:"schwer",e:"difficult / heavy",ex:"Deutsch ist manchmal schwer.",exE:"German is sometimes difficult.",cat:"adjectives"},
+  {g:"richtig",e:"correct / right",ex:"Das ist richtig!",exE:"That is correct!",cat:"adjectives"},
+  {g:"falsch",e:"wrong / incorrect",ex:"Diese Antwort ist falsch.",exE:"This answer is wrong.",cat:"adjectives"},
+  {g:"viel",e:"much / a lot",ex:"Ich habe viel Arbeit.",exE:"I have a lot of work.",cat:"adjectives"},
+  {g:"wenig",e:"little / few",ex:"Ich habe wenig Zeit.",exE:"I have little time.",cat:"adjectives"},
+  {g:"laut",e:"loud / noisy",ex:"Die Musik ist zu laut.",exE:"The music is too loud.",cat:"adjectives"},
+  {g:"leise",e:"quiet / soft",ex:"Bitte sei leise!",exE:"Please be quiet!",cat:"adjectives"},
+  {g:"sauber",e:"clean",ex:"Das Zimmer ist sauber.",exE:"The room is clean.",cat:"adjectives"},
+  {g:"schmutzig",e:"dirty",ex:"Die Schuhe sind schmutzig.",exE:"The shoes are dirty.",cat:"adjectives"},
+  {g:"warm",e:"warm",ex:"Das Wasser ist warm.",exE:"The water is warm.",cat:"adjectives"},
+  {g:"kalt",e:"cold",ex:"Es ist sehr kalt heute.",exE:"It is very cold today.",cat:"adjectives"},
+  {g:"heiß",e:"hot",ex:"Der Kaffee ist heiß.",exE:"The coffee is hot.",cat:"adjectives"},
+  {g:"kühl",e:"cool",ex:"Im Keller ist es kühl.",exE:"In the basement it is cool.",cat:"adjectives"},
+  {g:"hell",e:"bright / light",ex:"Das Zimmer ist sehr hell.",exE:"The room is very bright.",cat:"adjectives"},
+  {g:"dunkel",e:"dark",ex:"Im Kino ist es dunkel.",exE:"In the cinema it is dark.",cat:"adjectives"},
+  {g:"lang",e:"long",ex:"Das ist ein langer Weg.",exE:"That is a long way.",cat:"adjectives"},
+  {g:"kurz",e:"short (length/time)",ex:"Das Meeting war kurz.",exE:"The meeting was short.",cat:"adjectives"},
+  {g:"breit",e:"wide / broad",ex:"Die Straße ist sehr breit.",exE:"The street is very wide.",cat:"adjectives"},
+  {g:"eng",e:"narrow / tight",ex:"Der Flur ist eng.",exE:"The hallway is narrow.",cat:"adjectives"},
+  {g:"hoch",e:"high / tall",ex:"Der Berg ist hoch.",exE:"The mountain is high.",cat:"adjectives"},
+  {g:"tief",e:"deep / low",ex:"Der See ist sehr tief.",exE:"The lake is very deep.",cat:"adjectives"},
+  {g:"schwach",e:"weak",ex:"Er ist krank und schwach.",exE:"He is sick and weak.",cat:"adjectives"},
+  {g:"stark",e:"strong",ex:"Sie ist sehr stark.",exE:"She is very strong.",cat:"adjectives"},
+  {g:"müde",e:"tired",ex:"Ich bin sehr müde.",exE:"I am very tired.",cat:"adjectives"},
+  {g:"krank",e:"sick / ill",ex:"Er ist krank und bleibt im Bett.",exE:"He is sick and stays in bed.",cat:"adjectives"},
+  {g:"gesund",e:"healthy",ex:"Sport ist gesund.",exE:"Sport is healthy.",cat:"adjectives"},
+  {g:"hungrig",e:"hungry",ex:"Ich bin sehr hungrig!",exE:"I am very hungry!",cat:"adjectives"},
+  {g:"durstig",e:"thirsty",ex:"Nach dem Sport bin ich durstig.",exE:"After sport I am thirsty.",cat:"adjectives"},
+  {g:"glücklich",e:"happy",ex:"Sie ist sehr glücklich.",exE:"She is very happy.",cat:"adjectives"},
+  {g:"traurig",e:"sad",ex:"Warum bist du traurig?",exE:"Why are you sad?",cat:"adjectives"},
+  {g:"wütend",e:"angry",ex:"Er ist wütend auf mich.",exE:"He is angry at me.",cat:"adjectives"},
+  {g:"aufgeregt",e:"excited",ex:"Die Kinder sind aufgeregt.",exE:"The children are excited.",cat:"adjectives"},
+  {g:"ruhig",e:"calm / quiet",ex:"Bleib ruhig!",exE:"Stay calm!",cat:"adjectives"},
+  {g:"lustig",e:"funny / cheerful",ex:"Er ist sehr lustig.",exE:"He is very funny.",cat:"adjectives"},
+  {g:"freundlich",e:"friendly",ex:"Die Lehrerin ist freundlich.",exE:"The teacher is friendly.",cat:"adjectives"},
+  {g:"nett",e:"nice / kind",ex:"Du bist sehr nett.",exE:"You are very nice.",cat:"adjectives"},
+  {g:"nah",e:"near / close",ex:"Die Bäckerei ist nah.",exE:"The bakery is close.",cat:"adjectives"},
+  {g:"weit",e:"far",ex:"Ist es noch weit?",exE:"Is it still far?",cat:"adjectives"},
+  {g:"offen",e:"open",ex:"Das Fenster ist offen.",exE:"The window is open.",cat:"adjectives"},
+  {g:"geschlossen",e:"closed",ex:"Das Museum ist geschlossen.",exE:"The museum is closed.",cat:"adjectives"},
+  {g:"fertig",e:"ready / finished",ex:"Bist du fertig?",exE:"Are you ready/finished?",cat:"adjectives"},
+  {g:"kaputt",e:"broken",ex:"Mein Handy ist kaputt.",exE:"My phone is broken.",cat:"adjectives"},
+  {g:"wichtig",e:"important",ex:"Das ist sehr wichtig.",exE:"That is very important.",cat:"adjectives"},
+  {g:"interessant",e:"interesting",ex:"Das Buch ist interessant.",exE:"The book is interesting.",cat:"adjectives"},
+  {g:"langweilig",e:"boring",ex:"Der Film ist langweilig.",exE:"The film is boring.",cat:"adjectives"},
+  {g:"lecker",e:"delicious / tasty",ex:"Das Essen ist lecker!",exE:"The food is delicious!",cat:"adjectives"},
+
+  // ─── COLORS ───
+  {g:"rot",e:"red",ex:"Das Auto ist rot.",exE:"The car is red.",cat:"colors"},
+  {g:"blau",e:"blue",ex:"Der Himmel ist blau.",exE:"The sky is blue.",cat:"colors"},
+  {g:"grün",e:"green",ex:"Das Gras ist grün.",exE:"The grass is green.",cat:"colors"},
+  {g:"gelb",e:"yellow",ex:"Die Banane ist gelb.",exE:"The banana is yellow.",cat:"colors"},
+  {g:"schwarz",e:"black",ex:"Ich mag schwarze Kleidung.",exE:"I like black clothes.",cat:"colors"},
+  {g:"weiß",e:"white",ex:"Der Schnee ist weiß.",exE:"The snow is white.",cat:"colors"},
+  {g:"grau",e:"grey",ex:"Der Himmel ist heute grau.",exE:"The sky is grey today.",cat:"colors"},
+  {g:"braun",e:"brown",ex:"Der Tisch ist braun.",exE:"The table is brown.",cat:"colors"},
+  {g:"orange",e:"orange",ex:"Die Orange ist orange.",exE:"The orange is orange.",cat:"colors"},
+  {g:"rosa",e:"pink",ex:"Sie trägt ein rosa Kleid.",exE:"She wears a pink dress.",cat:"colors"},
+  {g:"lila",e:"purple",ex:"Die Blume ist lila.",exE:"The flower is purple.",cat:"colors"},
+
+  // ─── HOME & FURNITURE ───
+  {g:"das Haus",e:"the house",ex:"Wir wohnen in einem großen Haus.",exE:"We live in a big house.",cat:"home"},
+  {g:"die Wohnung",e:"the apartment",ex:"Die Wohnung hat drei Zimmer.",exE:"The apartment has three rooms.",cat:"home"},
+  {g:"das Zimmer",e:"the room",ex:"Mein Zimmer ist sauber.",exE:"My room is clean.",cat:"home"},
+  {g:"die Küche",e:"the kitchen",ex:"Ich koche in der Küche.",exE:"I cook in the kitchen.",cat:"home"},
+  {g:"das Badezimmer",e:"the bathroom",ex:"Das Badezimmer hat eine Dusche.",exE:"The bathroom has a shower.",cat:"home"},
+  {g:"das Schlafzimmer",e:"the bedroom",ex:"Das Schlafzimmer ist dunkel.",exE:"The bedroom is dark.",cat:"home"},
+  {g:"das Wohnzimmer",e:"the living room",ex:"Wir sitzen im Wohnzimmer.",exE:"We are sitting in the living room.",cat:"home"},
+  {g:"das Esszimmer",e:"the dining room",ex:"Wir essen im Esszimmer.",exE:"We eat in the dining room.",cat:"home"},
+  {g:"der Flur",e:"the hallway",ex:"Die Schuhe stehen im Flur.",exE:"The shoes are in the hallway.",cat:"home"},
+  {g:"der Keller",e:"the basement",ex:"Im Keller ist es dunkel.",exE:"In the basement it is dark.",cat:"home"},
+  {g:"der Dachboden",e:"the attic",ex:"Alte Möbel stehen im Dachboden.",exE:"Old furniture is in the attic.",cat:"home"},
+  {g:"der Garten",e:"the garden",ex:"Im Garten wachsen Blumen.",exE:"Flowers grow in the garden.",cat:"home"},
+  {g:"der Balkon",e:"the balcony",ex:"Ich sitze auf dem Balkon.",exE:"I sit on the balcony.",cat:"home"},
+  {g:"die Terrasse",e:"the terrace",ex:"Wir essen auf der Terrasse.",exE:"We eat on the terrace.",cat:"home"},
+  {g:"die Tür",e:"the door",ex:"Bitte schließ die Tür!",exE:"Please close the door!",cat:"home"},
+  {g:"das Fenster",e:"the window",ex:"Das Fenster ist offen.",exE:"The window is open.",cat:"home"},
+  {g:"die Treppe",e:"the stairs",ex:"Die Treppe ist sehr steil.",exE:"The stairs are very steep.",cat:"home"},
+  {g:"der Aufzug",e:"the lift / elevator",ex:"Der Aufzug ist kaputt.",exE:"The lift is broken.",cat:"home"},
+  {g:"die Wand",e:"the wall",ex:"Das Bild hängt an der Wand.",exE:"The picture hangs on the wall.",cat:"home"},
+  {g:"der Boden",e:"the floor",ex:"Der Boden ist sehr sauber.",exE:"The floor is very clean.",cat:"home"},
+  {g:"die Decke",e:"the ceiling / blanket",ex:"Die Decke ist weiß.",exE:"The ceiling is white.",cat:"home"},
+  {g:"der Tisch",e:"the table",ex:"Das Essen steht auf dem Tisch.",exE:"The food is on the table.",cat:"home"},
+  {g:"der Stuhl",e:"the chair",ex:"Sitz bitte auf dem Stuhl.",exE:"Please sit on the chair.",cat:"home"},
+  {g:"das Sofa",e:"the sofa / couch",ex:"Ich liege auf dem Sofa.",exE:"I am lying on the sofa.",cat:"home"},
+  {g:"das Bett",e:"the bed",ex:"Ich schlafe in meinem Bett.",exE:"I sleep in my bed.",cat:"home"},
+  {g:"der Schrank",e:"the wardrobe / cupboard",ex:"Meine Kleider sind im Schrank.",exE:"My clothes are in the wardrobe.",cat:"home"},
+  {g:"das Regal",e:"the shelf",ex:"Die Bücher stehen im Regal.",exE:"The books are on the shelf.",cat:"home"},
+  {g:"die Lampe",e:"the lamp",ex:"Mach die Lampe an!",exE:"Turn on the lamp!",cat:"home"},
+  {g:"der Teppich",e:"the carpet / rug",ex:"Der Teppich ist braun.",exE:"The carpet is brown.",cat:"home"},
+  {g:"der Vorhang",e:"the curtain",ex:"Die Vorhänge sind gelb.",exE:"The curtains are yellow.",cat:"home"},
+  {g:"der Spiegel",e:"the mirror",ex:"Ich schaue in den Spiegel.",exE:"I look in the mirror.",cat:"home"},
+  {g:"die Badewanne",e:"the bathtub",ex:"Ich bade in der Badewanne.",exE:"I bathe in the bathtub.",cat:"home"},
+  {g:"die Dusche",e:"the shower",ex:"Ich dusche jeden Morgen.",exE:"I shower every morning.",cat:"home"},
+  {g:"das Waschbecken",e:"the sink / washbasin",ex:"Ich wasche meine Hände am Waschbecken.",exE:"I wash my hands at the sink.",cat:"home"},
+  {g:"die Toilette",e:"the toilet",ex:"Wo ist die Toilette?",exE:"Where is the toilet?",cat:"home"},
+  {g:"der Herd",e:"the stove / cooker",ex:"Ich koche auf dem Herd.",exE:"I cook on the stove.",cat:"home"},
+  {g:"der Kühlschrank",e:"the fridge",ex:"Die Milch ist im Kühlschrank.",exE:"The milk is in the fridge.",cat:"home"},
+  {g:"die Spülmaschine",e:"the dishwasher",ex:"Die Spülmaschine ist voll.",exE:"The dishwasher is full.",cat:"home"},
+  {g:"die Waschmaschine",e:"the washing machine",ex:"Die Wäsche ist in der Waschmaschine.",exE:"The laundry is in the washing machine.",cat:"home"},
+  {g:"der Mikrowelle",e:"the microwave",ex:"Ich wärme die Suppe in der Mikrowelle.",exE:"I warm the soup in the microwave.",cat:"home"},
+  {g:"der Ofen",e:"the oven",ex:"Der Kuchen ist im Ofen.",exE:"The cake is in the oven.",cat:"home"},
+
+  // ─── FOOD & DRINK ───
+  {g:"das Wasser",e:"water",ex:"Ich trinke viel Wasser.",exE:"I drink a lot of water.",cat:"food"},
+  {g:"der Kaffee",e:"coffee",ex:"Ich möchte einen Kaffee, bitte.",exE:"I would like a coffee, please.",cat:"food"},
+  {g:"der Tee",e:"tea",ex:"Sie trinkt lieber Tee.",exE:"She prefers to drink tea.",cat:"food"},
+  {g:"die Milch",e:"milk",ex:"Das Kind trinkt Milch.",exE:"The child drinks milk.",cat:"food"},
+  {g:"der Saft",e:"juice",ex:"Ich möchte einen Apfelsaft.",exE:"I would like an apple juice.",cat:"food"},
+  {g:"das Bier",e:"beer",ex:"Er trinkt ein Bier.",exE:"He drinks a beer.",cat:"food"},
+  {g:"der Wein",e:"wine",ex:"Möchtest du Wein?",exE:"Would you like wine?",cat:"food"},
+  {g:"die Limonade",e:"lemonade / soft drink",ex:"Die Kinder trinken Limonade.",exE:"The children drink lemonade.",cat:"food"},
+  {g:"das Brot",e:"bread",ex:"Ich esse Brot zum Frühstück.",exE:"I eat bread for breakfast.",cat:"food"},
+  {g:"die Brötchen",e:"bread rolls",ex:"Frische Brötchen vom Bäcker.",exE:"Fresh rolls from the baker.",cat:"food"},
+  {g:"der Käse",e:"cheese",ex:"Ich mag Käse sehr gern.",exE:"I like cheese very much.",cat:"food"},
+  {g:"die Butter",e:"butter",ex:"Ich streiche Butter auf das Brot.",exE:"I spread butter on the bread.",cat:"food"},
+  {g:"das Fleisch",e:"meat",ex:"Isst du Fleisch?",exE:"Do you eat meat?",cat:"food"},
+  {g:"der Fisch",e:"fish",ex:"Der Fisch ist frisch.",exE:"The fish is fresh.",cat:"food"},
+  {g:"das Hähnchen",e:"chicken",ex:"Ich esse gern Hähnchen.",exE:"I like to eat chicken.",cat:"food"},
+  {g:"das Schweinefleisch",e:"pork",ex:"Schweinefleisch ist günstig.",exE:"Pork is affordable.",cat:"food"},
+  {g:"das Rindfleisch",e:"beef",ex:"Das Steak ist aus Rindfleisch.",exE:"The steak is made from beef.",cat:"food"},
+  {g:"die Wurst",e:"sausage / cold cuts",ex:"Ich esse Wurst zum Frühstück.",exE:"I eat sausage for breakfast.",cat:"food"},
+  {g:"das Gemüse",e:"vegetables",ex:"Ich esse täglich Gemüse.",exE:"I eat vegetables daily.",cat:"food"},
+  {g:"das Obst",e:"fruit",ex:"Obst ist gesund.",exE:"Fruit is healthy.",cat:"food"},
+  {g:"der Apfel",e:"apple",ex:"Ein Apfel am Tag hält den Arzt fern.",exE:"An apple a day keeps the doctor away.",cat:"food"},
+  {g:"die Banane",e:"banana",ex:"Ich esse eine Banane.",exE:"I eat a banana.",cat:"food"},
+  {g:"die Orange",e:"orange",ex:"Die Orange ist süß.",exE:"The orange is sweet.",cat:"food"},
+  {g:"die Erdbeere",e:"strawberry",ex:"Ich mag Erdbeeren sehr.",exE:"I like strawberries very much.",cat:"food"},
+  {g:"die Traube",e:"grape",ex:"Diese Trauben sind süß.",exE:"These grapes are sweet.",cat:"food"},
+  {g:"die Kartoffel",e:"potato",ex:"Ich esse Kartoffeln gern.",exE:"I like to eat potatoes.",cat:"food"},
+  {g:"die Tomate",e:"tomato",ex:"Die Tomaten sind rot.",exE:"The tomatoes are red.",cat:"food"},
+  {g:"die Gurke",e:"cucumber",ex:"Ich schneide die Gurke.",exE:"I cut the cucumber.",cat:"food"},
+  {g:"die Karotte",e:"carrot",ex:"Karotten sind sehr gesund.",exE:"Carrots are very healthy.",cat:"food"},
+  {g:"der Salat",e:"salad / lettuce",ex:"Ich esse einen Salat.",exE:"I eat a salad.",cat:"food"},
+  {g:"die Zwiebel",e:"onion",ex:"Die Zwiebel macht mich weinen.",exE:"The onion makes me cry.",cat:"food"},
+  {g:"der Knoblauch",e:"garlic",ex:"Ich koche mit Knoblauch.",exE:"I cook with garlic.",cat:"food"},
+  {g:"der Reis",e:"rice",ex:"Ich esse Reis mit Hähnchen.",exE:"I eat rice with chicken.",cat:"food"},
+  {g:"die Nudeln",e:"pasta / noodles",ex:"Nudeln mit Tomatensoße.",exE:"Pasta with tomato sauce.",cat:"food"},
+  {g:"das Ei",e:"egg",ex:"Ich esse zwei Eier.",exE:"I eat two eggs.",cat:"food"},
+  {g:"die Suppe",e:"soup",ex:"Die Suppe ist heiß.",exE:"The soup is hot.",cat:"food"},
+  {g:"der Kuchen",e:"cake",ex:"Der Kuchen ist sehr lecker.",exE:"The cake is very delicious.",cat:"food"},
+  {g:"das Eis",e:"ice cream / ice",ex:"Ich möchte ein Eis.",exE:"I would like an ice cream.",cat:"food"},
+  {g:"der Zucker",e:"sugar",ex:"Wie viel Zucker möchtest du?",exE:"How much sugar would you like?",cat:"food"},
+  {g:"das Salz",e:"salt",ex:"Das braucht mehr Salz.",exE:"That needs more salt.",cat:"food"},
+  {g:"der Pfeffer",e:"pepper",ex:"Salz und Pfeffer, bitte.",exE:"Salt and pepper, please.",cat:"food"},
+  {g:"das Öl",e:"oil",ex:"Ich brate mit Öl.",exE:"I fry with oil.",cat:"food"},
+  {g:"das Frühstück",e:"breakfast",ex:"Ich esse Frühstück um sieben.",exE:"I eat breakfast at seven.",cat:"food"},
+  {g:"das Mittagessen",e:"lunch",ex:"Das Mittagessen ist um zwölf.",exE:"Lunch is at twelve.",cat:"food"},
+  {g:"das Abendessen",e:"dinner / supper",ex:"Wir essen Abendessen um sieben.",exE:"We eat dinner at seven.",cat:"food"},
+  {g:"die Mahlzeit",e:"meal",ex:"Guten Appetit! Mahlzeit!",exE:"Enjoy your meal!",cat:"food"},
+  {g:"das Rezept",e:"recipe",ex:"Hast du das Rezept für diesen Kuchen?",exE:"Do you have the recipe for this cake?",cat:"food"},
+
+  // ─── BODY ───
+  {g:"der Kopf",e:"the head",ex:"Ich habe Kopfschmerzen.",exE:"I have a headache.",cat:"body"},
+  {g:"das Gesicht",e:"the face",ex:"Sie hat ein schönes Gesicht.",exE:"She has a beautiful face.",cat:"body"},
+  {g:"das Haar",e:"the hair",ex:"Sein Haar ist braun.",exE:"His hair is brown.",cat:"body"},
+  {g:"das Auge",e:"the eye",ex:"Sie hat blaue Augen.",exE:"She has blue eyes.",cat:"body"},
+  {g:"die Nase",e:"the nose",ex:"Meine Nase ist kalt.",exE:"My nose is cold.",cat:"body"},
+  {g:"der Mund",e:"the mouth",ex:"Bitte öffne den Mund.",exE:"Please open your mouth.",cat:"body"},
+  {g:"das Ohr",e:"the ear",ex:"Das Ohr tut mir weh.",exE:"My ear hurts.",cat:"body"},
+  {g:"der Zahn",e:"the tooth",ex:"Ich habe Zahnschmerzen.",exE:"I have a toothache.",cat:"body"},
+  {g:"der Hals",e:"the neck / throat",ex:"Mein Hals tut weh.",exE:"My throat hurts.",cat:"body"},
+  {g:"die Schulter",e:"the shoulder",ex:"Meine Schulter schmerzt.",exE:"My shoulder aches.",cat:"body"},
+  {g:"der Arm",e:"the arm",ex:"Ich habe meinen Arm gebrochen.",exE:"I have broken my arm.",cat:"body"},
+  {g:"der Ellbogen",e:"the elbow",ex:"Ich stoße meinen Ellbogen.",exE:"I bump my elbow.",cat:"body"},
+  {g:"die Hand",e:"the hand",ex:"Gib mir deine Hand.",exE:"Give me your hand.",cat:"body"},
+  {g:"der Finger",e:"the finger",ex:"Ich habe zehn Finger.",exE:"I have ten fingers.",cat:"body"},
+  {g:"der Bauch",e:"the stomach / belly",ex:"Mein Bauch tut weh.",exE:"My stomach hurts.",cat:"body"},
+  {g:"der Rücken",e:"the back",ex:"Ich habe Rückenschmerzen.",exE:"I have back pain.",cat:"body"},
+  {g:"das Bein",e:"the leg",ex:"Mein Bein ist lang.",exE:"My leg is long.",cat:"body"},
+  {g:"das Knie",e:"the knee",ex:"Mein Knie tut weh.",exE:"My knee hurts.",cat:"body"},
+  {g:"der Fuß",e:"the foot",ex:"Mein Fuß ist groß.",exE:"My foot is big.",cat:"body"},
+  {g:"der Zeh",e:"the toe",ex:"Ich habe fünf Zehen.",exE:"I have five toes.",cat:"body"},
+
+  // ─── CLOTHING ───
+  {g:"das Hemd",e:"the shirt",ex:"Er trägt ein weißes Hemd.",exE:"He wears a white shirt.",cat:"clothing"},
+  {g:"die Bluse",e:"the blouse",ex:"Sie trägt eine blaue Bluse.",exE:"She wears a blue blouse.",cat:"clothing"},
+  {g:"die Hose",e:"the trousers / pants",ex:"Ich ziehe meine Hose an.",exE:"I put on my trousers.",cat:"clothing"},
+  {g:"der Rock",e:"the skirt",ex:"Sie trägt einen kurzen Rock.",exE:"She wears a short skirt.",cat:"clothing"},
+  {g:"das Kleid",e:"the dress",ex:"Das Kleid ist sehr schön.",exE:"The dress is very beautiful.",cat:"clothing"},
+  {g:"die Jacke",e:"the jacket",ex:"Ich ziehe meine Jacke an.",exE:"I put on my jacket.",cat:"clothing"},
+  {g:"der Mantel",e:"the coat",ex:"Im Winter trage ich einen Mantel.",exE:"In winter I wear a coat.",cat:"clothing"},
+  {g:"der Pullover",e:"the sweater / jumper",ex:"Der Pullover ist warm.",exE:"The sweater is warm.",cat:"clothing"},
+  {g:"die Socke",e:"the sock",ex:"Ich trage weiße Socken.",exE:"I wear white socks.",cat:"clothing"},
+  {g:"der Schuh",e:"the shoe",ex:"Meine Schuhe sind neu.",exE:"My shoes are new.",cat:"clothing"},
+  {g:"der Stiefel",e:"the boot",ex:"Im Winter trage ich Stiefel.",exE:"In winter I wear boots.",cat:"clothing"},
+  {g:"die Unterwäsche",e:"the underwear",ex:"Ich brauche neue Unterwäsche.",exE:"I need new underwear.",cat:"clothing"},
+  {g:"die Mütze",e:"the hat / beanie",ex:"Im Winter trage ich eine Mütze.",exE:"In winter I wear a hat.",cat:"clothing"},
+  {g:"der Schal",e:"the scarf",ex:"Dein Schal ist schön.",exE:"Your scarf is beautiful.",cat:"clothing"},
+  {g:"die Handschuhe",e:"the gloves",ex:"Ich brauche Handschuhe.",exE:"I need gloves.",cat:"clothing"},
+  {g:"die Brille",e:"the glasses",ex:"Ich trage eine Brille.",exE:"I wear glasses.",cat:"clothing"},
+  {g:"der Gürtel",e:"the belt",ex:"Der Gürtel ist aus Leder.",exE:"The belt is made of leather.",cat:"clothing"},
+  {g:"die Tasche",e:"the bag / pocket",ex:"Meine Tasche ist schwer.",exE:"My bag is heavy.",cat:"clothing"},
+
+  // ─── PLACES & TRANSPORT ───
+  {g:"die Straße",e:"the street / road",ex:"Die Straße ist breit.",exE:"The street is wide.",cat:"places"},
+  {g:"der Weg",e:"the way / path",ex:"Zeig mir den Weg.",exE:"Show me the way.",cat:"places"},
+  {g:"die Stadt",e:"the city / town",ex:"Berlin ist eine große Stadt.",exE:"Berlin is a large city.",cat:"places"},
+  {g:"das Dorf",e:"the village",ex:"Ich komme aus einem kleinen Dorf.",exE:"I come from a small village.",cat:"places"},
+  {g:"das Land",e:"the country / countryside",ex:"Ich lebe auf dem Land.",exE:"I live in the countryside.",cat:"places"},
+  {g:"der Bahnhof",e:"the train station",ex:"Der Bahnhof ist in der Mitte der Stadt.",exE:"The train station is in the centre of the city.",cat:"places"},
+  {g:"der Busbahnhof",e:"the bus station",ex:"Der Busbahnhof ist nah.",exE:"The bus station is close.",cat:"places"},
+  {g:"der Flughafen",e:"the airport",ex:"Der Flughafen ist weit vom Zentrum.",exE:"The airport is far from the centre.",cat:"places"},
+  {g:"der Hafen",e:"the port / harbour",ex:"Das Schiff ist im Hafen.",exE:"The ship is in the harbour.",cat:"places"},
+  {g:"das Hotel",e:"the hotel",ex:"Ich wohne im Hotel.",exE:"I am staying at the hotel.",cat:"places"},
+  {g:"das Restaurant",e:"the restaurant",ex:"Wir essen im Restaurant.",exE:"We eat at the restaurant.",cat:"places"},
+  {g:"das Café",e:"the café",ex:"Treffen wir uns im Café!",exE:"Let's meet at the café!",cat:"places"},
+  {g:"die Bäckerei",e:"the bakery",ex:"Ich kaufe Brot in der Bäckerei.",exE:"I buy bread at the bakery.",cat:"places"},
+  {g:"die Metzgerei",e:"the butcher's shop",ex:"Ich kaufe Fleisch in der Metzgerei.",exE:"I buy meat at the butcher's.",cat:"places"},
+  {g:"der Supermarkt",e:"the supermarket",ex:"Ich gehe in den Supermarkt.",exE:"I go to the supermarket.",cat:"places"},
+  {g:"das Kaufhaus",e:"the department store",ex:"Ich kaufe Kleidung im Kaufhaus.",exE:"I buy clothes at the department store.",cat:"places"},
+  {g:"der Markt",e:"the market",ex:"Auf dem Markt gibt es frisches Obst.",exE:"At the market there is fresh fruit.",cat:"places"},
+  {g:"die Apotheke",e:"the pharmacy",ex:"Die Apotheke ist geöffnet.",exE:"The pharmacy is open.",cat:"places"},
+  {g:"das Krankenhaus",e:"the hospital",ex:"Er ist im Krankenhaus.",exE:"He is in the hospital.",cat:"places"},
+  {g:"die Arztpraxis",e:"the doctor's surgery",ex:"Ich gehe zur Arztpraxis.",exE:"I go to the doctor's surgery.",cat:"places"},
+  {g:"die Schule",e:"the school",ex:"Die Kinder gehen in die Schule.",exE:"The children go to school.",cat:"places"},
+  {g:"die Universität",e:"the university",ex:"Ich studiere an der Universität.",exE:"I study at the university.",cat:"places"},
+  {g:"die Bibliothek",e:"the library",ex:"Ich leihe Bücher aus der Bibliothek.",exE:"I borrow books from the library.",cat:"places"},
+  {g:"das Kino",e:"the cinema",ex:"Gehen wir ins Kino!",exE:"Let's go to the cinema!",cat:"places"},
+  {g:"das Theater",e:"the theatre",ex:"Das Theater ist ausverkauft.",exE:"The theatre is sold out.",cat:"places"},
+  {g:"das Museum",e:"the museum",ex:"Das Museum ist sehr interessant.",exE:"The museum is very interesting.",cat:"places"},
+  {g:"der Park",e:"the park",ex:"Ich gehe im Park spazieren.",exE:"I walk in the park.",cat:"places"},
+  {g:"die Post",e:"the post office",ex:"Ich schicke ein Paket bei der Post.",exE:"I send a parcel at the post office.",cat:"places"},
+  {g:"die Bank",e:"the bank",ex:"Ich muss zur Bank gehen.",exE:"I have to go to the bank.",cat:"places"},
+  {g:"das Rathaus",e:"the town hall",ex:"Das Rathaus ist sehr alt.",exE:"The town hall is very old.",cat:"places"},
+  {g:"die Kirche",e:"the church",ex:"Die Kirche ist in der Mitte des Dorfes.",exE:"The church is in the middle of the village.",cat:"places"},
+  {g:"die Polizei",e:"the police",ex:"Rufen Sie die Polizei!",exE:"Call the police!",cat:"places"},
+  {g:"das Auto",e:"the car",ex:"Mein Auto ist rot.",exE:"My car is red.",cat:"transport"},
+  {g:"der Bus",e:"the bus",ex:"Ich fahre mit dem Bus.",exE:"I travel by bus.",cat:"transport"},
+  {g:"die U-Bahn",e:"the underground / metro",ex:"Die U-Bahn ist schnell.",exE:"The underground is fast.",cat:"transport"},
+  {g:"die S-Bahn",e:"the suburban train",ex:"Ich nehme die S-Bahn.",exE:"I take the suburban train.",cat:"transport"},
+  {g:"der Zug",e:"the train",ex:"Der Zug kommt um neun an.",exE:"The train arrives at nine.",cat:"transport"},
+  {g:"das Fahrrad",e:"the bicycle",ex:"Ich fahre mit dem Fahrrad zur Arbeit.",exE:"I cycle to work.",cat:"transport"},
+  {g:"das Motorrad",e:"the motorbike",ex:"Er fährt Motorrad.",exE:"He rides a motorbike.",cat:"transport"},
+  {g:"das Flugzeug",e:"the aeroplane",ex:"Ich fliege mit dem Flugzeug.",exE:"I fly by aeroplane.",cat:"transport"},
+  {g:"das Schiff",e:"the ship / boat",ex:"Das Schiff fährt nach England.",exE:"The ship sails to England.",cat:"transport"},
+  {g:"das Taxi",e:"the taxi",ex:"Ich nehme ein Taxi.",exE:"I take a taxi.",cat:"transport"},
+  {g:"die Straßenbahn",e:"the tram",ex:"Die Straßenbahn hält hier.",exE:"The tram stops here.",cat:"transport"},
+  {g:"der Parkplatz",e:"the car park / parking space",ex:"Ich suche einen Parkplatz.",exE:"I am looking for a parking space.",cat:"transport"},
+  {g:"die Ampel",e:"the traffic light",ex:"Die Ampel ist rot.",exE:"The traffic light is red.",cat:"transport"},
+  {g:"die Kreuzung",e:"the intersection / crossroads",ex:"An der Kreuzung links abbiegen.",exE:"Turn left at the crossroads.",cat:"transport"},
+  {g:"die Brücke",e:"the bridge",ex:"Die Brücke über den Fluss.",exE:"The bridge over the river.",cat:"transport"},
+  {g:"der Tunnel",e:"the tunnel",ex:"Der Zug fährt durch den Tunnel.",exE:"The train goes through the tunnel.",cat:"transport"},
+  {g:"links",e:"left",ex:"Bieg hier links ab.",exE:"Turn left here.",cat:"transport"},
+  {g:"rechts",e:"right",ex:"Das Café ist rechts.",exE:"The café is on the right.",cat:"transport"},
+  {g:"geradeaus",e:"straight ahead",ex:"Gehen Sie geradeaus.",exE:"Go straight ahead.",cat:"transport"},
+
+  // ─── TIME ───
+  {g:"die Uhr",e:"the clock / watch",ex:"Meine Uhr ist kaputt.",exE:"My watch is broken.",cat:"time"},
+  {g:"die Stunde",e:"the hour",ex:"Ich warte seit einer Stunde.",exE:"I have been waiting for an hour.",cat:"time"},
+  {g:"die Minute",e:"the minute",ex:"Ich komme in fünf Minuten.",exE:"I'll come in five minutes.",cat:"time"},
+  {g:"die Sekunde",e:"the second",ex:"Warte eine Sekunde.",exE:"Wait a second.",cat:"time"},
+  {g:"der Tag",e:"the day",ex:"Was machst du heute?",exE:"What are you doing today?",cat:"time"},
+  {g:"die Nacht",e:"the night",ex:"Gute Nacht!",exE:"Good night!",cat:"time"},
+  {g:"der Morgen",e:"the morning",ex:"Guten Morgen!",exE:"Good morning!",cat:"time"},
+  {g:"der Vormittag",e:"the late morning",ex:"Am Vormittag arbeite ich.",exE:"In the late morning I work.",cat:"time"},
+  {g:"der Mittag",e:"midday / noon",ex:"Um Mittag esse ich.",exE:"At noon I eat.",cat:"time"},
+  {g:"der Nachmittag",e:"the afternoon",ex:"Am Nachmittag lese ich.",exE:"In the afternoon I read.",cat:"time"},
+  {g:"der Abend",e:"the evening",ex:"Guten Abend!",exE:"Good evening!",cat:"time"},
+  {g:"die Woche",e:"the week",ex:"Ich arbeite fünf Tage in der Woche.",exE:"I work five days a week.",cat:"time"},
+  {g:"das Wochenende",e:"the weekend",ex:"Am Wochenende schlafe ich lange.",exE:"At the weekend I sleep long.",cat:"time"},
+  {g:"der Monat",e:"the month",ex:"Im nächsten Monat fahre ich nach Berlin.",exE:"Next month I go to Berlin.",cat:"time"},
+  {g:"das Jahr",e:"the year",ex:"Dieses Jahr lerne ich Deutsch.",exE:"This year I am learning German.",cat:"time"},
+  {g:"heute",e:"today",ex:"Heute ist Montag.",exE:"Today is Monday.",cat:"time"},
+  {g:"morgen",e:"tomorrow",ex:"Morgen gehe ich zum Arzt.",exE:"Tomorrow I go to the doctor.",cat:"time"},
+  {g:"gestern",e:"yesterday",ex:"Gestern war ich krank.",exE:"Yesterday I was sick.",cat:"time"},
+  {g:"übermorgen",e:"the day after tomorrow",ex:"Übermorgen kommt sie zurück.",exE:"She is coming back the day after tomorrow.",cat:"time"},
+  {g:"vorgestern",e:"the day before yesterday",ex:"Vorgestern war ich in München.",exE:"The day before yesterday I was in Munich.",cat:"time"},
+  {g:"jetzt",e:"now",ex:"Ich bin jetzt fertig.",exE:"I am finished now.",cat:"time"},
+  {g:"später",e:"later",ex:"Bis später!",exE:"See you later!",cat:"time"},
+  {g:"bald",e:"soon",ex:"Ich komme bald.",exE:"I'm coming soon.",cat:"time"},
+  {g:"früh",e:"early",ex:"Ich stehe früh auf.",exE:"I get up early.",cat:"time"},
+  {g:"spät",e:"late",ex:"Es ist sehr spät.",exE:"It is very late.",cat:"time"},
+  {g:"Montag",e:"Monday",ex:"Am Montag habe ich Schule.",exE:"On Monday I have school.",cat:"days"},
+  {g:"Dienstag",e:"Tuesday",ex:"Dienstag ist mein Lieblingstag.",exE:"Tuesday is my favourite day.",cat:"days"},
+  {g:"Mittwoch",e:"Wednesday",ex:"Am Mittwoch treffe ich Freunde.",exE:"On Wednesday I meet friends.",cat:"days"},
+  {g:"Donnerstag",e:"Thursday",ex:"Donnerstag habe ich Sport.",exE:"On Thursday I have sport.",cat:"days"},
+  {g:"Freitag",e:"Friday",ex:"Freitag! Wochenende!",exE:"Friday! Weekend!",cat:"days"},
+  {g:"Samstag",e:"Saturday",ex:"Am Samstag schlafe ich lange.",exE:"On Saturday I sleep long.",cat:"days"},
+  {g:"Sonntag",e:"Sunday",ex:"Am Sonntag ist die Bank geschlossen.",exE:"On Sunday the bank is closed.",cat:"days"},
+  {g:"Januar",e:"January",ex:"Im Januar ist es kalt.",exE:"In January it is cold.",cat:"months"},
+  {g:"Februar",e:"February",ex:"Im Februar gibt es oft Schnee.",exE:"In February there is often snow.",cat:"months"},
+  {g:"März",e:"March",ex:"Im März beginnt der Frühling.",exE:"In March spring begins.",cat:"months"},
+  {g:"April",e:"April",ex:"Im April regnet es oft.",exE:"In April it often rains.",cat:"months"},
+  {g:"Mai",e:"May",ex:"Im Mai blühen die Blumen.",exE:"In May the flowers bloom.",cat:"months"},
+  {g:"Juni",e:"June",ex:"Im Juni ist es warm.",exE:"In June it is warm.",cat:"months"},
+  {g:"Juli",e:"July",ex:"Im Juli fahre ich in Urlaub.",exE:"In July I go on holiday.",cat:"months"},
+  {g:"August",e:"August",ex:"Im August ist es sehr heiß.",exE:"In August it is very hot.",cat:"months"},
+  {g:"September",e:"September",ex:"Im September beginnt die Schule.",exE:"In September school begins.",cat:"months"},
+  {g:"Oktober",e:"October",ex:"Im Oktober ist Oktoberfest.",exE:"In October there is Oktoberfest.",cat:"months"},
+  {g:"November",e:"November",ex:"Im November ist es grau.",exE:"In November it is grey.",cat:"months"},
+  {g:"Dezember",e:"December",ex:"Im Dezember gibt es Weihnachten.",exE:"In December there is Christmas.",cat:"months"},
+
+  // ─── WEATHER ───
+  {g:"das Wetter",e:"the weather",ex:"Wie ist das Wetter heute?",exE:"What is the weather like today?",cat:"weather"},
+  {g:"die Sonne",e:"the sun",ex:"Die Sonne scheint.",exE:"The sun is shining.",cat:"weather"},
+  {g:"der Regen",e:"the rain",ex:"Der Regen ist stark.",exE:"The rain is heavy.",cat:"weather"},
+  {g:"der Schnee",e:"the snow",ex:"Der Schnee ist weiß.",exE:"The snow is white.",cat:"weather"},
+  {g:"der Wind",e:"the wind",ex:"Der Wind ist stark heute.",exE:"The wind is strong today.",cat:"weather"},
+  {g:"der Nebel",e:"the fog",ex:"Bei Nebel fahre ich langsam.",exE:"In fog I drive slowly.",cat:"weather"},
+  {g:"die Wolke",e:"the cloud",ex:"Viele Wolken am Himmel.",exE:"Many clouds in the sky.",cat:"weather"},
+  {g:"das Gewitter",e:"the thunderstorm",ex:"Ein Gewitter kommt.",exE:"A thunderstorm is coming.",cat:"weather"},
+  {g:"der Blitz",e:"the lightning",ex:"Der Blitz ist gefährlich.",exE:"The lightning is dangerous.",cat:"weather"},
+  {g:"der Donner",e:"the thunder",ex:"Ich höre den Donner.",exE:"I hear the thunder.",cat:"weather"},
+  {g:"sonnig",e:"sunny",ex:"Heute ist es sonnig.",exE:"Today it is sunny.",cat:"weather"},
+  {g:"regnerisch",e:"rainy",ex:"Der Herbst ist oft regnerisch.",exE:"Autumn is often rainy.",cat:"weather"},
+  {g:"bewölkt",e:"cloudy",ex:"Es ist bewölkt aber warm.",exE:"It is cloudy but warm.",cat:"weather"},
+  {g:"windig",e:"windy",ex:"Es ist sehr windig.",exE:"It is very windy.",cat:"weather"},
+  {g:"neblig",e:"foggy",ex:"Der Morgen ist neblig.",exE:"The morning is foggy.",cat:"weather"},
+  {g:"trocken",e:"dry",ex:"Im Sommer ist es trocken.",exE:"In summer it is dry.",cat:"weather"},
+  {g:"nass",e:"wet",ex:"Meine Schuhe sind nass.",exE:"My shoes are wet.",cat:"weather"},
+  {g:"das Thermometer",e:"the thermometer",ex:"Das Thermometer zeigt zehn Grad.",exE:"The thermometer shows ten degrees.",cat:"weather"},
+  {g:"Grad",e:"degree(s) (temperature)",ex:"Es sind zwanzig Grad.",exE:"It is twenty degrees.",cat:"weather"},
+
+  // ─── NUMBERS & ORDINALS ───
+  {g:"eins",e:"one",ex:"Ich habe eins.",exE:"I have one.",cat:"numbers"},
+  {g:"zwei",e:"two",ex:"Ich möchte zwei Kaffee.",exE:"I would like two coffees.",cat:"numbers"},
+  {g:"drei",e:"three",ex:"Sie hat drei Kinder.",exE:"She has three children.",cat:"numbers"},
+  {g:"vier",e:"four",ex:"Das kostet vier Euro.",exE:"That costs four euros.",cat:"numbers"},
+  {g:"fünf",e:"five",ex:"Ich bin fünf Minuten zu spät.",exE:"I am five minutes late.",cat:"numbers"},
+  {g:"sechs",e:"six",ex:"Er ist sechs Jahre alt.",exE:"He is six years old.",cat:"numbers"},
+  {g:"sieben",e:"seven",ex:"Ich stehe um sieben auf.",exE:"I get up at seven.",cat:"numbers"},
+  {g:"acht",e:"eight",ex:"Der Bus kommt um acht.",exE:"The bus comes at eight.",cat:"numbers"},
+  {g:"neun",e:"nine",ex:"Ich arbeite bis neun.",exE:"I work until nine.",cat:"numbers"},
+  {g:"zehn",e:"ten",ex:"Ich warte seit zehn Minuten.",exE:"I have been waiting for ten minutes.",cat:"numbers"},
+  {g:"elf",e:"eleven",ex:"Es ist elf Uhr.",exE:"It is eleven o'clock.",cat:"numbers"},
+  {g:"zwölf",e:"twelve",ex:"Um zwölf esse ich Mittag.",exE:"At twelve I eat lunch.",cat:"numbers"},
+  {g:"dreizehn",e:"thirteen",ex:"Er ist dreizehn Jahre alt.",exE:"He is thirteen years old.",cat:"numbers"},
+  {g:"vierzehn",e:"fourteen",ex:"Das Konzert dauert vierzehn Stunden.",exE:"The concert lasts fourteen hours.",cat:"numbers"},
+  {g:"fünfzehn",e:"fifteen",ex:"In fünfzehn Minuten.",exE:"In fifteen minutes.",cat:"numbers"},
+  {g:"sechzehn",e:"sixteen",ex:"Sie ist sechzehn.",exE:"She is sixteen.",cat:"numbers"},
+  {g:"siebzehn",e:"seventeen",ex:"Er hat siebzehn Punkte.",exE:"He has seventeen points.",cat:"numbers"},
+  {g:"achtzehn",e:"eighteen",ex:"Sie ist achtzehn Jahre alt.",exE:"She is eighteen years old.",cat:"numbers"},
+  {g:"neunzehn",e:"nineteen",ex:"Neunzehn Grad — perfekt!",exE:"Nineteen degrees — perfect!",cat:"numbers"},
+  {g:"zwanzig",e:"twenty",ex:"Zwanzig Euro, bitte.",exE:"Twenty euros, please.",cat:"numbers"},
+  {g:"einundzwanzig",e:"twenty-one",ex:"Er ist einundzwanzig.",exE:"He is twenty-one.",cat:"numbers"},
+  {g:"dreißig",e:"thirty",ex:"Es sind dreißig Grad!",exE:"It is thirty degrees!",cat:"numbers"},
+  {g:"vierzig",e:"forty",ex:"Vierzig Kilometer entfernt.",exE:"Forty kilometres away.",cat:"numbers"},
+  {g:"fünfzig",e:"fifty",ex:"Das kostet fünfzig Euro.",exE:"That costs fifty euros.",cat:"numbers"},
+  {g:"sechzig",e:"sixty",ex:"Sechzig Sekunden sind eine Minute.",exE:"Sixty seconds are one minute.",cat:"numbers"},
+  {g:"siebzig",e:"seventy",ex:"Meine Oma ist siebzig.",exE:"My grandmother is seventy.",cat:"numbers"},
+  {g:"achtzig",e:"eighty",ex:"Der Großvater ist achtzig.",exE:"The grandfather is eighty.",cat:"numbers"},
+  {g:"neunzig",e:"ninety",ex:"Neunzig Prozent.",exE:"Ninety percent.",cat:"numbers"},
+  {g:"hundert",e:"one hundred",ex:"Das kostet hundert Euro.",exE:"That costs one hundred euros.",cat:"numbers"},
+  {g:"tausend",e:"one thousand",ex:"Tausend Menschen.",exE:"A thousand people.",cat:"numbers"},
+  {g:"erste",e:"first",ex:"Das ist mein erstes Mal.",exE:"This is my first time.",cat:"numbers"},
+  {g:"zweite",e:"second",ex:"Das zweite Haus links.",exE:"The second house on the left.",cat:"numbers"},
+  {g:"dritte",e:"third",ex:"Sie ist Dritte.",exE:"She is third.",cat:"numbers"},
+  {g:"vierte",e:"fourth",ex:"Der vierte April.",exE:"The fourth of April.",cat:"numbers"},
+  {g:"fünfte",e:"fifth",ex:"Das fünfte Kind.",exE:"The fifth child.",cat:"numbers"},
+
+  // ─── MONEY & OBJECTS ───
+  {g:"der Euro",e:"the euro",ex:"Das kostet fünf Euro.",exE:"That costs five euros.",cat:"objects"},
+  {g:"der Cent",e:"the cent",ex:"Fünfzig Cent Rückgeld.",exE:"Fifty cents change.",cat:"objects"},
+  {g:"das Geld",e:"the money",ex:"Hast du Geld?",exE:"Do you have money?",cat:"objects"},
+  {g:"die Banknote",e:"the banknote",ex:"Ich zahle mit einer Banknote.",exE:"I pay with a banknote.",cat:"objects"},
+  {g:"die Münze",e:"the coin",ex:"Ich habe keine Münzen.",exE:"I have no coins.",cat:"objects"},
+  {g:"die Kreditkarte",e:"the credit card",ex:"Kann ich mit Kreditkarte zahlen?",exE:"Can I pay by credit card?",cat:"objects"},
+  {g:"die EC-Karte",e:"the debit card",ex:"Ich zahle mit der EC-Karte.",exE:"I pay with the debit card.",cat:"objects"},
+  {g:"der Preis",e:"the price",ex:"Was ist der Preis?",exE:"What is the price?",cat:"objects"},
+  {g:"das Angebot",e:"the offer / deal",ex:"Das ist ein gutes Angebot!",exE:"That is a good deal!",cat:"objects"},
+  {g:"der Rabatt",e:"the discount",ex:"Gibt es einen Rabatt?",exE:"Is there a discount?",cat:"objects"},
+  {g:"die Quittung",e:"the receipt",ex:"Kann ich eine Quittung haben?",exE:"Can I have a receipt?",cat:"objects"},
+  {g:"die Rechnung",e:"the bill / invoice",ex:"Die Rechnung, bitte!",exE:"The bill, please!",cat:"objects"},
+  {g:"der Computer",e:"the computer",ex:"Mein Computer ist neu.",exE:"My computer is new.",cat:"objects"},
+  {g:"das Handy",e:"the mobile phone",ex:"Mein Handy ist leer.",exE:"My mobile phone is flat.",cat:"objects"},
+  {g:"das Smartphone",e:"the smartphone",ex:"Ich kaufe ein neues Smartphone.",exE:"I buy a new smartphone.",cat:"objects"},
+  {g:"das Internet",e:"the internet",ex:"Ich brauche das Internet.",exE:"I need the internet.",cat:"objects"},
+  {g:"die E-Mail",e:"the email",ex:"Ich schicke dir eine E-Mail.",exE:"I send you an email.",cat:"objects"},
+  {g:"die Website",e:"the website",ex:"Die Website ist interessant.",exE:"The website is interesting.",cat:"objects"},
+  {g:"das Passwort",e:"the password",ex:"Ich habe mein Passwort vergessen.",exE:"I forgot my password.",cat:"objects"},
+  {g:"der Drucker",e:"the printer",ex:"Der Drucker ist kaputt.",exE:"The printer is broken.",cat:"objects"},
+  {g:"das Tablet",e:"the tablet",ex:"Ich lese auf dem Tablet.",exE:"I read on the tablet.",cat:"objects"},
+  {g:"das Telefon",e:"the telephone",ex:"Das Telefon klingelt.",exE:"The telephone is ringing.",cat:"objects"},
+  {g:"das Buch",e:"the book",ex:"Ich lese ein gutes Buch.",exE:"I am reading a good book.",cat:"objects"},
+  {g:"die Zeitung",e:"the newspaper",ex:"Ich lese die Zeitung.",exE:"I read the newspaper.",cat:"objects"},
+  {g:"die Zeitschrift",e:"the magazine",ex:"Ich kaufe eine Zeitschrift.",exE:"I buy a magazine.",cat:"objects"},
+  {g:"der Brief",e:"the letter",ex:"Ich schreibe einen Brief.",exE:"I write a letter.",cat:"objects"},
+  {g:"das Heft",e:"the notebook / exercise book",ex:"Ich schreibe im Heft.",exE:"I write in the notebook.",cat:"objects"},
+  {g:"der Stift",e:"the pen / pencil",ex:"Hast du einen Stift?",exE:"Do you have a pen?",cat:"objects"},
+  {g:"das Papier",e:"the paper",ex:"Ich brauche Papier.",exE:"I need paper.",cat:"objects"},
+  {g:"die Schere",e:"the scissors",ex:"Ich schneide mit der Schere.",exE:"I cut with the scissors.",cat:"objects"},
+  {g:"der Rucksack",e:"the backpack",ex:"Mein Rucksack ist schwer.",exE:"My backpack is heavy.",cat:"objects"},
+  {g:"das Gepäck",e:"the luggage",ex:"Mein Gepäck ist im Hotel.",exE:"My luggage is at the hotel.",cat:"objects"},
+  {g:"der Koffer",e:"the suitcase",ex:"Ich packe meinen Koffer.",exE:"I pack my suitcase.",cat:"objects"},
+  {g:"der Schlüssel",e:"the key",ex:"Ich habe meinen Schlüssel vergessen.",exE:"I forgot my key.",cat:"objects"},
+  {g:"das Formular",e:"the form",ex:"Bitte füllen Sie das Formular aus.",exE:"Please fill in the form.",cat:"objects"},
+  {g:"der Ausweis",e:"the ID card",ex:"Zeigen Sie Ihren Ausweis!",exE:"Show your ID card!",cat:"objects"},
+  {g:"der Reisepass",e:"the passport",ex:"Mein Reisepass ist abgelaufen.",exE:"My passport has expired.",cat:"objects"},
+  {g:"die Adresse",e:"the address",ex:"Was ist Ihre Adresse?",exE:"What is your address?",cat:"objects"},
+  {g:"die Postleitzahl",e:"the postcode",ex:"Was ist die Postleitzahl?",exE:"What is the postcode?",cat:"objects"},
+  {g:"die Telefonnummer",e:"the phone number",ex:"Wie ist deine Telefonnummer?",exE:"What is your phone number?",cat:"objects"},
+
+  // ─── PERSONAL INFO ───
+  {g:"der Name",e:"the name",ex:"Wie ist Ihr Name?",exE:"What is your name?",cat:"personal"},
+  {g:"der Vorname",e:"the first name",ex:"Mein Vorname ist Thomas.",exE:"My first name is Thomas.",cat:"personal"},
+  {g:"der Nachname",e:"the surname / last name",ex:"Mein Nachname ist Müller.",exE:"My last name is Müller.",cat:"personal"},
+  {g:"das Alter",e:"the age",ex:"In welchem Alter?",exE:"At what age?",cat:"personal"},
+  {g:"das Geburtsdatum",e:"the date of birth",ex:"Was ist Ihr Geburtsdatum?",exE:"What is your date of birth?",cat:"personal"},
+  {g:"der Geburtsort",e:"the place of birth",ex:"Mein Geburtsort ist Wien.",exE:"My place of birth is Vienna.",cat:"personal"},
+  {g:"die Nationalität",e:"the nationality",ex:"Was ist Ihre Nationalität?",exE:"What is your nationality?",cat:"personal"},
+  {g:"die Sprache",e:"the language",ex:"Welche Sprachen sprichst du?",exE:"What languages do you speak?",cat:"personal"},
+  {g:"Deutschland",e:"Germany",ex:"Ich lebe in Deutschland.",exE:"I live in Germany.",cat:"countries"},
+  {g:"Österreich",e:"Austria",ex:"Wien ist in Österreich.",exE:"Vienna is in Austria.",cat:"countries"},
+  {g:"die Schweiz",e:"Switzerland",ex:"In der Schweiz spricht man Deutsch.",exE:"In Switzerland people speak German.",cat:"countries"},
+  {g:"Europa",e:"Europe",ex:"Deutschland ist in Europa.",exE:"Germany is in Europe.",cat:"countries"},
+  {g:"Afrika",e:"Africa",ex:"Afrika ist ein großer Kontinent.",exE:"Africa is a large continent.",cat:"countries"},
+  {g:"Amerika",e:"America",ex:"Er kommt aus Amerika.",exE:"He comes from America.",cat:"countries"},
+  {g:"Asien",e:"Asia",ex:"Asien ist der größte Kontinent.",exE:"Asia is the largest continent.",cat:"countries"},
+  {g:"Deutsch",e:"German (language)",ex:"Ich lerne Deutsch.",exE:"I am learning German.",cat:"countries"},
+  {g:"Englisch",e:"English (language)",ex:"Sprichst du Englisch?",exE:"Do you speak English?",cat:"countries"},
+  {g:"Französisch",e:"French (language)",ex:"Sie spricht Französisch.",exE:"She speaks French.",cat:"countries"},
+  {g:"Spanisch",e:"Spanish (language)",ex:"Er lernt Spanisch.",exE:"He is learning Spanish.",cat:"countries"},
+
+  // ─── PHRASES ───
+  {g:"ja",e:"yes",ex:"Ja, ich möchte Kaffee.",exE:"Yes, I would like coffee.",cat:"phrases"},
+  {g:"nein",e:"no",ex:"Nein, danke!",exE:"No, thank you!",cat:"phrases"},
+  {g:"bitte",e:"please / you're welcome",ex:"Kaffee, bitte.",exE:"Coffee, please.",cat:"phrases"},
+  {g:"danke",e:"thank you",ex:"Danke für deine Hilfe!",exE:"Thank you for your help!",cat:"phrases"},
+  {g:"danke schön",e:"thank you very much",ex:"Danke schön!",exE:"Thank you very much!",cat:"phrases"},
+  {g:"bitte schön",e:"you're very welcome",ex:"Bitte schön!",exE:"You're very welcome!",cat:"phrases"},
+  {g:"gern",e:"gladly / with pleasure",ex:"Ja, gern!",exE:"Yes, gladly!",cat:"phrases"},
+  {g:"hallo",e:"hello",ex:"Hallo! Wie geht es dir?",exE:"Hello! How are you?",cat:"phrases"},
+  {g:"hi",e:"hi",ex:"Hi! Was machst du hier?",exE:"Hi! What are you doing here?",cat:"phrases"},
+  {g:"tschüss",e:"bye",ex:"Tschüss! Bis morgen!",exE:"Bye! See you tomorrow!",cat:"phrases"},
+  {g:"auf Wiedersehen",e:"goodbye (formal)",ex:"Auf Wiedersehen, Herr Müller!",exE:"Goodbye, Mr Müller!",cat:"phrases"},
+  {g:"auf Wiederhören",e:"goodbye (on phone)",ex:"Auf Wiederhören!",exE:"Goodbye! (on phone)",cat:"phrases"},
+  {g:"guten Morgen",e:"good morning",ex:"Guten Morgen, wie schläfst du?",exE:"Good morning, how did you sleep?",cat:"phrases"},
+  {g:"guten Tag",e:"good day / hello",ex:"Guten Tag! Kann ich helfen?",exE:"Good day! Can I help?",cat:"phrases"},
+  {g:"guten Abend",e:"good evening",ex:"Guten Abend! Alles gut?",exE:"Good evening! All good?",cat:"phrases"},
+  {g:"gute Nacht",e:"good night",ex:"Gute Nacht! Schlaf gut!",exE:"Good night! Sleep well!",cat:"phrases"},
+  {g:"entschuldigung",e:"excuse me / sorry",ex:"Entschuldigung, wo ist die Toilette?",exE:"Excuse me, where is the toilet?",cat:"phrases"},
+  {g:"entschuldigen Sie",e:"excuse me (formal)",ex:"Entschuldigen Sie, sprechen Sie Englisch?",exE:"Excuse me, do you speak English?",cat:"phrases"},
+  {g:"es tut mir leid",e:"I am sorry",ex:"Es tut mir leid, ich weiß es nicht.",exE:"I'm sorry, I don't know.",cat:"phrases"},
+  {g:"kein Problem",e:"no problem",ex:"Kein Problem!",exE:"No problem!",cat:"phrases"},
+  {g:"macht nichts",e:"never mind / it doesn't matter",ex:"Macht nichts, es ist ok.",exE:"Never mind, it's ok.",cat:"phrases"},
+  {g:"wie bitte?",e:"pardon? / could you repeat that?",ex:"Wie bitte? Ich habe nicht verstanden.",exE:"Pardon? I didn't understand.",cat:"phrases"},
+  {g:"ich verstehe nicht",e:"I don't understand",ex:"Ich verstehe nicht. Können Sie das erklären?",exE:"I don't understand. Can you explain?",cat:"phrases"},
+  {g:"ich weiß nicht",e:"I don't know",ex:"Ich weiß nicht, wo er ist.",exE:"I don't know where he is.",cat:"phrases"},
+  {g:"wie heißen Sie?",e:"What is your name? (formal)",ex:"Wie heißen Sie? Ich heiße Müller.",exE:"What is your name? My name is Müller.",cat:"phrases"},
+  {g:"wie heißt du?",e:"What is your name? (informal)",ex:"Wie heißt du? Ich heiße Anna.",exE:"What is your name? My name is Anna.",cat:"phrases"},
+  {g:"ich heiße...",e:"My name is...",ex:"Ich heiße Max.",exE:"My name is Max.",cat:"phrases"},
+  {g:"woher kommen Sie?",e:"Where are you from? (formal)",ex:"Woher kommen Sie? Aus Deutschland.",exE:"Where are you from? From Germany.",cat:"phrases"},
+  {g:"woher kommst du?",e:"Where are you from? (informal)",ex:"Woher kommst du? Aus Österreich.",exE:"Where are you from? From Austria.",cat:"phrases"},
+  {g:"ich komme aus...",e:"I come from...",ex:"Ich komme aus der Schweiz.",exE:"I come from Switzerland.",cat:"phrases"},
+  {g:"wo wohnen Sie?",e:"Where do you live? (formal)",ex:"Wo wohnen Sie? In Hamburg.",exE:"Where do you live? In Hamburg.",cat:"phrases"},
+  {g:"wo wohnst du?",e:"Where do you live? (informal)",ex:"Wo wohnst du? In München.",exE:"Where do you live? In Munich.",cat:"phrases"},
+  {g:"ich wohne in...",e:"I live in...",ex:"Ich wohne in Berlin.",exE:"I live in Berlin.",cat:"phrases"},
+  {g:"wie alt sind Sie?",e:"How old are you? (formal)",ex:"Wie alt sind Sie? Ich bin vierzig.",exE:"How old are you? I am forty.",cat:"phrases"},
+  {g:"wie alt bist du?",e:"How old are you? (informal)",ex:"Wie alt bist du? Ich bin zwanzig.",exE:"How old are you? I am twenty.",cat:"phrases"},
+  {g:"ich bin ... Jahre alt",e:"I am ... years old",ex:"Ich bin zwanzig Jahre alt.",exE:"I am twenty years old.",cat:"phrases"},
+  {g:"was machen Sie beruflich?",e:"What do you do for work? (formal)",ex:"Was machen Sie beruflich? Ich bin Lehrer.",exE:"What do you do? I am a teacher.",cat:"phrases"},
+  {g:"ich arbeite als...",e:"I work as...",ex:"Ich arbeite als Kellner.",exE:"I work as a waiter.",cat:"phrases"},
+  {g:"sprechen Sie Deutsch?",e:"Do you speak German? (formal)",ex:"Sprechen Sie Deutsch? Ja, ein bisschen.",exE:"Do you speak German? Yes, a little.",cat:"phrases"},
+  {g:"sprichst du Deutsch?",e:"Do you speak German? (informal)",ex:"Sprichst du Deutsch? Ja!",exE:"Do you speak German? Yes!",cat:"phrases"},
+  {g:"ich spreche ein bisschen Deutsch",e:"I speak a little German",ex:"Ich spreche ein bisschen Deutsch.",exE:"I speak a little German.",cat:"phrases"},
+  {g:"können Sie langsamer sprechen?",e:"Can you speak more slowly? (formal)",ex:"Können Sie langsamer sprechen? Danke.",exE:"Can you speak more slowly? Thank you.",cat:"phrases"},
+  {g:"kannst du das wiederholen?",e:"Can you repeat that? (informal)",ex:"Kannst du das wiederholen? Ich habe nicht gehört.",exE:"Can you repeat that? I didn't hear.",cat:"phrases"},
+  {g:"was bedeutet...?",e:"What does ... mean?",ex:"Was bedeutet 'Gemütlichkeit'?",exE:"What does 'Gemütlichkeit' mean?",cat:"phrases"},
+  {g:"wie schreibt man das?",e:"How do you write / spell that?",ex:"Wie schreibt man das?",exE:"How do you spell that?",cat:"phrases"},
+  {g:"wo ist...?",e:"Where is...?",ex:"Wo ist der Bahnhof?",exE:"Where is the train station?",cat:"phrases"},
+  {g:"wie komme ich zu...?",e:"How do I get to...?",ex:"Wie komme ich zum Markt?",exE:"How do I get to the market?",cat:"phrases"},
+  {g:"ist es weit von hier?",e:"Is it far from here?",ex:"Ist es weit von hier?",exE:"Is it far from here?",cat:"phrases"},
+  {g:"wie weit ist es?",e:"How far is it?",ex:"Wie weit ist es zum Bahnhof?",exE:"How far is it to the station?",cat:"phrases"},
+  {g:"gibt es hier...?",e:"Is there a ... here?",ex:"Gibt es hier eine Apotheke?",exE:"Is there a pharmacy here?",cat:"phrases"},
+  {g:"was kostet das?",e:"How much does that cost?",ex:"Was kostet das? Drei Euro.",exE:"How much does that cost? Three euros.",cat:"phrases"},
+  {g:"ich möchte...",e:"I would like...",ex:"Ich möchte einen Kaffee.",exE:"I would like a coffee.",cat:"phrases"},
+  {g:"haben Sie...?",e:"Do you have...? (formal)",ex:"Haben Sie ein Zimmer frei?",exE:"Do you have a room free?",cat:"phrases"},
+  {g:"ich nehme...",e:"I'll take...",ex:"Ich nehme das hier.",exE:"I'll take this one.",cat:"phrases"},
+  {g:"das ist alles",e:"that's all",ex:"Das ist alles, danke.",exE:"That's all, thank you.",cat:"phrases"},
+  {g:"die Speisekarte",e:"the menu",ex:"Die Speisekarte bitte.",exE:"The menu please.",cat:"phrases"},
+  {g:"ich bin allergisch gegen...",e:"I am allergic to...",ex:"Ich bin allergisch gegen Nüsse.",exE:"I am allergic to nuts.",cat:"phrases"},
+  {g:"die Rechnung bitte",e:"the bill please",ex:"Die Rechnung bitte!",exE:"The bill please!",cat:"phrases"},
+
+  // ─── QUESTION WORDS ───
+  {g:"wann?",e:"when?",ex:"Wann kommt der Zug?",exE:"When does the train come?",cat:"questions"},
+  {g:"wo?",e:"where?",ex:"Wo ist die Küche?",exE:"Where is the kitchen?",cat:"questions"},
+  {g:"wohin?",e:"where to?",ex:"Wohin gehst du?",exE:"Where are you going?",cat:"questions"},
+  {g:"woher?",e:"where from?",ex:"Woher kommst du?",exE:"Where are you from?",cat:"questions"},
+  {g:"wie?",e:"how?",ex:"Wie geht es dir?",exE:"How are you?",cat:"questions"},
+  {g:"was?",e:"what?",ex:"Was machst du?",exE:"What are you doing?",cat:"questions"},
+  {g:"wer?",e:"who?",ex:"Wer ist das?",exE:"Who is that?",cat:"questions"},
+  {g:"warum?",e:"why?",ex:"Warum bist du müde?",exE:"Why are you tired?",cat:"questions"},
+  {g:"wie viel?",e:"how much?",ex:"Wie viel kostet das?",exE:"How much does that cost?",cat:"questions"},
+  {g:"wie viele?",e:"how many?",ex:"Wie viele Kinder hast du?",exE:"How many children do you have?",cat:"questions"},
+  {g:"welcher?",e:"which? (masculine)",ex:"Welcher Bus fährt in die Mitte?",exE:"Which bus goes to the centre?",cat:"questions"},
+  {g:"welche?",e:"which? (feminine/plural)",ex:"Welche Farbe magst du?",exE:"Which colour do you like?",cat:"questions"},
+  {g:"welches?",e:"which? (neuter)",ex:"Welches Zimmer ist frei?",exE:"Which room is free?",cat:"questions"},
+
+  // ─── PREPOSITIONS ───
+  {g:"in",e:"in / into",ex:"Ich bin in der Küche.",exE:"I am in the kitchen.",cat:"prepositions"},
+  {g:"an",e:"at / on (vertical surface)",ex:"Das Bild hängt an der Wand.",exE:"The picture hangs on the wall.",cat:"prepositions"},
+  {g:"auf",e:"on (horizontal surface)",ex:"Das Buch liegt auf dem Tisch.",exE:"The book is on the table.",cat:"prepositions"},
+  {g:"unter",e:"under / below",ex:"Die Katze ist unter dem Tisch.",exE:"The cat is under the table.",cat:"prepositions"},
+  {g:"über",e:"above / over",ex:"Die Lampe hängt über dem Tisch.",exE:"The lamp hangs above the table.",cat:"prepositions"},
+  {g:"vor",e:"in front of / before",ex:"Ich warte vor der Tür.",exE:"I wait in front of the door.",cat:"prepositions"},
+  {g:"hinter",e:"behind",ex:"Das Auto ist hinter dem Haus.",exE:"The car is behind the house.",cat:"prepositions"},
+  {g:"neben",e:"next to / beside",ex:"Die Bank ist neben der Post.",exE:"The bank is next to the post office.",cat:"prepositions"},
+  {g:"zwischen",e:"between",ex:"Das Café ist zwischen Bank und Markt.",exE:"The café is between the bank and market.",cat:"prepositions"},
+  {g:"mit",e:"with",ex:"Ich fahre mit dem Zug.",exE:"I travel by train.",cat:"prepositions"},
+  {g:"ohne",e:"without",ex:"Kaffee ohne Zucker.",exE:"Coffee without sugar.",cat:"prepositions"},
+  {g:"für",e:"for",ex:"Das ist für dich.",exE:"This is for you.",cat:"prepositions"},
+  {g:"gegen",e:"against",ex:"Ich bin dagegen.",exE:"I am against it.",cat:"prepositions"},
+  {g:"nach",e:"after / to (direction)",ex:"Nach dem Essen gehen wir spazieren.",exE:"After the meal we go for a walk.",cat:"prepositions"},
+  {g:"von",e:"from / of",ex:"Ich komme von der Arbeit.",exE:"I'm coming from work.",cat:"prepositions"},
+  {g:"zu",e:"to / too",ex:"Ich gehe zu meiner Freundin.",exE:"I'm going to my friend's place.",cat:"prepositions"},
+  {g:"bei",e:"at / near / with",ex:"Ich bin bei meiner Mutter.",exE:"I am at my mother's.",cat:"prepositions"},
+  {g:"aus",e:"from / out of",ex:"Ich komme aus Deutschland.",exE:"I come from Germany.",cat:"prepositions"},
+  {g:"durch",e:"through",ex:"Wir gehen durch den Park.",exE:"We walk through the park.",cat:"prepositions"},
+  {g:"um",e:"around / at (time)",ex:"Um zehn Uhr.",exE:"At ten o'clock.",cat:"prepositions"},
+  {g:"bis",e:"until / to",ex:"Bis morgen!",exE:"Until tomorrow!",cat:"prepositions"},
+  {g:"seit",e:"since / for (time)",ex:"Ich lerne seit einem Jahr Deutsch.",exE:"I have been learning German for a year.",cat:"prepositions"},
+  {g:"während",e:"during",ex:"Während der Pause.",exE:"During the break.",cat:"prepositions"},
+  {g:"wegen",e:"because of",ex:"Wegen des Regens bleibe ich zu Hause.",exE:"Because of the rain I stay home.",cat:"prepositions"},
+  {g:"trotz",e:"despite",ex:"Trotz des Regens gehe ich raus.",exE:"Despite the rain I go out.",cat:"prepositions"},
+  {g:"statt",e:"instead of",ex:"Statt Kaffee trinke ich Tee.",exE:"Instead of coffee I drink tea.",cat:"prepositions"},
+  {g:"als",e:"as / when (past)",ex:"Als ich jung war...",exE:"When I was young...",cat:"prepositions"},
+  {g:"ob",e:"whether / if",ex:"Ich weiß nicht, ob er kommt.",exE:"I don't know whether he is coming.",cat:"prepositions"},
+  {g:"damit",e:"so that",ex:"Ich lerne, damit ich bestehe.",exE:"I study so that I pass.",cat:"prepositions"},
+  {g:"obwohl",e:"although",ex:"Obwohl es regnet, gehen wir.",exE:"Although it rains, we go.",cat:"prepositions"},
+
+  // ─── ADVERBS ───
+  {g:"immer",e:"always",ex:"Ich trinke immer Kaffee.",exE:"I always drink coffee.",cat:"adverbs"},
+  {g:"nie",e:"never",ex:"Ich esse nie Fleisch.",exE:"I never eat meat.",cat:"adverbs"},
+  {g:"manchmal",e:"sometimes",ex:"Manchmal bin ich müde.",exE:"Sometimes I am tired.",cat:"adverbs"},
+  {g:"oft",e:"often",ex:"Ich gehe oft in den Park.",exE:"I often go to the park.",cat:"adverbs"},
+  {g:"selten",e:"rarely",ex:"Ich esse selten Fast Food.",exE:"I rarely eat fast food.",cat:"adverbs"},
+  {g:"meistens",e:"mostly / usually",ex:"Meistens stehe ich früh auf.",exE:"I usually get up early.",cat:"adverbs"},
+  {g:"normalerweise",e:"normally / usually",ex:"Normalerweise schlafe ich acht Stunden.",exE:"I normally sleep eight hours.",cat:"adverbs"},
+  {g:"auch",e:"also / too",ex:"Ich auch!",exE:"Me too!",cat:"adverbs"},
+  {g:"noch",e:"still / yet",ex:"Ich bin noch hier.",exE:"I am still here.",cat:"adverbs"},
+  {g:"schon",e:"already",ex:"Ich bin schon fertig.",exE:"I am already finished.",cat:"adverbs"},
+  {g:"sehr",e:"very",ex:"Das ist sehr gut!",exE:"That is very good!",cat:"adverbs"},
+  {g:"zu",e:"too (excessive)",ex:"Das ist zu teuer.",exE:"That is too expensive.",cat:"adverbs"},
+  {g:"nur",e:"only / just",ex:"Ich habe nur fünf Euro.",exE:"I only have five euros.",cat:"adverbs"},
+  {g:"fast",e:"almost",ex:"Das ist fast richtig.",exE:"That is almost correct.",cat:"adverbs"},
+  {g:"genug",e:"enough",ex:"Ich habe genug gegessen.",exE:"I have eaten enough.",cat:"adverbs"},
+  {g:"vielleicht",e:"maybe / perhaps",ex:"Vielleicht morgen.",exE:"Maybe tomorrow.",cat:"adverbs"},
+  {g:"wahrscheinlich",e:"probably",ex:"Er kommt wahrscheinlich morgen.",exE:"He is probably coming tomorrow.",cat:"adverbs"},
+  {g:"sicher",e:"certainly / surely",ex:"Sicher, kein Problem!",exE:"Certainly, no problem!",cat:"adverbs"},
+  {g:"natürlich",e:"of course / naturally",ex:"Natürlich!",exE:"Of course!",cat:"adverbs"},
+  {g:"leider",e:"unfortunately",ex:"Leider kann ich nicht kommen.",exE:"Unfortunately I cannot come.",cat:"adverbs"},
+  {g:"zum Glück",e:"fortunately / luckily",ex:"Zum Glück habe ich einen Schirm.",exE:"Luckily I have an umbrella.",cat:"adverbs"},
+  {g:"zusammen",e:"together",ex:"Wir machen das zusammen.",exE:"We do that together.",cat:"adverbs"},
+  {g:"allein",e:"alone",ex:"Ich bin allein.",exE:"I am alone.",cat:"adverbs"},
+  {g:"hier",e:"here",ex:"Ich bin hier.",exE:"I am here.",cat:"adverbs"},
+  {g:"dort",e:"there",ex:"Das Café ist dort.",exE:"The café is there.",cat:"adverbs"},
+  {g:"oben",e:"above / upstairs",ex:"Das Schlafzimmer ist oben.",exE:"The bedroom is upstairs.",cat:"adverbs"},
+  {g:"unten",e:"below / downstairs",ex:"Die Küche ist unten.",exE:"The kitchen is downstairs.",cat:"adverbs"},
+  {g:"drinnen",e:"inside",ex:"Bleib drinnen!",exE:"Stay inside!",cat:"adverbs"},
+  {g:"draußen",e:"outside",ex:"Es ist kalt draußen.",exE:"It is cold outside.",cat:"adverbs"},
+  {g:"überall",e:"everywhere",ex:"Überall gibt es Touristen.",exE:"There are tourists everywhere.",cat:"adverbs"},
+  {g:"irgendwo",e:"somewhere",ex:"Irgendwo muss er sein.",exE:"He must be somewhere.",cat:"adverbs"},
+  {g:"nirgendwo",e:"nowhere",ex:"Ich kann ihn nirgendwo finden.",exE:"I can find him nowhere.",cat:"adverbs"},
+
+  // ─── ANIMALS & NATURE ───
+  {g:"der Hund",e:"the dog",ex:"Der Hund bellt.",exE:"The dog barks.",cat:"nature"},
+  {g:"die Katze",e:"the cat",ex:"Die Katze schläft.",exE:"The cat is sleeping.",cat:"nature"},
+  {g:"der Vogel",e:"the bird",ex:"Der Vogel singt.",exE:"The bird sings.",cat:"nature"},
+  {g:"das Kaninchen",e:"the rabbit",ex:"Das Kaninchen frisst Karotten.",exE:"The rabbit eats carrots.",cat:"nature"},
+  {g:"der Fisch",e:"the fish",ex:"Der Fisch schwimmt.",exE:"The fish swims.",cat:"nature"},
+  {g:"das Pferd",e:"the horse",ex:"Das Pferd läuft schnell.",exE:"The horse runs fast.",cat:"nature"},
+  {g:"die Kuh",e:"the cow",ex:"Die Kuh gibt Milch.",exE:"The cow gives milk.",cat:"nature"},
+  {g:"das Schwein",e:"the pig",ex:"Das Schwein ist auf dem Bauernhof.",exE:"The pig is on the farm.",cat:"nature"},
+  {g:"das Schaf",e:"the sheep",ex:"Das Schaf hat Wolle.",exE:"The sheep has wool.",cat:"nature"},
+  {g:"die Maus",e:"the mouse",ex:"Die Maus ist klein.",exE:"The mouse is small.",cat:"nature"},
+  {g:"der Baum",e:"the tree",ex:"Der Baum ist groß.",exE:"The tree is large.",cat:"nature"},
+  {g:"die Blume",e:"the flower",ex:"Die Blume riecht gut.",exE:"The flower smells good.",cat:"nature"},
+  {g:"das Gras",e:"the grass",ex:"Das Gras ist grün.",exE:"The grass is green.",cat:"nature"},
+  {g:"der Wald",e:"the forest",ex:"Ich gehe im Wald spazieren.",exE:"I walk in the forest.",cat:"nature"},
+  {g:"der Berg",e:"the mountain",ex:"Der Berg ist sehr hoch.",exE:"The mountain is very high.",cat:"nature"},
+  {g:"der See",e:"the lake",ex:"Im Sommer schwimme ich im See.",exE:"In summer I swim in the lake.",cat:"nature"},
+  {g:"der Fluss",e:"the river",ex:"Der Fluss ist lang.",exE:"The river is long.",cat:"nature"},
+  {g:"das Meer",e:"the sea",ex:"Im Urlaub gehe ich ans Meer.",exE:"On holiday I go to the sea.",cat:"nature"},
+
+  // ─── HOBBIES ───
+  {g:"die Musik",e:"music",ex:"Ich höre gern Musik.",exE:"I like to listen to music.",cat:"hobbies"},
+  {g:"der Film",e:"the film / movie",ex:"Ich sehe einen Film.",exE:"I am watching a film.",cat:"hobbies"},
+  {g:"das Spiel",e:"the game",ex:"Ich spiele ein Spiel.",exE:"I play a game.",cat:"hobbies"},
+  {g:"der Sport",e:"sport",ex:"Sport ist wichtig für die Gesundheit.",exE:"Sport is important for health.",cat:"hobbies"},
+  {g:"das Fußball",e:"football / soccer",ex:"Ich spiele Fußball.",exE:"I play football.",cat:"hobbies"},
+  {g:"das Tennis",e:"tennis",ex:"Wir spielen Tennis.",exE:"We play tennis.",cat:"hobbies"},
+  {g:"das Schwimmen",e:"swimming",ex:"Schwimmen ist mein Hobby.",exE:"Swimming is my hobby.",cat:"hobbies"},
+  {g:"das Lesen",e:"reading",ex:"Lesen entspannt mich.",exE:"Reading relaxes me.",cat:"hobbies"},
+  {g:"das Kochen",e:"cooking",ex:"Kochen macht mir Spaß.",exE:"Cooking is fun for me.",cat:"hobbies"},
+  {g:"das Reisen",e:"travelling",ex:"Reisen ist meine Leidenschaft.",exE:"Travelling is my passion.",cat:"hobbies"},
+  {g:"die Ferien",e:"the holidays / vacation",ex:"Im Sommer habe ich Ferien.",exE:"In summer I have holidays.",cat:"hobbies"},
+  {g:"die Party",e:"the party",ex:"Ich gehe auf eine Party.",exE:"I am going to a party.",cat:"hobbies"},
+  {g:"das Konzert",e:"the concert",ex:"Das Konzert war fantastisch.",exE:"The concert was fantastic.",cat:"hobbies"},
+];
+
+// ═══════════════════════════════════════════════════════════
+// DAY DEFINITIONS — 7 days, ~100 words each
+// ═══════════════════════════════════════════════════════════
+const DAYS = [
+  {
+    id:1,
+    title:"First Contact",
+    subtitle:"Pronouns, Core Verbs & Greetings",
+    emoji:"👋",
+    color:"#7b61ff",
+    desc:"Start your German journey! Learn how to say who you are, basic actions, and polite greetings. These 98 words are the skeleton of the language.",
+    cats:["pronouns","phrases","questions"],
+    extraCats:["verbs"],
+    wordLimit:100
+  },
+  {
+    id:2,
+    title:"People & Feelings",
+    subtitle:"Family, Professions & Adjectives",
+    emoji:"👨‍👩‍👧",
+    color:"#e84393",
+    desc:"Talk about people in your life and describe how things feel. Family vocabulary + the essential adjectives that bring German to life.",
+    cats:["people","adjectives"],
+    extraCats:[],
+    wordLimit:100
+  },
+  {
+    id:3,
+    title:"The World Around You",
+    subtitle:"Places, Transport & Colors",
+    emoji:"🏙️",
+    color:"#3af0c0",
+    desc:"Navigate cities, find your way around, and describe the world visually. Everything you need to get from A to B in Germany!",
+    cats:["places","transport","colors"],
+    extraCats:[],
+    wordLimit:100
+  },
+  {
+    id:4,
+    title:"Home & Food",
+    subtitle:"House, Rooms, Food & Drink",
+    emoji:"🍽️",
+    color:"#f7c948",
+    desc:"Your home and what you eat. Order at a restaurant, describe your apartment, and talk about your favorite foods in German.",
+    cats:["home","food"],
+    extraCats:[],
+    wordLimit:100
+  },
+  {
+    id:5,
+    title:"Time & Body",
+    subtitle:"Days, Months, Weather, Body Parts & Clothing",
+    emoji:"⏰",
+    color:"#ff4f6d",
+    desc:"Talk about when things happen, describe the weather, and discuss your body and what you wear. Essential everyday vocabulary!",
+    cats:["time","days","months","weather","body","clothing"],
+    extraCats:[],
+    wordLimit:110
+  },
+  {
+    id:6,
+    title:"Numbers & Objects",
+    subtitle:"Numbers, Money, Tech & Everyday Objects",
+    emoji:"🔢",
+    color:"#ff9500",
+    desc:"Count, shop, pay and deal with everyday objects in German. Numbers, money, and the tech items you use daily.",
+    cats:["numbers","objects","personal","countries"],
+    extraCats:[],
+    wordLimit:100
+  },
+  {
+    id:7,
+    title:"Grammar & Mastery",
+    subtitle:"Prepositions, Adverbs, Animals & Hobbies",
+    emoji:"🏆",
+    color:"#7b61ff",
+    desc:"The final challenge! Master the connecting words that hold German sentences together, plus animals, nature and hobbies.",
+    cats:["prepositions","adverbs","nature","hobbies","verbs"],
+    extraCats:[],
+    wordLimit:100
+  }
+];
+
+// Assign words to days
+function buildDayWords() {
+  const used = new Set();
+  const dayWords = {};
+  DAYS.forEach(day => {
+    let words = [];
+    const cats = [...day.cats, ...(day.extraCats||[])];
+    cats.forEach(cat => {
+      VOCAB.filter(w => w.cat === cat && !used.has(w.g))
+           .forEach(w => { words.push(w); used.add(w.g); });
+    });
+    // shuffle and limit
+    words = shuffle(words).slice(0, day.wordLimit || 100);
+    dayWords[day.id] = words;
+  });
+  // Add any remaining words to day 7
+  const remaining = VOCAB.filter(w => !used.has(w.g));
+  if (remaining.length > 0) {
+    dayWords[7] = [...dayWords[7], ...remaining];
+  }
+  return dayWords;
+}
+
+// ═══════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════
+let state = {
+  progress: {}, // dayId -> { completed, score, mistakes, xp }
+  totalXP: 0,
+  streak: 0,
+  currentDay: null,
+  dayWords: null,
+  // session
+  sessionWords: [],
+  sessionIdx: 0,
+  sessionXP: 0,
+  sessionMistakes: [],
+  lives: 5,
+  maxLives: 5,
+  streakCount: 0,
+  exerciseQueue: [],
+  currentExercise: null,
+  fcPhase: false, // flashcard phase
+  hardWords: [], // words marked hard in flashcard
+};
+
+function loadState() {
+  try {
+    const s = localStorage.getItem('dq_state');
+    if (s) { const p = JSON.parse(s); state.progress = p.progress||{}; state.totalXP = p.totalXP||0; state.streak = p.streak||0; }
+  } catch(e){}
+}
+function saveState() {
+  try { localStorage.setItem('dq_state', JSON.stringify({progress:state.progress,totalXP:state.totalXP,streak:state.streak})); } catch(e){}
+}
+
+// ═══════════════════════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════════════════════
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  return a;
+}
+function pick(arr, n) { return shuffle(arr).slice(0,n); }
+function rand(arr) { return arr[Math.floor(Math.random()*arr.length)]; }
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function showAchievement(title, body) {
+  const t = document.createElement('div');
+  t.className = 'achievement-toast';
+  t.innerHTML = `<div class="toast-title">🏆 ${title}</div><div class="toast-body">${body}</div>`;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 4100);
+}
+
+function showXPPopup(x, y, amount) {
+  const el = document.createElement('div');
+  el.className = 'xp-popup';
+  el.textContent = `+${amount} XP`;
+  el.style.cssText = `left:${x}px;top:${y}px;`;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 1500);
+}
+
+// ═══════════════════════════════════════════════════════════
+// SCREENS
+// ═══════════════════════════════════════════════════════════
+function goToDays() {
+  loadState();
+  state.dayWords = buildDayWords();
+  renderDays();
+  showScreen('screen-days');
+}
+
+function renderDays() {
+  const grid = document.getElementById('days-grid');
+  grid.innerHTML = '';
+  DAYS.forEach(day => {
+    const prog = state.progress[day.id];
+    const prevCompleted = day.id === 1 || state.progress[day.id-1]?.completed;
+    const isCompleted = prog?.completed;
+    const isLocked = !prevCompleted && !isCompleted;
+    const pct = prog ? Math.round((prog.score / (state.dayWords[day.id]?.length || 100)) * 100) : 0;
+
+    const card = document.createElement('div');
+    card.className = `day-card ${isCompleted?'completed':''} ${isLocked?'locked':'unlocked'}`;
+    card.innerHTML = `
+      <div class="day-number">DAY ${day.id} ${isCompleted ? '<span class="day-complete-icon">✅</span>' : isLocked ? '<span class="day-lock-icon">🔒</span>' : ''}</div>
+      <div class="day-title">${day.emoji} ${day.title}</div>
+      <div class="day-desc">${day.subtitle}</div>
+      <div class="day-meta">
+        ${day.cats.map(c=>`<span class="day-tag">${c.toUpperCase()}</span>`).join('')}
+        <span class="day-tag">${state.dayWords[day.id]?.length || '...'} WORDS</span>
+      </div>
+      <div class="day-progress-bar"><div class="day-progress-fill" style="width:${isCompleted?100:pct}%"></div></div>
+      ${isCompleted ? `<div style="font-size:0.75rem;color:var(--accent3);margin-top:8px;">✓ Completed · ${prog.xp||0} XP earned</div>` : ''}
+    `;
+    if (!isLocked) card.onclick = () => startDay(day.id);
+    grid.appendChild(card);
+  });
+
+  // Overall progress
+  const section = document.getElementById('overall-progress-section');
+  const total = VOCAB.length;
+  const learned = Object.values(state.progress).reduce((a,p)=>a+(p.score||0),0);
+  const pct = Math.round((learned/total)*100);
+  section.innerHTML = `
+    <div class="overall-progress" style="max-width:680px;margin:0 auto 24px;">
+      <h3>📊 Overall Progress</h3>
+      <div class="progress-row">
+        <div class="progress-label">Words</div>
+        <div class="progress-bar"><div class="progress-bar-fill" style="width:${pct}%;background:linear-gradient(90deg,var(--accent4),var(--accent3))"></div></div>
+        <div class="progress-value">${learned}/${total}</div>
+      </div>
+      <div class="progress-row">
+        <div class="progress-label">Total XP</div>
+        <div class="progress-bar"><div class="progress-bar-fill" style="width:${Math.min(100,(state.totalXP/5000)*100)}%;background:linear-gradient(90deg,var(--accent),var(--accent2))"></div></div>
+        <div class="progress-value">${state.totalXP}</div>
+      </div>
+      <div class="progress-row">
+        <div class="progress-label">Days Done</div>
+        <div class="progress-bar"><div class="progress-bar-fill" style="width:${(Object.values(state.progress).filter(p=>p.completed).length/7)*100}%;background:linear-gradient(90deg,var(--accent2),var(--accent4))"></div></div>
+        <div class="progress-value">${Object.values(state.progress).filter(p=>p.completed).length}/7</div>
+      </div>
+    </div>
+  `;
+}
+
+// ═══════════════════════════════════════════════════════════
+// START DAY
+// ═══════════════════════════════════════════════════════════
+function startDay(dayId) {
+  const day = DAYS.find(d=>d.id===dayId);
+  state.currentDay = day;
+  state.sessionWords = state.dayWords[dayId] || [];
+  state.sessionIdx = 0;
+  state.sessionXP = 0;
+  state.sessionMistakes = [];
+  state.lives = state.maxLives;
+  state.streakCount = 0;
+  state.fcPhase = false;
+  state.hardWords = [];
+
+  // Show intro
+  document.getElementById('topbar-day-label').textContent = `DAY ${dayId}`;
+  document.getElementById('topbar-title').textContent = day.title;
+  updateLivesDisplay();
+  updateXPBar();
+  updateStreakDisplay();
+  showScreen('screen-game');
+
+  // Build exercise queue
+  buildExerciseQueue();
+  showLessonIntro();
+}
+
+function buildExerciseQueue() {
+  const words = state.sessionWords;
+  const queue = [];
+
+  // Phase 1: Flashcards for learning (every word)
+  words.forEach(w => queue.push({type:'flashcard', word:w}));
+
+  // Phase 2: Multiple choice (2/3 of words)
+  shuffle(words).slice(0, Math.ceil(words.length * 0.65)).forEach(w => {
+    queue.push({type: Math.random()<0.5 ? 'mc_de_en' : 'mc_en_de', word:w});
+  });
+
+  // Phase 3: Fill in the blank (1/3)
+  shuffle(words).slice(0, Math.ceil(words.length * 0.3)).forEach(w => {
+    queue.push({type:'fill', word:w});
+  });
+
+  // Phase 4: Matching pairs (grouped into sets of 6)
+  const chunkSize = 6;
+  for (let i=0; i<words.length; i+=chunkSize*2) {
+    const chunk = words.slice(i, i+chunkSize);
+    if (chunk.length >= 3) queue.push({type:'match', words: chunk});
+  }
+
+  // Phase 5: Word order (short sentences)
+  shuffle(words).slice(0, Math.min(15, Math.ceil(words.length*0.15))).forEach(w => {
+    queue.push({type:'order', word:w});
+  });
+
+  // Phase 6: Final review (type the answer) — most missed words
+  shuffle(words).slice(0, Math.ceil(words.length * 0.3)).forEach(w => {
+    queue.push({type:'type', word:w});
+  });
+
+  state.exerciseQueue = shuffle(queue.filter(q => q.type !== 'flashcard'))
+    .concat(queue.filter(q => q.type === 'match'))
+  ;
+  // Put flashcards first
+  state.exerciseQueue = [
+    ...queue.filter(q => q.type === 'flashcard'),
+    ...shuffle(queue.filter(q => q.type !== 'flashcard' && q.type !== 'match')),
+    ...queue.filter(q => q.type === 'match')
+  ];
+
+  state.sessionIdx = 0;
+}
+
+function showLessonIntro() {
+  const day = state.currentDay;
+  const words = state.sessionWords;
+  const preview = pick(words, 12);
+  document.getElementById('game-content').innerHTML = `
+    <div class="lesson-intro">
+      <div style="font-size:4rem;">${day.emoji}</div>
+      <h2>Day ${day.id}: ${day.title}</h2>
+      <p>${day.desc}</p>
+      <div class="word-preview-chips">
+        ${preview.map(w=>`<span class="word-chip">${w.g}</span>`).join('')}
+        <span class="word-chip" style="color:var(--muted)">+${words.length-preview.length} more…</span>
+      </div>
+      <p style="color:var(--muted);font-size:0.8rem;margin-bottom:24px;">
+        📖 ${words.length} words · 🎮 ${state.exerciseQueue.length} exercises · ❤️ ${state.maxLives} lives
+      </p>
+      <button class="btn-begin" onclick="runNextExercise()">START LEARNING ⚡</button>
+    </div>
+  `;
+}
+
+// ═══════════════════════════════════════════════════════════
+// EXERCISE ENGINE
+// ═══════════════════════════════════════════════════════════
+function runNextExercise() {
+  if (state.sessionIdx >= state.exerciseQueue.length) {
+    showDayResult();
+    return;
+  }
+  const ex = state.exerciseQueue[state.sessionIdx];
+  state.currentExercise = ex;
+  renderExercise(ex);
+}
+
+function renderExercise(ex) {
+  const total = state.exerciseQueue.length;
+  const current = state.sessionIdx + 1;
+  const pct = Math.round((state.sessionIdx / total) * 100);
+
+  const container = document.getElementById('game-content');
+  container.innerHTML = `
+    <div class="exercise-counter">${current} / ${total} &nbsp;·&nbsp; ${pct}% complete</div>
+    <div style="width:100%;max-width:680px;height:6px;background:var(--surface3);border-radius:3px;overflow:hidden;">
+      <div style="width:${pct}%;height:100%;background:linear-gradient(90deg,var(--accent4),var(--accent));border-radius:3px;transition:width 0.4s;"></div>
+    </div>
+    <div id="exercise-slot" style="width:100%;max-width:680px;"></div>
+    <div id="feedback-slot"></div>
+    <button class="btn-continue" id="btn-continue" onclick="advance()" style="display:none;">CONTINUE →</button>
+  `;
+
+  const slot = document.getElementById('exercise-slot');
+
+  switch(ex.type) {
+    case 'flashcard': renderFlashcard(slot, ex.word); break;
+    case 'mc_de_en':  renderMC(slot, ex.word, 'de_en'); break;
+    case 'mc_en_de':  renderMC(slot, ex.word, 'en_de'); break;
+    case 'fill':      renderFill(slot, ex.word); break;
+    case 'match':     renderMatch(slot, ex.words); break;
+    case 'order':     renderOrder(slot, ex.word); break;
+    case 'type':      renderType(slot, ex.word); break;
+  }
+}
+
+// ─── FLASHCARD ───
+function renderFlashcard(slot, word) {
+  slot.innerHTML = `
+    <div class="exercise-card" style="background:none;border:none;padding:0;">
+      <div class="exercise-type-label">📖 FLASHCARD — Click to flip!</div>
+      <div class="flashcard-wrap" onclick="flipCard(this)">
+        <div class="flashcard" id="fc-card">
+          <div class="card-front">
+            <div class="card-front-word">${word.g}</div>
+            <div class="card-front-hint">${getCatEmoji(word.cat)} ${word.cat.toUpperCase()}</div>
+            <div style="margin-top:16px;font-size:0.75rem;color:var(--muted);">👆 Click to reveal</div>
+          </div>
+          <div class="card-back">
+            <div class="card-back-translation">${word.e}</div>
+            <div class="card-back-example">
+              <strong>Example:</strong><br>
+              <em>${word.ex}</em><br>
+              <span style="color:var(--muted);font-size:0.8rem;">${word.exE}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="flashcard-actions" id="fc-actions" style="display:none;">
+        <button class="fc-btn again" onclick="fcRate('again')">😰 Again</button>
+        <button class="fc-btn hard" onclick="fcRate('hard')">🤔 Hard</button>
+        <button class="fc-btn easy" onclick="fcRate('easy')">✅ Easy</button>
+      </div>
+    </div>
+  `;
+}
+
+function flipCard(wrap) {
+  const card = document.getElementById('fc-card');
+  card.classList.toggle('flipped');
+  if (card.classList.contains('flipped')) {
+    document.getElementById('fc-actions').style.display = 'flex';
+  }
+}
+
+function fcRate(rating) {
+  const xpMap = {again:2, hard:5, easy:10};
+  const xp = xpMap[rating];
+  addXP(xp);
+  if (rating === 'again') state.hardWords.push(state.currentExercise.word);
+  state.sessionIdx++;
+  updateXPBar();
+  updateStreakDisplay();
+  runNextExercise();
+}
+
+// ─── MULTIPLE CHOICE ───
+function renderMC(slot, word, dir) {
+  const isDeEn = dir === 'de_en';
+  const question = isDeEn ? word.g : word.e;
+  const answer = isDeEn ? word.e : word.g;
+
+  // Get wrong options from same category
+  const pool = VOCAB.filter(w => w.g !== word.g);
+  const wrongs = shuffle(pool).slice(0,3).map(w => isDeEn ? w.e : w.g);
+  const options = shuffle([answer, ...wrongs]);
+
+  slot.innerHTML = `
+    <div class="exercise-card">
+      <div class="exercise-type-label">🎯 ${isDeEn ? 'GERMAN → ENGLISH' : 'ENGLISH → GERMAN'}</div>
+      <div class="exercise-prompt">${question}</div>
+      <div class="exercise-example">"${word.ex}"<br><span style="color:var(--muted);font-size:0.8rem;">${word.exE}</span></div>
+      <div class="choices-grid" id="choices">
+        ${options.map((opt,i) => `
+          <button class="choice-btn" onclick="checkMC(this,'${escQ(opt)}','${escQ(answer)}')">${opt}</button>
+        `).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function escQ(s) { return s.replace(/'/g,"\\'"); }
+
+function checkMC(btn, chosen, answer) {
+  const allBtns = document.querySelectorAll('.choice-btn');
+  allBtns.forEach(b => b.classList.add('disabled'));
+
+  if (chosen === answer) {
+    btn.classList.add('correct');
+    correctFeedback(word => word);
+    addStreak();
+    addXP(20);
+  } else {
+    btn.classList.add('wrong');
+    allBtns.forEach(b => { if (b.textContent === answer) b.classList.add('show-correct'); });
+    wrongFeedback();
+    loseLife();
+    breakStreak();
+    addXP(5);
+  }
+}
+
+// ─── TYPE THE ANSWER ───
+function renderType(slot, word) {
+  const dir = Math.random() < 0.5 ? 'de_en' : 'en_de';
+  const question = dir === 'de_en' ? word.g : word.e;
+  const answer = dir === 'de_en' ? word.e : word.g;
+
+  slot.innerHTML = `
+    <div class="exercise-card">
+      <div class="exercise-type-label">✍️ ${dir === 'de_en' ? 'TRANSLATE TO ENGLISH' : 'TRANSLATE TO GERMAN'}</div>
+      <div class="exercise-prompt">${question}</div>
+      <div class="exercise-context">${getCatEmoji(word.cat)} ${word.cat.toUpperCase()} · Example: ${word.ex}</div>
+      <div class="type-input-wrap">
+        <input class="type-input" id="type-input" type="text" placeholder="Type your answer…" 
+          onkeydown="if(event.key==='Enter')submitType('${escQ(answer)}')"
+          autocomplete="off" autocorrect="off" spellcheck="false">
+        <button class="type-submit" onclick="submitType('${escQ(answer)}')">→</button>
+      </div>
+      <button class="hint-btn" onclick="showHint('${escQ(answer)}')">💡 Hint</button>
+    </div>
+  `;
+  setTimeout(() => document.getElementById('type-input')?.focus(), 100);
+}
+
+function submitType(answer) {
+  const input = document.getElementById('type-input');
+  if (!input) return;
+  const val = input.value.trim().toLowerCase();
+  const ans = answer.toLowerCase();
+  // fuzzy: accept close answers (1-2 char difference)
+  const isCorrect = val === ans || levenshtein(val, ans) <= 1;
+  input.classList.add(isCorrect ? 'correct' : 'wrong');
+  input.disabled = true;
+  if (isCorrect) { correctFeedback(); addStreak(); addXP(25); }
+  else { wrongFeedback(answer); loseLife(); breakStreak(); addXP(5); }
+}
+
+function levenshtein(a, b) {
+  const m=a.length,n=b.length,dp=[];
+  for(let i=0;i<=m;i++){dp[i]=[i];for(let j=1;j<=n;j++)dp[i][j]=i===0?j:0;}
+  for(let j=0;j<=n;j++)dp[0][j]=j;
+  for(let i=1;i<=m;i++)for(let j=1;j<=n;j++)
+    dp[i][j]=a[i-1]===b[j-1]?dp[i-1][j-1]:1+Math.min(dp[i-1][j],dp[i][j-1],dp[i-1][j-1]);
+  return dp[m][n];
+}
+
+function showHint(answer) {
+  const hint = answer.split('').map((c,i)=>i<2?c:'_').join('');
+  const hb = document.querySelector('.hint-btn');
+  if (hb) hb.textContent = `💡 ${hint}`;
+}
+
+// ─── FILL IN THE BLANK ───
+function renderFill(slot, word) {
+  // Create sentence with blank
+  const sentence = word.ex;
+  const target = word.g;
+  const blanked = sentence.replace(target, '___');
+
+  slot.innerHTML = `
+    <div class="exercise-card">
+      <div class="exercise-type-label">🔡 FILL IN THE BLANK</div>
+      <p style="color:var(--muted);font-size:0.8rem;margin-bottom:12px;">Complete the German sentence:</p>
+      <div class="fill-sentence">
+        ${blanked.includes('___') ? blanked.replace('___', `<input class="fill-blank" id="fill-in" placeholder="?" autocomplete="off" autocorrect="off" spellcheck="false" onkeydown="if(event.key==='Enter')checkFill('${escQ(target)}')">`) : `<input class="fill-blank" id="fill-in" placeholder="${target.split(' ')[0][0]}…" autocomplete="off" autocorrect="off" spellcheck="false" onkeydown="if(event.key==='Enter')checkFill('${escQ(target)}')">`}
+      </div>
+      <div style="margin-top:16px;font-size:0.8rem;color:var(--muted);">English: "${word.exE}"</div>
+      <button class="btn-check" style="margin-top:20px;" onclick="checkFill('${escQ(target)}')">CHECK ✓</button>
+    </div>
+  `;
+  setTimeout(() => document.getElementById('fill-in')?.focus(), 100);
+}
+
+function checkFill(answer) {
+  const input = document.getElementById('fill-in');
+  if (!input) return;
+  const val = input.value.trim().toLowerCase();
+  const ans = answer.toLowerCase();
+  const isCorrect = val === ans || levenshtein(val, ans) <= 1;
+  input.classList.add(isCorrect ? 'correct' : 'wrong');
+  input.disabled = true;
+  if (isCorrect) { correctFeedback(); addStreak(); addXP(20); }
+  else { wrongFeedback(answer); loseLife(); breakStreak(); addXP(3); }
+}
+
+// ─── MATCHING PAIRS ───
+function renderMatch(slot, words) {
+  const pairs = words.slice(0,6);
+  const lefts = shuffle(pairs.map(w => ({text:w.g, id:w.g, side:'left'})));
+  const rights = shuffle(pairs.map(w => ({text:w.e, id:w.g, side:'right'})));
+
+  window._matchState = {selected:null, matched:new Set(), total:pairs.length, correct:0, words:pairs};
+
+  slot.innerHTML = `
+    <div class="exercise-card">
+      <div class="exercise-type-label">🔗 MATCH THE PAIRS — Click German then English</div>
+      <div class="match-grid">
+        <div class="match-col" id="match-left">
+          ${lefts.map(l=>`<div class="match-item" data-id="${l.id}" data-side="left" onclick="matchClick(this)">${l.text}</div>`).join('')}
+        </div>
+        <div class="match-col" id="match-right">
+          ${rights.map(r=>`<div class="match-item" data-id="${r.id}" data-side="right" onclick="matchClick(this)">${r.text}</div>`).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function matchClick(el) {
+  const ms = window._matchState;
+  if (el.classList.contains('matched')) return;
+
+  if (!ms.selected) {
+    // First selection
+    document.querySelectorAll('.match-item.selected').forEach(e=>e.classList.remove('selected'));
+    el.classList.add('selected');
+    ms.selected = el;
+  } else {
+    const first = ms.selected;
+    const second = el;
+    // If same side, just re-select
+    if (first.dataset.side === second.dataset.side) {
+      first.classList.remove('selected');
+      el.classList.add('selected');
+      ms.selected = el;
+      return;
+    }
+    // Check match
+    if (first.dataset.id === second.dataset.id) {
+      first.classList.remove('selected');
+      first.classList.add('matched');
+      second.classList.add('matched');
+      ms.matched.add(first.dataset.id);
+      ms.correct++;
+      addXP(15);
+      ms.selected = null;
+      if (ms.matched.size === ms.total) {
+        // All matched
+        setTimeout(() => { correctFeedback(null, '🎉 All pairs matched!'); addStreak(); }, 300);
+      }
+    } else {
+      first.classList.add('wrong-flash');
+      second.classList.add('wrong-flash');
+      setTimeout(() => {
+        first.classList.remove('wrong-flash','selected');
+        second.classList.remove('wrong-flash');
+      }, 500);
+      ms.selected = null;
+      loseLife();
+      addXP(2);
+    }
+  }
+}
+
+// ─── WORD ORDER ───
+function renderOrder(slot, word) {
+  // Use the example sentence, scramble the words
+  const sentence = word.ex;
+  const tokens = sentence.split(' ').filter(t=>t.length>0);
+  const scrambled = shuffle([...tokens]);
+
+  window._orderState = {answer: tokens, current: [], tokens: scrambled};
+
+  slot.innerHTML = `
+    <div class="exercise-card">
+      <div class="exercise-type-label">🔀 PUT IN THE RIGHT ORDER</div>
+      <p style="color:var(--muted);font-size:0.8rem;margin-bottom:8px;">Translate: "${word.exE}"</p>
+      <div class="word-order-answer" id="order-answer" onclick="orderAreaClick(event)">
+        <span style="color:var(--muted);font-size:0.75rem;align-self:center;">Click words to build the sentence</span>
+      </div>
+      <div class="word-order-bank" id="order-bank">
+        ${scrambled.map((t,i)=>`<div class="word-tile" data-idx="${i}" data-token="${escQ(t)}" onclick="orderTileClick(this)">${t}</div>`).join('')}
+      </div>
+      <button class="btn-check" onclick="checkOrder('${escQ(tokens.join(' '))}')">CHECK ✓</button>
+    </div>
+  `;
+}
+
+function orderTileClick(tile) {
+  const os = window._orderState;
+  if (tile.classList.contains('in-answer')) {
+    // Remove from answer
+    tile.classList.remove('in-answer');
+    os.current = os.current.filter(t=>t!==tile.dataset.token || (os.current.splice(os.current.indexOf(tile.dataset.token),1),''));
+    os.current = os.current.filter(Boolean);
+    renderOrderAnswer();
+  } else {
+    tile.classList.add('in-answer');
+    os.current.push(tile.dataset.token);
+    renderOrderAnswer();
+  }
+}
+
+function renderOrderAnswer() {
+  const os = window._orderState;
+  const area = document.getElementById('order-answer');
+  if (os.current.length === 0) {
+    area.innerHTML = '<span style="color:var(--muted);font-size:0.75rem;align-self:center;">Click words to build the sentence</span>';
+  } else {
+    area.innerHTML = os.current.map(t=>`<div class="word-tile">${t}</div>`).join('');
+  }
+}
+
+function checkOrder(answer) {
+  const os = window._orderState;
+  const userAnswer = os.current.join(' ').toLowerCase();
+  const correctAnswer = answer.toLowerCase();
+  const isCorrect = userAnswer === correctAnswer || levenshtein(userAnswer, correctAnswer) <= 3;
+  if (isCorrect) { correctFeedback(null, '🎯 Perfect sentence!'); addStreak(); addXP(30); }
+  else { wrongFeedback(`Correct: "${answer}"`); loseLife(); breakStreak(); addXP(5); }
+}
+
+// ═══════════════════════════════════════════════════════════
+// FEEDBACK & FLOW
+// ═══════════════════════════════════════════════════════════
+function correctFeedback(_, msg) {
+  state.sessionMistakes; // track
+  const fb = document.getElementById('feedback-slot') || document.createElement('div');
+  const word = state.currentExercise?.word;
+  fb.id = 'feedback-slot';
+  fb.innerHTML = `
+    <div class="feedback-panel correct-fb" style="display:block;">
+      <div class="feedback-title correct-fb">✅ ${msg || 'Correct! Great job!'}</div>
+      ${word ? `<div class="feedback-example">💬 "${word.ex}" — ${word.exE}</div>` : ''}
+    </div>
+  `;
+  const cont = document.getElementById('btn-continue');
+  if (cont) cont.style.display = 'block';
+}
+
+function wrongFeedback(correctAnswer) {
+  const word = state.currentExercise?.word;
+  if (word) state.sessionMistakes.push(word);
+  const fb = document.getElementById('feedback-slot') || document.createElement('div');
+  fb.id = 'feedback-slot';
+  fb.innerHTML = `
+    <div class="feedback-panel wrong-fb" style="display:block;">
+      <div class="feedback-title wrong-fb">❌ Not quite!</div>
+      <div class="feedback-explanation">
+        ${correctAnswer ? `✅ Correct answer: <strong style="color:var(--accent)">${correctAnswer}</strong>` : ''}
+      </div>
+      ${word ? `<div class="feedback-example">💬 "${word.ex}" — ${word.exE}</div>` : ''}
+    </div>
+  `;
+  const cont = document.getElementById('btn-continue');
+  if (cont) cont.style.display = 'block';
+}
+
+function advance() {
+  state.sessionIdx++;
+  updateXPBar();
+  updateStreakDisplay();
+  runNextExercise();
+}
+
+function addXP(amount) {
+  state.sessionXP += amount;
+  state.totalXP += amount;
+  // Show popup roughly
+  const bar = document.getElementById('xp-bar-fill');
+  if (bar) {
+    const pct = Math.min(100, (state.sessionXP / (state.sessionWords.length * 20)) * 100);
+    bar.style.width = pct + '%';
+    document.getElementById('xp-label').textContent = state.sessionXP;
+  }
+}
+
+function updateXPBar() {
+  const bar = document.getElementById('xp-bar-fill');
+  if (!bar) return;
+  const total = state.exerciseQueue.length * 15;
+  const pct = Math.min(100, (state.sessionXP / Math.max(1,total)) * 100);
+  bar.style.width = pct + '%';
+  document.getElementById('xp-label').textContent = state.sessionXP;
+}
+
+function addStreak() {
+  state.streakCount++;
+  if (state.streakCount % 5 === 0) {
+    showAchievement(`🔥 ${state.streakCount} Streak!`, `Incredible! ${state.streakCount} correct in a row!`);
+    addXP(state.streakCount * 5);
+  }
+  updateStreakDisplay();
+}
+function breakStreak() { state.streakCount = 0; updateStreakDisplay(); }
+function updateStreakDisplay() {
+  const el = document.getElementById('streak-count');
+  if (el) el.textContent = state.streakCount;
+}
+
+function loseLife() {
+  if (state.lives > 0) state.lives--;
+  updateLivesDisplay();
+  if (state.lives === 0) {
+    // Out of lives — but we let them continue (ADHD-friendly: no death screen)
+    setTimeout(()=>{
+      showAchievement('💔 Lives Refilled!', "Don't give up! Lives restored!");
+      state.lives = state.maxLives;
+      updateLivesDisplay();
+    }, 1500);
+  }
+}
+
+function updateLivesDisplay() {
+  const el = document.getElementById('lives-display');
+  if (!el) return;
+  let html = '';
+  for (let i=0;i<state.maxLives;i++) {
+    html += `<span class="life-heart ${i>=state.lives?'lost':''}">❤️</span>`;
+  }
+  el.innerHTML = html;
+}
+
+function getCatEmoji(cat) {
+  const map = {pronouns:'👤',verbs:'⚡',people:'👨‍👩‍👧',adjectives:'🎨',colors:'🌈',home:'🏠',food:'🍽️',body:'💪',clothing:'👕',places:'📍',transport:'🚗',time:'⏰',days:'📅',months:'🗓️',weather:'☁️',numbers:'🔢',objects:'📦',personal:'🪪',countries:'🌍',phrases:'💬',questions:'❓',prepositions:'🔗',adverbs:'⚡',nature:'🌿',hobbies:'🎮'};
+  return map[cat] || '📚';
+}
+
+// ═══════════════════════════════════════════════════════════
+// RESULTS
+// ═══════════════════════════════════════════════════════════
+function showDayResult() {
+  const day = state.currentDay;
+  const total = state.sessionWords.length;
+  const mistakes = [...new Set(state.sessionMistakes.map(w=>w.g))].length;
+  const score = total - mistakes;
+  const pct = Math.round((score/total)*100);
+  const stars = pct>=90?'⭐⭐⭐':pct>=70?'⭐⭐':'⭐';
+
+  state.progress[day.id] = {
+    completed: true,
+    score: score,
+    xp: state.sessionXP,
+    mistakes: mistakes
+  };
+  state.totalXP += state.sessionXP;
+  state.streak++;
+  saveState();
+
+  const uniqueMistakes = [...new Map(state.sessionMistakes.map(w=>[w.g,w])).values()].slice(0,8);
+
+  document.getElementById('result-content').innerHTML = `
+    <div class="result-stars">${stars}</div>
+    <div class="result-title">Day ${day.id} Complete!</div>
+    <div class="result-subtitle">${day.emoji} ${day.title} · ${pct}% accuracy</div>
+    <div class="result-stats">
+      <div class="result-stat">
+        <div class="result-stat-num" style="color:var(--accent)">${state.sessionXP}</div>
+        <div class="result-stat-label">XP EARNED</div>
+      </div>
+      <div class="result-stat">
+        <div class="result-stat-num" style="color:var(--success)">${score}</div>
+        <div class="result-stat-label">CORRECT</div>
+      </div>
+      <div class="result-stat">
+        <div class="result-stat-num" style="color:var(--danger)">${mistakes}</div>
+        <div class="result-stat-label">MISTAKES</div>
+      </div>
+    </div>
+
+    ${uniqueMistakes.length > 0 ? `
+    <div class="result-mistakes">
+      <h3>📖 Review These Words:</h3>
+      ${uniqueMistakes.map(w=>`
+        <div class="mistake-item">
+          <span class="mistake-german">${w.g}</span>
+          <span>→</span>
+          <span class="mistake-english">${w.e}</span>
+          <span style="margin-left:auto;font-size:0.7rem;color:var(--muted);">${w.ex}</span>
+        </div>
+      `).join('')}
+    </div>
+    ` : `<div style="color:var(--success);font-size:1.5rem;margin-bottom:24px;">🏆 Perfect! No mistakes!</div>`}
+
+    <div style="display:flex;flex-wrap:wrap;justify-content:center;">
+      ${day.id < 7 ? `<button class="btn-next-day" onclick="goToDays()">Next Day →</button>` : `<button class="btn-next-day" onclick="goToDays()">🏆 All Done! Review</button>`}
+      <button class="btn-retry" onclick="startDay(${day.id})">🔄 Retry Day</button>
+    </div>
+    <button class="btn-home" onclick="goToDays()">← Back to Days</button>
+  `;
+  showScreen('screen-result');
+
+  if (pct === 100) showAchievement('🏆 Perfect Score!', 'Absolutely flawless!');
+  else if (pct >= 90) showAchievement('🌟 Excellent!', 'You crushed it today!');
+  if (day.id === 7 && Object.values(state.progress).filter(p=>p.completed).length === 7) {
+    setTimeout(()=>showAchievement('🎓 A1 COMPLETE!', 'You finished the entire course!'), 1500);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════
+loadState();
+
+// Make sure checkMC can access current word
+function checkMCword(btn, chosen, answer) {
+  const word = state.currentExercise?.word;
+  const allBtns = document.querySelectorAll('.choice-btn');
+  allBtns.forEach(b => b.classList.add('disabled'));
+
+  if (chosen.trim().toLowerCase() === answer.trim().toLowerCase()) {
+    btn.classList.add('correct');
+    correctFeedback();
+    addStreak();
+    addXP(20);
+  } else {
+    btn.classList.add('wrong');
+    allBtns.forEach(b => { if (b.textContent.trim().toLowerCase() === answer.trim().toLowerCase()) b.classList.add('show-correct'); });
+    wrongFeedback(answer);
+    loseLife();
+    breakStreak();
+    addXP(5);
+  }
+}
+
+// Override checkMC to use word-aware version
+function checkMC(btn, chosen, answer) { checkMCword(btn, chosen, answer); }
+
+</script>
+</body>
+</html>
+
