@@ -1,0 +1,2344 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deutsch Codex — Modul 1: Die erste Woche</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0e14;
+    --surface: #111827;
+    --surface2: #1a2332;
+    --border: #1e2d3d;
+    --gold: #e8c547;
+    --red: #e85555;
+    --green: #4de8a0;
+    --blue: #4db8e8;
+    --purple: #a07ef5;
+    --bright: #eef2f8;
+    --text: #b0bec5;
+    --dim: #556070;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Space Mono', monospace;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  h1,h2,h3,h4,.heading { font-family: 'Syne', sans-serif; }
+
+  /* SCREENS */
+  .screen { display: none; min-height: 100vh; padding: 24px 20px; max-width: 700px; margin: 0 auto; }
+  .screen.active { display: block; }
+
+  /* HOME */
+  .home-header {
+    text-align: center;
+    padding: 40px 0 32px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 32px;
+  }
+  .home-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--bright);
+    letter-spacing: -0.5px;
+  }
+  .home-sub {
+    color: var(--gold);
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 6px;
+  }
+  .home-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .stat-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 12px;
+    text-align: center;
+  }
+  .stat-val {
+    font-family: 'Syne', sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--gold);
+  }
+  .stat-lbl { font-size: 10px; color: var(--dim); letter-spacing: 1px; text-transform: uppercase; margin-top: 4px; }
+
+  .day-grid { display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
+  .day-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    color: var(--text);
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+  }
+  .day-btn:hover { border-color: var(--gold); background: var(--surface2); }
+  .day-btn.completed { border-color: var(--green); }
+  .day-btn.locked { opacity: 0.4; cursor: not-allowed; }
+  .day-btn.boss { border-color: var(--purple); }
+  .day-btn .day-label { font-family: 'Syne', sans-serif; font-weight: 700; color: var(--bright); }
+  .day-btn .day-theme { font-size: 11px; color: var(--dim); margin-top: 2px; }
+  .day-btn .day-check { color: var(--green); font-size: 18px; }
+  .day-btn .day-lock { color: var(--dim); font-size: 14px; }
+
+  .forge-btn {
+    width: 100%;
+    background: transparent;
+    border: 1px solid var(--purple);
+    border-radius: 8px;
+    padding: 14px;
+    color: var(--purple);
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: background 0.2s;
+  }
+  .forge-btn:hover { background: rgba(160,126,245,0.1); }
+
+  /* BUTTONS */
+  .btn {
+    display: inline-block;
+    padding: 12px 24px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    transition: opacity 0.15s, transform 0.1s;
+  }
+  .btn:active { transform: scale(0.97); }
+  .btn-gold { background: var(--gold); color: #0a0e14; }
+  .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
+  .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+  .btn-green { background: var(--green); color: #0a0e14; }
+  .btn-red { background: var(--red); color: #fff; }
+  .btn-sm { padding: 8px 16px; font-size: 12px; }
+  .btn-full { width: 100%; text-align: center; }
+
+  /* LESSON */
+  .screen-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .screen-header h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--bright);
+  }
+  .back-btn {
+    background: none;
+    border: none;
+    color: var(--dim);
+    cursor: pointer;
+    font-size: 18px;
+    padding: 4px;
+    line-height: 1;
+  }
+  .back-btn:hover { color: var(--text); }
+
+  .phase-label {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+
+  /* VOCAB GRID */
+  .vocab-grid { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+  .vocab-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .vocab-de {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    color: var(--bright);
+    font-size: 15px;
+    flex: 1;
+  }
+  .vocab-en { color: var(--dim); font-size: 12px; flex: 1; }
+  .vocab-ex { color: var(--text); font-size: 11px; font-style: italic; margin-top: 3px; }
+  .audio-btn {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--gold);
+    cursor: pointer;
+    padding: 6px 10px;
+    font-size: 14px;
+    transition: background 0.15s;
+    flex-shrink: 0;
+  }
+  .audio-btn:hover { background: var(--border); }
+  .audio-btn.playing { color: var(--green); border-color: var(--green); }
+
+  .grammar-box {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--blue);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 24px;
+  }
+  .grammar-box h4 {
+    color: var(--blue);
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .grammar-box p { font-size: 13px; line-height: 1.7; margin-bottom: 6px; }
+  .grammar-box .example { color: var(--bright); font-style: italic; }
+  .grammar-box .note { color: var(--dim); font-size: 11px; }
+
+  /* STORY */
+  .story-text {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    font-size: 14px;
+    line-height: 2;
+    margin-bottom: 16px;
+  }
+  .story-text .w-new {
+    color: var(--gold);
+    border-bottom: 1px dashed var(--gold);
+    cursor: pointer;
+  }
+  .story-text .w-new:hover { background: rgba(232,197,71,0.1); }
+  .story-text .w-verb {
+    color: var(--red);
+    border-bottom: 1px dashed var(--red);
+  }
+  .story-text .w-known {
+    color: var(--blue);
+    border-bottom: 1px dashed var(--blue);
+  }
+  .story-text .w-thought { font-style: italic; color: var(--bright); }
+  .story-audio-btn {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px;
+    color: var(--text);
+    cursor: pointer;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    margin-bottom: 20px;
+    transition: border-color 0.15s;
+  }
+  .story-audio-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+  /* QUIZ / DRILLS */
+  .progress-bar-wrap {
+    background: var(--surface2);
+    border-radius: 4px;
+    height: 4px;
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: var(--gold);
+    border-radius: 4px;
+    transition: width 0.3s;
+  }
+
+  .question-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  .question-type {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--purple);
+    margin-bottom: 8px;
+  }
+  .question-text {
+    color: var(--bright);
+    font-size: 16px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 600;
+    line-height: 1.5;
+    margin-bottom: 16px;
+  }
+
+  .options-list { display: flex; flex-direction: column; gap: 8px; }
+  .option-btn {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px 16px;
+    text-align: left;
+    cursor: pointer;
+    color: var(--text);
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    transition: border-color 0.15s, background 0.15s;
+    width: 100%;
+  }
+  .option-btn:hover:not(:disabled) { border-color: var(--gold); color: var(--bright); background: rgba(232,197,71,0.06); }
+  .option-btn.correct { border-color: var(--green) !important; background: rgba(77,232,160,0.1) !important; color: var(--green) !important; }
+  .option-btn.wrong { border-color: var(--red) !important; background: rgba(232,85,85,0.1) !important; color: var(--red) !important; }
+
+  /* SCRAMBLE */
+  .scramble-pool { display: flex; flex-wrap: wrap; gap: 8px; min-height: 44px; margin-bottom: 12px; }
+  .scramble-answer { display: flex; flex-wrap: wrap; gap: 8px; min-height: 44px; background: var(--surface2); border: 1px dashed var(--border); border-radius: 6px; padding: 8px; margin-bottom: 12px; }
+  .chip {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 7px 12px;
+    font-size: 13px;
+    color: var(--bright);
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    user-select: none;
+  }
+  .chip:hover { border-color: var(--gold); background: rgba(232,197,71,0.08); }
+  .chip.in-answer { background: rgba(77,184,232,0.1); border-color: var(--blue); color: var(--blue); }
+
+  /* DICTATION */
+  .dictation-input {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px 16px;
+    color: var(--bright);
+    font-family: 'Space Mono', monospace;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.15s;
+    margin-bottom: 12px;
+  }
+  .dictation-input:focus { border-color: var(--gold); }
+
+  /* TEXT INPUT */
+  .text-input {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px 16px;
+    color: var(--bright);
+    font-family: 'Space Mono', monospace;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.15s;
+    margin-bottom: 12px;
+  }
+  .text-input:focus { border-color: var(--gold); }
+
+  .feedback-box {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px;
+    margin-top: 12px;
+    font-size: 13px;
+    line-height: 1.7;
+    display: none;
+  }
+  .feedback-box.show { display: block; }
+  .feedback-box.correct-fb { border-color: var(--green); }
+  .feedback-box.wrong-fb { border-color: var(--red); }
+  .feedback-box .fb-label { font-weight: 700; margin-bottom: 4px; }
+  .feedback-box.correct-fb .fb-label { color: var(--green); }
+  .feedback-box.wrong-fb .fb-label { color: var(--red); }
+
+  /* XP POP */
+  .xp-pop {
+    position: fixed;
+    pointer-events: none;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+    color: var(--gold);
+    z-index: 9999;
+    animation: xpFloat 1.1s ease-out forwards;
+  }
+  @keyframes xpFloat {
+    0% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(-60px); }
+  }
+
+  /* DISSECTION */
+  .dissect-sentence {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--bright);
+    margin-bottom: 16px;
+    line-height: 1.5;
+  }
+  .dissect-word-grid { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; }
+  .dissect-word {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 12px;
+    cursor: pointer;
+    transition: border-color 0.15s;
+  }
+  .dissect-word:hover { border-color: var(--gold); }
+  .dissect-word .dw-text { color: var(--bright); font-size: 14px; margin-bottom: 6px; }
+  .dissect-word .dw-tags { display: flex; flex-direction: column; gap: 3px; }
+  .tag-input {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 2px 6px;
+    font-size: 10px;
+    color: var(--dim);
+    font-family: 'Space Mono', monospace;
+    width: 80px;
+  }
+
+  /* RESULT */
+  .result-score {
+    text-align: center;
+    padding: 40px 0;
+  }
+  .result-pct {
+    font-family: 'Syne', sans-serif;
+    font-size: 64px;
+    font-weight: 800;
+    line-height: 1;
+  }
+  .result-pct.perfect { color: var(--gold); }
+  .result-pct.high { color: var(--green); }
+  .result-pct.mid { color: var(--blue); }
+  .result-pct.low { color: var(--red); }
+  .matei-reaction {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--gold);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin: 20px 0;
+    font-style: italic;
+    font-size: 14px;
+    color: var(--bright);
+    line-height: 1.7;
+  }
+  .matei-name { color: var(--gold); font-style: normal; font-weight: 700; font-size: 11px; margin-bottom: 6px; }
+
+  .xp-earned {
+    color: var(--gold);
+    font-family: 'Syne', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    margin: 12px 0;
+  }
+
+  /* EPILOGUE */
+  .epilogue-text {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 28px;
+    font-size: 15px;
+    line-height: 2;
+    color: var(--bright);
+    margin-bottom: 24px;
+  }
+  .epilogue-text em { color: var(--gold); }
+
+  /* FORGE */
+  .forge-prompt-display {
+    font-family: 'Syne', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--gold);
+    margin: 24px 0 8px;
+    text-align: center;
+  }
+  .checklist {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+  }
+  .checklist p { font-size: 11px; color: var(--dim); margin-bottom: 4px; }
+  .checklist li { font-size: 12px; color: var(--text); list-style: none; padding: 2px 0; }
+  .checklist li::before { content: "□ "; color: var(--dim); }
+  .forge-history { margin-top: 20px; }
+  .forge-entry {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin-bottom: 8px;
+    font-size: 12px;
+  }
+  .forge-entry .fe-sentence { color: var(--bright); margin-bottom: 4px; }
+  .forge-entry.fe-correct { border-left: 3px solid var(--green); }
+  .forge-entry.fe-partial { border-left: 3px solid var(--gold); }
+  .forge-entry.fe-wrong { border-left: 3px solid var(--red); }
+
+  /* WARMUP BANNER */
+  .warmup-banner {
+    background: rgba(232,197,71,0.1);
+    border: 1px solid var(--gold);
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    font-size: 12px;
+    color: var(--gold);
+    display: none;
+  }
+  .warmup-banner.show { display: block; }
+
+  /* STREAK */
+  .streak-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 6px 12px;
+    font-size: 12px;
+    color: var(--gold);
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
+
+  /* NAV ROW */
+  .nav-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+
+  /* DIVIDER */
+  .divider { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
+
+  /* SRS BADGE */
+  .srs-badge {
+    background: rgba(232,85,85,0.15);
+    border: 1px solid var(--red);
+    border-radius: 4px;
+    color: var(--red);
+    font-size: 10px;
+    padding: 2px 6px;
+    margin-left: 8px;
+  }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  /* DIFF HIGHLIGHT */
+  .diff-correct { color: var(--green); }
+  .diff-wrong { color: var(--red); text-decoration: underline; }
+
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--bright);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== HOME SCREEN ===== -->
+<div id="screen-home" class="screen active">
+  <div class="home-header">
+    <div class="home-title">DEUTSCH CODEX</div>
+    <div class="home-sub">Modul 1 · A1 · Die erste Woche</div>
+  </div>
+  <div id="streak-display" class="streak-badge">🔥 <span id="streak-num">0</span> Tage</div>
+  <div id="warmup-banner" class="warmup-banner">
+    ⚠ <span id="warmup-count">0</span> Wörter zur Wiederholung — Warm-Up erforderlich
+  </div>
+  <div class="home-stats">
+    <div class="stat-box"><div class="stat-val" id="stat-xp">0</div><div class="stat-lbl">XP</div></div>
+    <div class="stat-box"><div class="stat-val" id="stat-days">0</div><div class="stat-lbl">Tage</div></div>
+    <div class="stat-box"><div class="stat-val" id="stat-words">0</div><div class="stat-lbl">SRS-Wörter</div></div>
+  </div>
+  <div class="day-grid" id="day-grid"></div>
+  <button class="forge-btn" onclick="showForge()">⚒ SENTENCE FORGE</button>
+</div>
+
+<!-- ===== WARMUP SCREEN ===== -->
+<div id="screen-warmup" class="screen">
+  <div class="screen-header">
+    <button class="back-btn" onclick="goHome()">←</button>
+    <h2>Warm-Up · Wiederholung</h2>
+  </div>
+  <div class="phase-label">SM-2 · Due Today</div>
+  <div class="progress-bar-wrap"><div class="progress-bar-fill" id="warmup-progress"></div></div>
+  <div id="warmup-content"></div>
+</div>
+
+<!-- ===== LESSON SCREEN ===== -->
+<div id="screen-lesson" class="screen">
+  <div class="screen-header">
+    <button class="back-btn" onclick="goHome()">←</button>
+    <h2 id="lesson-title">Lektion</h2>
+  </div>
+  <div class="phase-label">PHASE 1 · VOKABELN</div>
+  <div class="vocab-grid" id="vocab-grid"></div>
+  <div id="grammar-display"></div>
+  <button class="btn btn-gold btn-full" onclick="showStory()">Weiter → Geschichte</button>
+</div>
+
+<!-- ===== STORY SCREEN ===== -->
+<div id="screen-story" class="screen">
+  <div class="screen-header">
+    <button class="back-btn" onclick="showLesson()">←</button>
+    <h2 id="story-title">Geschichte</h2>
+  </div>
+  <div class="phase-label">PHASE 2 · GESCHICHTE</div>
+  <button class="story-audio-btn" onclick="playStoryAudio()" id="story-audio-btn">🔊 Geschichte anhören</button>
+  <div class="story-text" id="story-text"></div>
+  <button class="btn btn-gold btn-full" onclick="showStoryQuiz()">Weiter → Quiz</button>
+</div>
+
+<!-- ===== STORY QUIZ SCREEN ===== -->
+<div id="screen-storyquiz" class="screen">
+  <div class="screen-header">
+    <button class="back-btn" onclick="showStory()">←</button>
+    <h2>Geschichte-Quiz</h2>
+  </div>
+  <div class="phase-label">PHASE 3 · QUIZ</div>
+  <div class="progress-bar-wrap"><div class="progress-bar-fill" id="sq-progress"></div></div>
+  <div id="sq-content"></div>
+</div>
+
+<!-- ===== DRILLS SCREEN ===== -->
+<div id="screen-drills" class="screen">
+  <div class="screen-header">
+    <button class="back-btn" onclick="goHome()">←</button>
+    <h2>Drills</h2>
+  </div>
+  <div class="phase-label">PHASE 4 · ÜBUNGEN</div>
+  <div class="progress-bar-wrap"><div class="progress-bar-fill" id="drill-progress"></div></div>
+  <div id="drill-content"></div>
+</div>
+
+<!-- ===== DISSECTION SCREEN ===== -->
+<div id="screen-dissect" class="screen">
+  <div class="screen-header">
+    <button class="back-btn" onclick="goHome()">←</button>
+    <h2>Satz-Analyse</h2>
+  </div>
+  <div class="phase-label">PHASE 5 · DISSECTION</div>
+  <div class="progress-bar-wrap"><div class="progress-bar-fill" id="dis-progress"></div></div>
+  <div id="dis-content"></div>
+</div>
+
+<!-- ===== RESULT SCREEN ===== -->
+<div id="screen-result" class="screen">
+  <div class="screen-header">
+    <button class="back-btn" onclick="goHome()">←</button>
+    <h2>Ergebnis</h2>
+  </div>
+  <div class="result-score">
+    <div class="result-pct" id="result-pct">0%</div>
+    <div class="xp-earned" id="xp-earned">+0 XP</div>
+  </div>
+  <div class="matei-reaction">
+    <div class="matei-name">MATEI</div>
+    <div id="matei-line"></div>
+  </div>
+  <div class="nav-row">
+    <button class="btn btn-gold" onclick="goHome()">Zurück</button>
+    <button class="btn btn-outline" id="next-phase-btn"></button>
+  </div>
+</div>
+
+<!-- ===== EPILOGUE SCREEN ===== -->
+<div id="screen-epilogue" class="screen">
+  <div class="screen-header">
+    <button class="back-btn" onclick="goHome()">←</button>
+    <h2>Sechs Monate später</h2>
+  </div>
+  <div class="epilogue-text" id="epilogue-text"></div>
+  <button class="btn btn-gold btn-full" onclick="goHome()">Abgeschlossen ✓</button>
+</div>
+
+<!-- ===== FORGE SCREEN ===== -->
+<div id="screen-forge" class="screen">
+  <div class="screen-header">
+    <button class="back-btn" onclick="goHome()">←</button>
+    <h2>Sentence Forge</h2>
+  </div>
+  <div class="phase-label">FREIES SCHREIBEN</div>
+  <div class="forge-prompt-display" id="forge-prompt"></div>
+  <div class="checklist" id="forge-checklist"></div>
+  <textarea class="text-input" id="forge-input" rows="3" placeholder="Schreibe einen deutschen Satz mit diesem Wort..."></textarea>
+  <div class="nav-row">
+    <button class="btn btn-gold" onclick="gradeForge('correct')">✓ Richtig</button>
+    <button class="btn btn-outline" onclick="gradeForge('partial')">~ Teilweise</button>
+    <button class="btn btn-outline" style="color:var(--red);border-color:var(--red)" onclick="gradeForge('wrong')">✗ Falsch</button>
+  </div>
+  <button class="btn btn-outline btn-sm" onclick="newForgePrompt()" style="margin-top:12px">Neues Wort</button>
+  <div class="forge-history" id="forge-history"></div>
+</div>
+
+<!-- ===== BOSS SCREEN ===== -->
+<div id="screen-boss" class="screen">
+  <div class="screen-header">
+    <button class="back-btn" onclick="goHome()">←</button>
+    <h2>Boss — Tag 7</h2>
+  </div>
+  <div class="phase-label">ENDKAMPF · 20 FRAGEN · 90s/Frage</div>
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+    <div class="progress-bar-wrap" style="flex:1;margin:0"><div class="progress-bar-fill" id="boss-progress"></div></div>
+    <div id="boss-timer" style="color:var(--red);font-family:'Syne',sans-serif;font-weight:700;font-size:18px;min-width:40px">90</div>
+  </div>
+  <div id="boss-content"></div>
+</div>
+
+<script>
+// =====================================================================
+// STATE
+// =====================================================================
+const SAVE_KEY = 'dc_m1';
+
+function defaultState() {
+  return {
+    xp: 0, streak: 0, lastStudyDate: null,
+    daysCompleted: [], vocabSRS: {},
+    forgeHistory: [], bossUnlocked: false, epilogueUnlocked: false
+  };
+}
+
+let state = loadState();
+let currentDay = 0;
+let currentPhase = 'lesson';
+let sessionScore = 0; sessionTotal = 0;
+let drillQ = [], drillIdx = 0;
+let sqQ = [], sqIdx = 0;
+let disQ = [], disIdx = 0;
+let bossQ = [], bossIdx = 0, bossTimer = null, bossTime = 90;
+let answerLocked = false;
+let scramblePool = [], scrambleAnswer = [];
+let warmupQ = [], warmupIdx = 0;
+let resultNextFn = null;
+
+function loadState() {
+  try { const s = localStorage.getItem(SAVE_KEY); return s ? JSON.parse(s) : defaultState(); }
+  catch(e) { return defaultState(); }
+}
+function saveState() {
+  try { localStorage.setItem(SAVE_KEY, JSON.stringify(state)); } catch(e) {}
+}
+
+// =====================================================================
+// SM-2
+// =====================================================================
+function updateSM2(wordKey, correct) {
+  if (!state.vocabSRS[wordKey]) {
+    state.vocabSRS[wordKey] = { interval: 1, easeFactor: 2.5, nextReview: todayStr(), streak: 0 };
+  }
+  const w = state.vocabSRS[wordKey];
+  if (correct) {
+    w.streak++;
+    if (w.streak === 1) w.interval = 1;
+    else if (w.streak === 2) w.interval = 6;
+    else w.interval = Math.round(w.interval * w.easeFactor);
+    w.easeFactor = Math.max(1.3, w.easeFactor + 0.1);
+  } else {
+    w.streak = 0;
+    w.interval = 1;
+    w.easeFactor = Math.max(1.3, w.easeFactor - 0.2);
+  }
+  w.nextReview = futureDateStr(w.interval);
+  saveState();
+}
+
+function initSRS(wordKey) {
+  if (!state.vocabSRS[wordKey]) {
+    state.vocabSRS[wordKey] = { interval: 1, easeFactor: 2.5, nextReview: todayStr(), streak: 0 };
+    saveState();
+  }
+}
+
+function getDueWords() {
+  const today = todayStr();
+  return Object.entries(state.vocabSRS)
+    .filter(([k,v]) => v.nextReview <= today)
+    .map(([k]) => k);
+}
+
+function todayStr() { return new Date().toISOString().split('T')[0]; }
+function futureDateStr(days) {
+  return new Date(Date.now() + days * 86400000).toISOString().split('T')[0];
+}
+
+// =====================================================================
+// DATA — ALL 7 DAYS
+// =====================================================================
+
+const DAYS = [
+  {
+    num: 1, title: "Die Wohnung", subtitle: "The Apartment",
+    vocab: [
+      { de: "die Wohnung", en: "apartment", gender: "f", plural: "die Wohnungen", ex: "Ich bin in der Wohnung." },
+      { de: "das Zimmer", en: "room", gender: "n", plural: "die Zimmer", ex: "Mein Zimmer ist klein." },
+      { de: "die Küche", en: "kitchen", gender: "f", plural: "die Küchen", ex: "Er kocht in der Küche." },
+      { de: "das Bett", en: "bed", gender: "n", plural: "die Betten", ex: "Das Bett ist bequem." },
+      { de: "die Tür", en: "door", gender: "f", plural: "die Türen", ex: "Die Tür ist offen." },
+      { de: "das Fenster", en: "window", gender: "n", plural: "die Fenster", ex: "Das Fenster ist groß." },
+      { de: "der Tisch", en: "table", gender: "m", plural: "die Tische", ex: "Der Tisch steht in der Küche." },
+      { de: "der Stuhl", en: "chair", gender: "m", plural: "die Stühle", ex: "Ich sitze auf dem Stuhl." },
+      { de: "das Sofa", en: "sofa", gender: "n", plural: "die Sofas", ex: "Wir sitzen auf dem Sofa." },
+      { de: "die Lampe", en: "lamp", gender: "f", plural: "die Lampen", ex: "Die Lampe ist an." },
+      { de: "der Schlüssel", en: "key", gender: "m", plural: "die Schlüssel", ex: "Ich habe den Schlüssel." },
+      { de: "die Wand", en: "wall", gender: "f", plural: "die Wände", ex: "Die Wand ist weiß." },
+    ],
+    grammar: {
+      title: "Zwei-Wege-Präpositionen: Dativ (Ort) vs. Akkusativ (Richtung)",
+      lines: [
+        { label: "Dativ (Ort):", ex: "Er ist in der Küche. • Das Buch liegt auf dem Tisch." },
+        { label: "Akkusativ (Richtung):", ex: "Er geht in die Küche. • Er legt das Buch auf den Tisch." },
+        { note: "Präpositionen: in, auf, an, über, unter, vor, hinter, neben, zwischen" }
+      ]
+    },
+    storyTitle: "Der erste Abend",
+    storyDE: `Felix <span class="w-verb">kommt</span> an. Matei <span class="w-verb">gibt</span> ihm den <span class="w-new" onclick="speak('der Schlüssel')">Schlüssel</span> ohne Zeremonie. „Hier. Du <span class="w-verb">brauchst</span> ihn." Felix <span class="w-verb">nimmt</span> ihn und <span class="w-verb">spürt</span> das Gewicht. Später <span class="w-verb">sitzen</span> sie auf dem <span class="w-new" onclick="speak('das Sofa')">Sofa</span> und <span class="w-verb">sagen</span> nichts. Die <span class="w-new" onclick="speak('die Lampe')">Lampe</span> wirft ein warmes Licht. Felix <span class="w-verb">denkt</span>: <span class="w-thought">Ich bin wirklich hier.</span> Die <span class="w-new" onclick="speak('die Tür')">Tür</span> zur <span class="w-new" onclick="speak('die Küche')">Küche</span> steht offen. Er <span class="w-verb">sieht</span> den <span class="w-new" onclick="speak('der Tisch')">Tisch</span> und die <span class="w-new" onclick="speak('der Stuhl')">Stühle</span>. Alles ist still. Matei <span class="w-verb">beugt</span> sich vor und <span class="w-verb">schaltet</span> die <span class="w-new" onclick="speak('die Lampe')">Lampe</span> aus. Im Dunkeln <span class="w-verb">sagt</span> Felix leise: „Danke."`,
+    storyPlain: "Felix kommt an. Matei gibt ihm den Schlüssel ohne Zeremonie. Hier. Du brauchst ihn. Felix nimmt ihn und spürt das Gewicht. Später sitzen sie auf dem Sofa und sagen nichts. Die Lampe wirft ein warmes Licht. Felix denkt: Ich bin wirklich hier. Die Tür zur Küche steht offen. Er sieht den Tisch und die Stühle. Alles ist still. Matei beugt sich vor und schaltet die Lampe aus. Im Dunkeln sagt Felix leise: Danke.",
+    quiz: [
+      { q: "Warum steht „in der Küche" im Dativ?", opts: ["Wegen des Akkusativs", "Es beschreibt einen Ort, keine Bewegung", "Wegen des Verbs kommen", "Alle Küchen sind Dativ"], ans: 1, exp: "Die Präposition 'in' nimmt Dativ für Ortsangaben (wo?), nicht für Richtungen (wohin?)." },
+      { q: "Was bedeutet „der Schlüssel" in: „Matei gibt ihm den Schlüssel"?", opts: ["das Sofa", "die Wand", "der Schlüssel = the key", "das Zimmer"], ans: 2, exp: "Der Schlüssel = the key. Felix bekommt Mateis Wohnungsschlüssel." },
+      { q: "Welcher Fall ist „den Schlüssel" in diesem Satz?", opts: ["Nominativ", "Dativ", "Genitiv", "Akkusativ — direktes Objekt von 'gibt'"], ans: 3, exp: "'geben' hat ein direktes Akkusativobjekt (was wird gegeben?) → den Schlüssel." },
+      { q: "Warum hat „dem Sofa" den Dativ?", opts: ["Sofa ist immer Dativ", "'auf' mit Ortsangabe → Dativ", "'auf' mit Richtung → Dativ", "Weil sie sitzen bleiben"], ans: 1, exp: "'auf' als Zwei-Wege-Präposition: Ort (wo? sitzen) → Dativ." },
+      { q: "Schreibe den Satz im Akkusativ: Er sitzt auf dem Stuhl. →", opts: ["Er setzt sich auf den Stuhl.", "Er setzt sich auf dem Stuhl.", "Er sitzt auf den Stuhl.", "Er setzt auf dem Stuhl."], ans: 0, exp: "Bewegung (wohin? → sich setzen) → Akkusativ: auf den Stuhl." },
+      { q: "Welcher Fall ist „die Lampe" in „die Lampe ist an"?", opts: ["Akkusativ", "Dativ", "Nominativ — Subjekt des Satzes", "Genitiv"], ans: 2, exp: "'die Lampe' ist das Subjekt (Nominativ) des Satzes." },
+      { q: "Was ist „das Gewicht" in diesem Kontext?", opts: ["das Licht", "die Stimmung", "das Gewicht = the weight", "die Tür"], ans: 2, exp: "Felix 'spürt das Gewicht' des Schlüssels — buchstäblich und symbolisch." },
+      { q: "Warum steht „im Dunkeln" im Dativ?", opts: ["'in' ist immer Dativ", "'in' mit Ortsangabe → Dativ", "Dunkel ist ein Eigenname", "Es ist eine Zeitangabe"], ans: 1, exp: "'im Dunkeln' = im + dem Dunkeln → Ortsangabe → Dativ." },
+      { q: "Was bedeutet „ohne Zeremonie"?", opts: ["Mit Feier", "Ohne Aufwand / without ceremony", "Mit Schlüssel", "Sehr langsam"], ans: 1, exp: "'ohne Zeremonie' = without ceremony — Matei ist pragmatisch, nicht dramatisch." },
+      { q: "Warum steht das Verb in „Später sitzen sie auf dem Sofa" an zweiter Stelle?", opts: ["Zufall", "V2-Regel: Zeitangabe an Position 1 → Verb an Position 2", "Weil 'sitzen' modal ist", "Deutsche Grammatik ist flexibel"], ans: 1, exp: "Deutsch: V2-Regel. 'Später' besetzt Position 1 → Verb 'sitzen' rückt auf Position 2." },
+    ],
+    drills: [
+      { type: 1, de: "die Wohnung", opts: ["kitchen","apartment","room","bed"], ans: 1 },
+      { type: 2, en: "the key", gender: "m", opts: ["der Schlüssel","die Schlüssel","das Schlüssel","den Schlüssel"], ans: 0 },
+      { type: 3, sentence: "Ich sitze auf ___ Stuhl.", hint: "Dativ: m", opts: ["dem","den","der","das"], ans: 0, exp: "Dativ maskulin: auf dem Stuhl (Ortsangabe)." },
+      { type: 1, de: "das Fenster", opts: ["door","wall","window","sofa"], ans: 2 },
+      { type: 2, en: "the door", gender: "f", opts: ["die Tür","der Tür","das Tür","den Tür"], ans: 0 },
+      { type: 3, sentence: "Er geht in ___ Küche.", hint: "Akkusativ: f (Richtung)", opts: ["die","der","dem","das"], ans: 0, exp: "Richtung (wohin?) → Akkusativ: in die Küche." },
+      { type: 4, words: ["Der","Tisch","steht","in","der","Küche"], answer: ["Der","Tisch","steht","in","der","Küche"], exp: "Subjekt (Der Tisch) + Verb (steht) + Präpositionalphrase (in der Küche, Dativ)." },
+      { type: 5, audio: "Das Bett ist bequem.", text: "Das Bett ist bequem." },
+      { type: 1, de: "der Stuhl", opts: ["lamp","table","chair","wall"], ans: 2 },
+      { type: 2, en: "the lamp", gender: "f", opts: ["die Lampe","der Lampe","das Lampe","den Lampe"], ans: 0 },
+      { type: 3, sentence: "Die Lampe ist ___ der Wand.", hint: "Dativ: Ort", opts: ["an","auf","in","zu"], ans: 0, exp: "'an der Wand' = Dativ (Ortsangabe an vertikalen Flächen)." },
+      { type: 4, words: ["Sie","sitzen","auf","dem","Sofa"], answer: ["Sie","sitzen","auf","dem","Sofa"], exp: "Subjekt (Sie) + Verb (sitzen) + Dativ-Präpositionalphrase (auf dem Sofa, Ort)." },
+      { type: 5, audio: "Die Tür ist offen.", text: "Die Tür ist offen." },
+      { type: 1, de: "die Wand", opts: ["window","key","room","wall"], ans: 3 },
+      { type: 2, en: "the sofa", gender: "n", opts: ["das Sofa","die Sofa","der Sofa","den Sofa"], ans: 0 },
+      { type: 3, sentence: "Er legt das Buch auf ___ Tisch.", hint: "Akkusativ: m (Richtung)", opts: ["den","dem","der","das"], ans: 0, exp: "Richtung (wohin legen?) → Akkusativ: auf den Tisch." },
+      { type: 4, words: ["der","Schlüssel","liegt","auf","dem","Tisch"], answer: ["Der","Schlüssel","liegt","auf","dem","Tisch"], exp: "Subjekt (Der Schlüssel) + Verb (liegt) + Dativ (auf dem Tisch, Ort)." },
+      { type: 5, audio: "Ich habe den Schlüssel.", text: "Ich habe den Schlüssel." },
+      { type: 1, de: "das Sofa", opts: ["chair","wall","bed","sofa"], ans: 3 },
+      { type: 2, en: "the room", gender: "n", opts: ["das Zimmer","die Zimmer","der Zimmer","den Zimmer"], ans: 0 },
+    ],
+    dissect: [
+      {
+        sentence: "Felix nimmt ihn und spürt das Gewicht.",
+        words: [
+          { text: "Felix", case_: "Nom", type_: "Nomen", meaning: "Felix" },
+          { text: "nimmt", case_: "Verb", type_: "Verb", meaning: "takes" },
+          { text: "ihn", case_: "Akk", type_: "Pronomen", meaning: "him" },
+          { text: "und", case_: "–", type_: "Konjunktion", meaning: "and" },
+          { text: "spürt", case_: "Verb", type_: "Verb", meaning: "feels" },
+          { text: "das", case_: "Akk", type_: "Artikel", meaning: "the" },
+          { text: "Gewicht", case_: "Akk", type_: "Nomen", meaning: "weight" },
+        ],
+        exp: "Felix ist Nominativ-Subjekt. 'ihn' ist Akkusativ-Objekt von 'nimmt'. 'das Gewicht' ist Akkusativ-Objekt von 'spürt'."
+      },
+      {
+        sentence: "Die Lampe wirft ein warmes Licht.",
+        words: [
+          { text: "Die", case_: "Nom", type_: "Artikel", meaning: "the" },
+          { text: "Lampe", case_: "Nom", type_: "Nomen", meaning: "lamp" },
+          { text: "wirft", case_: "Verb", type_: "Verb", meaning: "casts" },
+          { text: "ein", case_: "Akk", type_: "Artikel", meaning: "a" },
+          { text: "warmes", case_: "Akk", type_: "Adjektiv", meaning: "warm" },
+          { text: "Licht", case_: "Akk", type_: "Nomen", meaning: "light" },
+        ],
+        exp: "Die Lampe = Nominativ-Subjekt. 'ein warmes Licht' = Akkusativ-Objekt (Adjektiv stimmt mit Neutr. überein: warmes)."
+      },
+      {
+        sentence: "Sie sitzen auf dem Sofa.",
+        words: [
+          { text: "Sie", case_: "Nom", type_: "Pronomen", meaning: "they" },
+          { text: "sitzen", case_: "Verb", type_: "Verb", meaning: "sit" },
+          { text: "auf", case_: "–", type_: "Präposition", meaning: "on" },
+          { text: "dem", case_: "Dat", type_: "Artikel", meaning: "the" },
+          { text: "Sofa", case_: "Dat", type_: "Nomen", meaning: "sofa" },
+        ],
+        exp: "'dem Sofa' ist Dativ, weil 'auf' als Zwei-Wege-Präposition mit Ortsangabe (sitzen = wo?) Dativ nimmt."
+      },
+      {
+        sentence: "Matei schaltet die Lampe aus.",
+        words: [
+          { text: "Matei", case_: "Nom", type_: "Nomen", meaning: "Matei" },
+          { text: "schaltet", case_: "Verb", type_: "Verb", meaning: "switches" },
+          { text: "die", case_: "Akk", type_: "Artikel", meaning: "the" },
+          { text: "Lampe", case_: "Akk", type_: "Nomen", meaning: "lamp" },
+          { text: "aus", case_: "–", type_: "Partikel", meaning: "off" },
+        ],
+        exp: "Matei = Nominativ-Subjekt. 'die Lampe' = Akkusativ-Objekt (was wird ausgeschaltet?). 'aus' ist das Präfix des Trennverbs ausschalten."
+      }
+    ],
+    forgePrompts: [
+      { word: "die Küche", checklist: ["Genus: feminin (die/der/das?)", "Dativ bei Ortsangaben: in der Küche", "Verbstellung: Verb an Position 2"] },
+      { word: "der Schlüssel", checklist: ["Genus: maskulin", "Akkusativ: den Schlüssel (direktes Objekt)", "Vollständiger Satz mit Subjekt"] },
+      { word: "das Sofa", checklist: ["Genus: neutral", "Dativ bei sitzen/liegen: auf dem Sofa", "Verbstellung prüfen"] },
+    ],
+    mateiReactions: {
+      perfect: ["„Die Wohnung gefällt dir also? Ich wusste, du würdest sie lieben."","„Endlich zu Hause. Und du bist hier."","„Der erste Abend. Und du hast schon alles im Griff."","„Ich habe den Schlüssel für dich bereitgelegt. Genau wie in der Geschichte.""],
+      high: ["„Fast perfekt. Aber die Lampe war aus, oder?"","„Gut gemacht. Die Küche wartet auf dich."","„Du hast den Tisch nicht vergessen. Das ist ein Anfang."","„Die Wohnung ist jetzt auch deine. Fühl dich wie zu Hause.""],
+      mid: ["„Die Tür war offen. Hast du das gesehen?"","„Der Stuhl steht noch da. Versuch's nochmal."","„Die Wand ist weiß. Aber die Wörter sind bunt."","„Das Bett ist bequem. Aber dein Deutsch könnte es auch sein.""],
+      low: ["„Die Wohnung ist nicht so kompliziert wie deine Fehler."","„Der Schlüssel passt nicht. Genau wie deine Antworten."","„Das Sofa ist bequem. Aber du sitzt noch auf dem Boden."","„Die Lampe ist aus. Genau wie dein Verständnis für Dativ.""]
+    }
+  },
+
+  {
+    num: 2, title: "Essen und Trinken", subtitle: "Food and Drink",
+    vocab: [
+      { de: "das Essen", en: "food", gender: "n", plural: "–", ex: "Das Essen schmeckt gut." },
+      { de: "das Frühstück", en: "breakfast", gender: "n", plural: "die Frühstücke", ex: "Ich esse Frühstück." },
+      { de: "das Brot", en: "bread", gender: "n", plural: "die Brote", ex: "Ich kaufe Brot." },
+      { de: "der Kaffee", en: "coffee", gender: "m", plural: "die Kaffees", ex: "Ich trinke Kaffee." },
+      { de: "das Wasser", en: "water", gender: "n", plural: "–", ex: "Ich trinke Wasser." },
+      { de: "die Milch", en: "milk", gender: "f", plural: "–", ex: "Die Milch ist kalt." },
+      { de: "der Tee", en: "tea", gender: "m", plural: "die Tees", ex: "Ich trinke Tee." },
+      { de: "das Ei", en: "egg", gender: "n", plural: "die Eier", ex: "Ich esse ein Ei." },
+      { de: "das Fleisch", en: "meat", gender: "n", plural: "–", ex: "Ich kaufe Fleisch." },
+      { de: "die Butter", en: "butter", gender: "f", plural: "–", ex: "Die Butter ist auf dem Tisch." },
+      { de: "der Zucker", en: "sugar", gender: "m", plural: "–", ex: "Ich nehme Zucker in den Kaffee." },
+    ],
+    grammar: {
+      title: "Akkusativ mit essen/trinken/kaufen • Modalverb möchten",
+      lines: [
+        { label: "Akkusativ-Objekte:", ex: "Ich esse das Brot. • Ich trinke den Kaffee. • Ich kaufe die Milch." },
+        { label: "Nicht-zählbare Nomen (kein Artikel):", ex: "Ich möchte Kaffee. • Ich trinke Wasser. • Er kauft Fleisch." },
+        { label: "Höfliches Modalverb möchten:", ex: "Möchtest du Kaffee? • Ich möchte Tee." }
+      ]
+    },
+    storyTitle: "Das Frühstück",
+    storyDE: `Matei <span class="w-verb">steht</span> früh auf. Felix <span class="w-verb">hört</span> das Klirren von Tassen in der <span class="w-known">Küche</span>. Als er <span class="w-verb">aufsteht</span>, <span class="w-verb">sieht</span> er: <span class="w-new" onclick="speak('das Frühstück')">das Frühstück</span> ist schon auf dem <span class="w-known">Tisch</span>. <span class="w-new" onclick="speak('das Brot')">Das Brot</span>, <span class="w-new" onclick="speak('die Butter')">die Butter</span>, <span class="w-new" onclick="speak('der Kaffee')">der Kaffee</span> — alles ist da. Matei <span class="w-verb">sagt</span> nichts. Er <span class="w-verb">weiß</span>, wie Felix <span class="w-new" onclick="speak('der Kaffee')">den Kaffee</span> mag: schwarz, ohne <span class="w-new" onclick="speak('der Zucker')">Zucker</span>. Felix <span class="w-verb">setzt</span> sich und <span class="w-verb">nimmt</span> ein Stück <span class="w-new" onclick="speak('das Brot')">Brot</span>. „Du hast an alles <span class="w-verb">gedacht</span>", <span class="w-verb">sagt</span> er. Matei <span class="w-verb">zuckt</span> mit den Schultern. „Ich <span class="w-verb">kenne</span> dich." Die <span class="w-new" onclick="speak('die Milch')">Milch</span> steht noch im Kühlschrank. Felix <span class="w-verb">lacht</span>. „Natürlich."`,
+    storyPlain: "Matei steht früh auf. Felix hört das Klirren von Tassen in der Küche. Als er aufsteht, sieht er: das Frühstück ist schon auf dem Tisch. Das Brot, die Butter, der Kaffee — alles ist da. Matei sagt nichts. Er weiß, wie Felix den Kaffee mag: schwarz, ohne Zucker. Felix setzt sich und nimmt ein Stück Brot. Du hast an alles gedacht, sagt er. Matei zuckt mit den Schultern. Ich kenne dich. Die Milch steht noch im Kühlschrank. Felix lacht. Natürlich.",
+    quiz: [
+      { q: "Warum steht „den Kaffee" im Akkusativ?", opts: ["Kaffee ist maskulin","Es ist das direkte Objekt von 'mag'","Es ist eine Zeitangabe","Wegen 'ohne'"], ans: 1, exp: "'mögen' verlangt ein Akkusativobjekt. Kaffee (m) → den Kaffee." },
+      { q: "Was bedeutet „ohne Zucker"?", opts: ["mit viel Zucker","mit Milch","without sugar","very sweet"], ans: 2, exp: "'ohne' + Akkusativ = without. Matei weiß: Felix trinkt Kaffee schwarz." },
+      { q: "Warum hat „die Milch" keinen Artikel in „Ich trinke Milch"?", opts: ["Milch ist immer definit","Milch ist ein nicht-zählbares Nomen","Es ist ein Fehler","Milch ist Nominativ"], ans: 1, exp: "Nicht-zählbare Nomen (Milch, Wasser, Kaffee) brauchen keinen unbestimmten Artikel bei allgemeiner Aussage." },
+      { q: "Schreibe den Satz mit möchten: „Ich trinke Tee." →", opts: ["Ich möchte Tee trinken.","Ich möchte den Tee.","Ich trinke möchten Tee.","Ich mag Tee trinken."], ans: 0, exp: "'möchten' ist ein Modalverb: möchten + Infinitiv am Ende." },
+      { q: "Welcher Fall ist „das Brot" in „Ich nehme das Brot"?", opts: ["Nominativ","Dativ","Genitiv","Akkusativ — direktes Objekt"], ans: 3, exp: "'nehmen' hat ein Akkusativobjekt: was nimmt er? → das Brot." },
+      { q: "Was ist „der Kühlschrank"?", opts: ["the table","the fridge","the cup","the kitchen"], ans: 1, exp: "der Kühlschrank = the fridge. 'kühlen' = to cool, 'der Schrank' = the cupboard." },
+      { q: "Welcher Fall ist „mich" in „Matei kennt mich"?", opts: ["Nominativ","Dativ","Akkusativ — direktes Objekt","Genitiv"], ans: 2, exp: "'kennen' hat ein Akkusativobjekt: ich → mich." },
+      { q: "Was bedeutet „schwarz" in diesem Kontext?", opts: ["dark roast","black — Kaffee ohne Milch/Zucker","very hot","bitter"], ans: 1, exp: "Kaffee 'schwarz' = black coffee, d.h. ohne Milch und ohne Zucker." },
+      { q: "Warum steht „auf dem Tisch" im Dativ?", opts: ["'auf' ist immer Dativ","'auf' mit Ortsangabe (wo?) → Dativ","Tisch ist Dativ","Das Frühstück bestimmt den Fall"], ans: 1, exp: "'auf dem Tisch' = Ortsangabe (wo ist das Frühstück?) → Dativ." },
+      { q: "Was ist „das Klirren"?", opts: ["the coffee","the morning","the clinking sound","the kitchen"], ans: 2, exp: "'klirren' = to clink/clatter. Felix hört das Klirren = the clinking of cups." },
+    ],
+    drills: [
+      { type: 1, de: "das Brot", opts: ["milk","bread","coffee","water"], ans: 1 },
+      { type: 2, en: "the milk", gender: "f", opts: ["die Milch","der Milch","das Milch","den Milch"], ans: 0 },
+      { type: 3, sentence: "Ich trinke ___ Kaffee.", hint: "Akkusativ: m (bestimmt)", opts: ["den","dem","der","das"], ans: 0, exp: "maskulin Akkusativ: den Kaffee." },
+      { type: 1, de: "der Tee", opts: ["egg","tea","sugar","butter"], ans: 1 },
+      { type: 2, en: "the egg", gender: "n", opts: ["das Ei","die Ei","der Ei","den Ei"], ans: 0 },
+      { type: 3, sentence: "Möchtest du ___?", hint: "Kaffee (unzählbar, kein Artikel)", opts: ["Kaffee","den Kaffee","dem Kaffee","eines Kaffees"], ans: 0, exp: "Unzählbare Nomen ohne Artikel bei allgemeiner Aussage/Frage." },
+      { type: 4, words: ["Ich","trinke","jeden","Morgen","Wasser"], answer: ["Ich","trinke","jeden","Morgen","Wasser"], exp: "Subjekt + Verb + Zeitangabe (jeden Morgen) + Objekt (Wasser, unzählbar ohne Artikel)." },
+      { type: 5, audio: "Ich esse ein Ei.", text: "Ich esse ein Ei." },
+      { type: 1, de: "die Butter", opts: ["bread","butter","meat","sugar"], ans: 1 },
+      { type: 2, en: "the sugar", gender: "m", opts: ["der Zucker","die Zucker","das Zucker","den Zucker"], ans: 0 },
+      { type: 3, sentence: "Das Brot liegt auf ___ Tisch.", hint: "Dativ: m (Ort)", opts: ["dem","den","der","das"], ans: 0, exp: "Ortsangabe: auf dem Tisch (Dativ maskulin)." },
+      { type: 4, words: ["Matei","macht","das","Frühstück","fertig"], answer: ["Matei","macht","das","Frühstück","fertig"], exp: "Subjekt + Verb + Akkusativ-Objekt + Partikel (Trennverb fertigmachen)." },
+      { type: 5, audio: "Die Milch ist kalt.", text: "Die Milch ist kalt." },
+      { type: 1, de: "das Fleisch", opts: ["breakfast","meat","egg","water"], ans: 1 },
+      { type: 2, en: "the breakfast", gender: "n", opts: ["das Frühstück","die Frühstück","der Frühstück","den Frühstück"], ans: 0 },
+      { type: 3, sentence: "Er nimmt ___ Brot.", hint: "Akkusativ: n (unbestimmt)", opts: ["ein","einen","einem","eine"], ans: 0, exp: "neutral unbestimmt Akkusativ: ein Brot." },
+      { type: 4, words: ["Ich","kaufe","die","Milch","im","Supermarkt"], answer: ["Ich","kaufe","die","Milch","im","Supermarkt"], exp: "Verb 'kaufen' + Akkusativ-Objekt (die Milch) + Ortsangabe (im Supermarkt, Dativ)." },
+      { type: 5, audio: "Der Kaffee schmeckt gut.", text: "Der Kaffee schmeckt gut." },
+      { type: 1, de: "das Wasser", opts: ["milk","coffee","water","tea"], ans: 2 },
+      { type: 2, en: "the coffee", gender: "m", opts: ["der Kaffee","die Kaffee","das Kaffee","den Kaffee"], ans: 0 },
+      { type: 3, sentence: "Ich möchte ___ Tee.", hint: "möchten + Nomen (kein Artikel nötig)", opts: ["–","den","dem","des"], ans: 0, exp: "Nach 'möchte' kann das Nomen ohne Artikel stehen (allgemein)." },
+      { type: 4, words: ["Das","Frühstück","ist","auf","dem","Tisch"], answer: ["Das","Frühstück","ist","auf","dem","Tisch"], exp: "Subjekt + Verb + Präpositionalphrase (auf dem Tisch = Dativ, Ortsangabe)." },
+    ],
+    dissect: [
+      { sentence: "Matei steht früh auf.", words: [{ text:"Matei",case_:"Nom",type_:"Nomen",meaning:"Matei" },{ text:"steht",case_:"Verb",type_:"Verb",meaning:"gets up" },{ text:"früh",case_:"–",type_:"Adverb",meaning:"early" },{ text:"auf",case_:"–",type_:"Partikel",meaning:"up" }], exp: "Matei = Nominativ-Subjekt. 'aufstehen' ist ein Trennverb: steht...auf. 'früh' = Adverb (wann?)." },
+      { sentence: "Er sieht das Brot auf dem Tisch.", words: [{ text:"Er",case_:"Nom",type_:"Pronomen",meaning:"he" },{ text:"sieht",case_:"Verb",type_:"Verb",meaning:"sees" },{ text:"das",case_:"Akk",type_:"Artikel",meaning:"the" },{ text:"Brot",case_:"Akk",type_:"Nomen",meaning:"bread" },{ text:"auf",case_:"–",type_:"Präposition",meaning:"on" },{ text:"dem",case_:"Dat",type_:"Artikel",meaning:"the" },{ text:"Tisch",case_:"Dat",type_:"Nomen",meaning:"table" }], exp: "'das Brot' = Akkusativ-Objekt. 'auf dem Tisch' = Dativ-Präpositionalphrase (Ortsangabe)." },
+      { sentence: "Ich nehme Zucker in den Kaffee.", words: [{ text:"Ich",case_:"Nom",type_:"Pronomen",meaning:"I" },{ text:"nehme",case_:"Verb",type_:"Verb",meaning:"take" },{ text:"Zucker",case_:"Akk",type_:"Nomen",meaning:"sugar" },{ text:"in",case_:"–",type_:"Präposition",meaning:"into" },{ text:"den",case_:"Akk",type_:"Artikel",meaning:"the" },{ text:"Kaffee",case_:"Akk",type_:"Nomen",meaning:"coffee" }], exp: "Zucker = Akkusativ (unzählbar, kein Artikel). 'in den Kaffee' = Akkusativ-Präpositionalphrase (Richtung: wohin?)." },
+      { sentence: "Die Milch ist kalt.", words: [{ text:"Die",case_:"Nom",type_:"Artikel",meaning:"the" },{ text:"Milch",case_:"Nom",type_:"Nomen",meaning:"milk" },{ text:"ist",case_:"Verb",type_:"Verb",meaning:"is" },{ text:"kalt",case_:"–",type_:"Adjektiv",meaning:"cold" }], exp: "Die Milch = Nominativ-Subjekt. 'kalt' = prädikatives Adjektiv nach 'ist' (keine Endung)." },
+    ],
+    forgePrompts: [
+      { word: "das Brot", checklist: ["Genus: neutral","Akkusativ: das Brot / ein Brot","Verb: essen, kaufen, mögen?"] },
+      { word: "der Kaffee", checklist: ["Genus: maskulin","Mit oder ohne Artikel? (allgemein: keiner)","möchten + Infinitiv"] },
+      { word: "die Milch", checklist: ["Genus: feminin","Unzählbar — kein unbestimmter Artikel","Dativ bei Ortsangaben"] },
+    ],
+    mateiReactions: {
+      perfect: ["„Das Frühstück ist bereit. Und du auch."","„Schwarz, kein Zucker. Ich weiß, wie du deinen Kaffee magst."","„Du hast alles richtig gemacht. Wie das Frühstück."","„Der Tisch ist gedeckt. Genau wie dein Deutsch.""],
+      high: ["„Fast perfekt — aber die Milch stand noch im Kühlschrank."","„Du kennst deine Wörter. Ich kenne dich."","„Gut gemacht. Der Kaffee wird kalt."","„Du hast an fast alles gedacht.""],
+      mid: ["„Das Ei braucht mehr Zeit. Dein Deutsch auch."","„Die Butter ist noch da. Weiter so."","„Versuch's nochmal. Der Tee wartet."","„Brot und Grammatik — beides braucht Übung.""],
+      low: ["„Der Kaffee ist kalt. Genau wie deine Antworten."","„Das Frühstück war fertig. Dein Deutsch noch nicht."","„Ich hätte dir eine Notiz hinterlassen sollen."","„Ich kenne dich — aber dein Deutsch kenne ich noch nicht.\""]
+    }
+  },
+
+  {
+    num: 3, title: "Die Stadt", subtitle: "The City",
+    vocab: [
+      { de: "die Stadt", en: "city", gender: "f", plural: "die Städte", ex: "Ich lebe in der Stadt." },
+      { de: "der Bahnhof", en: "train station", gender: "m", plural: "die Bahnhöfe", ex: "Der Bahnhof ist groß." },
+      { de: "die Straße", en: "street", gender: "f", plural: "die Straßen", ex: "Ich gehe die Straße entlang." },
+      { de: "der Bus", en: "bus", gender: "m", plural: "die Busse", ex: "Der Bus fährt zur Stadt." },
+      { de: "die U-Bahn", en: "subway", gender: "f", plural: "die U-Bahnen", ex: "Die U-Bahn ist schnell." },
+      { de: "der Weg", en: "way / path", gender: "m", plural: "die Wege", ex: "Der Weg ist lang." },
+      { de: "links", en: "left (direction)", gender: "–", plural: "–", ex: "Geh links!" },
+      { de: "rechts", en: "right (direction)", gender: "–", plural: "–", ex: "Geh rechts!" },
+      { de: "geradeaus", en: "straight ahead", gender: "–", plural: "–", ex: "Geh geradeaus!" },
+      { de: "der Park", en: "park", gender: "m", plural: "die Parks", ex: "Ich gehe in den Park." },
+      { de: "das Café", en: "café", gender: "n", plural: "die Cafés", ex: "Das Café ist gemütlich." },
+      { de: "der Supermarkt", en: "supermarket", gender: "m", plural: "die Supermärkte", ex: "Ich gehe in den Supermarkt." },
+    ],
+    grammar: {
+      title: "mit + Dativ (Transport) • Kontraktionen • Ort vs. Richtung",
+      lines: [
+        { label: "Transport mit Dativ:", ex: "Ich fahre mit dem Bus. • Ich gehe mit der U-Bahn." },
+        { label: "Kontraktionen:", ex: "am Bahnhof = an + dem • im Park = in + dem • zur Stadt = zu + der" },
+        { label: "Ort vs. Richtung:", ex: "Ich bin in der Stadt. (Dativ) • Ich gehe in die Stadt. (Akkusativ)" }
+      ]
+    },
+    storyTitle: "Der Spaziergang",
+    storyDE: `Matei <span class="w-verb">zeigt</span> Felix die <span class="w-new" onclick="speak('die Stadt')">Stadt</span>. Sie <span class="w-verb">gehen</span> <span class="w-new" onclick="speak('geradeaus')">geradeaus</span> die <span class="w-new" onclick="speak('die Straße')">Straße</span> entlang. „Da ist der <span class="w-new" onclick="speak('der Bahnhof')">Bahnhof</span>", <span class="w-verb">sagt</span> Matei. „Und dort ist der <span class="w-new" onclick="speak('der Park')">Park</span>." Felix <span class="w-verb">sieht</span> alles an. Die <span class="w-new" onclick="speak('die U-Bahn')">U-Bahn</span> <span class="w-verb">fährt</span> vorbei. „Ist die <span class="w-new" onclick="speak('die Stadt')">Stadt</span> immer so laut?", <span class="w-verb">fragt</span> Felix. Matei <span class="w-verb">lacht</span>. „Du <span class="w-verb">gewöhnst</span> dich dran." Sie <span class="w-verb">biegen</span> <span class="w-new" onclick="speak('links')">links</span> ab und <span class="w-verb">kommen</span> zu einem kleinen <span class="w-new" onclick="speak('das Café')">Café</span>. „Hier <span class="w-verb">trinken</span> wir <span class="w-known">Kaffee</span>", <span class="w-verb">sagt</span> Matei. Felix <span class="w-verb">nickt</span>. Er <span class="w-verb">merkt</span> sich jeden <span class="w-new" onclick="speak('der Weg')">Weg</span>, jede <span class="w-new" onclick="speak('die Straße')">Straße</span>, jeden Blick von Matei.`,
+    storyPlain: "Matei zeigt Felix die Stadt. Sie gehen geradeaus die Straße entlang. Da ist der Bahnhof, sagt Matei. Und dort ist der Park. Felix sieht alles an. Die U-Bahn fährt vorbei. Ist die Stadt immer so laut?, fragt Felix. Matei lacht. Du gewöhnst dich dran. Sie biegen links ab und kommen zu einem kleinen Café. Hier trinken wir Kaffee, sagt Matei. Felix nickt. Er merkt sich jeden Weg, jede Straße, jeden Blick von Matei.",
+    quiz: [
+      { q: "Warum steht „der Stadt" im Dativ in „in der Stadt"?", opts: ["'in' ist immer Dativ","Es ist eine Ortsangabe (wo?)","Die Stadt ist immer Dativ","Es ist eine Richtungsangabe"], ans: 1, exp: "'in' als Zwei-Wege-Präposition: Ortsangabe (wo bin ich?) → Dativ." },
+      { q: "Was bedeutet „geradeaus"?", opts: ["to the left","behind you","straight ahead","to the right"], ans: 2, exp: "'geradeaus' = straight ahead. Keine Richtungsänderung." },
+      { q: "Was ist „die U-Bahn"?", opts: ["the bus","the train station","the subway","the tram"], ans: 2, exp: "U-Bahn = Untergrundbahn = subway/underground." },
+      { q: "Warum steht „am Bahnhof"?", opts: ["'an' + Bahnhof, Dativ für Ort","Akkusativ-Kontraktion","Genitiv","Zufällige Form"], ans: 0, exp: "'am' = an + dem → Kontraktion. Dativform bei Ortsangabe." },
+      { q: "Welcher Fall ist „die Straße" in „die Straße entlang"?", opts: ["Nominativ","Dativ","Genitiv","Akkusativ (Richtung durch 'entlang')"], ans: 3, exp: "'entlang' mit Akkusativ: die Straße entlang = along the street." },
+      { q: "Wie sagt man 'I travel by bus' auf Deutsch?", opts: ["Ich fahre mit dem Bus.","Ich fahre den Bus.","Ich gehe mit dem Bus.","Ich Bus fahre."], ans: 0, exp: "Transport: mit + Dativ. 'mit dem Bus' = by bus." },
+      { q: "Was bedeutet „sich dran gewöhnen"?", opts: ["to miss it","to notice it","to get used to it","to avoid it"], ans: 2, exp: "'sich gewöhnen an' = to get used to. 'dran' = daran (informal)." },
+      { q: "Warum steht „links" ohne Artikel?", opts: ["Es ist ein Adjektiv","Es ist ein Adverb (kein Nomen)","Es ist Dativ","Es ist immer ohne Artikel"], ans: 1, exp: "'links' und 'rechts' sind Adverbien (wie?/wohin?) — keine Nomen, kein Artikel nötig." },
+      { q: "Was ist „das Café"?", opts: ["the bus stop","the park","the café","the supermarket"], ans: 2, exp: "das Café = the café. Aus dem Französischen entlehnt." },
+      { q: "Welcher Fall ist „die Stadt" in „Ich gehe in die Stadt"?", opts: ["Nominativ","Dativ (Ort)","Genitiv","Akkusativ (Richtung)"], ans: 3, exp: "'gehen in die Stadt' = Richtungsangabe (wohin?) → Akkusativ." },
+    ],
+    drills: [
+      { type: 1, de: "die U-Bahn", opts: ["train station","subway","bus","park"], ans: 1 },
+      { type: 2, en: "the train station", gender: "m", opts: ["der Bahnhof","die Bahnhof","das Bahnhof","den Bahnhof"], ans: 0 },
+      { type: 3, sentence: "Ich bin ___ Bahnhof.", hint: "am = an + dem (Dativ)", opts: ["am","im","um","beim"], ans: 0, exp: "'am Bahnhof' = an + dem Bahnhof. Dativkontraktion, Ortsangabe." },
+      { type: 1, de: "der Park", opts: ["café","street","park","city"], ans: 2 },
+      { type: 2, en: "the subway", gender: "f", opts: ["die U-Bahn","der U-Bahn","das U-Bahn","den U-Bahn"], ans: 0 },
+      { type: 3, sentence: "Ich fahre mit ___ Bus.", hint: "mit + Dativ: m", opts: ["dem","den","der","das"], ans: 0, exp: "'mit' nimmt immer Dativ: mit dem Bus." },
+      { type: 4, words: ["Der","Bus","fährt","zur","Stadt"], answer: ["Der","Bus","fährt","zur","Stadt"], exp: "Subjekt (Der Bus) + Verb (fährt) + Präpositionalphrase (zur Stadt = zu + der, Dativ)." },
+      { type: 5, audio: "Geh geradeaus!", text: "Geh geradeaus!" },
+      { type: 1, de: "die Straße", opts: ["street","way","city","park"], ans: 0 },
+      { type: 2, en: "the café", gender: "n", opts: ["das Café","die Café","der Café","den Café"], ans: 0 },
+      { type: 3, sentence: "Wir gehen in ___ Park.", hint: "Akkusativ: m (Richtung)", opts: ["den","dem","der","das"], ans: 0, exp: "Richtungsangabe (wohin?) → Akkusativ: in den Park (maskulin)." },
+      { type: 4, words: ["Sie","gehen","die","Straße","entlang"], answer: ["Sie","gehen","die","Straße","entlang"], exp: "'entlang' + Akkusativ: die Straße entlang. Adverb 'entlang' steht nach dem Nomen." },
+      { type: 5, audio: "Der Bahnhof ist groß.", text: "Der Bahnhof ist groß." },
+      { type: 1, de: "geradeaus", opts: ["left","right","straight ahead","back"], ans: 2 },
+      { type: 2, en: "the supermarket", gender: "m", opts: ["der Supermarkt","die Supermarkt","das Supermarkt","den Supermarkt"], ans: 0 },
+      { type: 3, sentence: "Er ist ___ der Stadt.", hint: "Dativ: f (Ort)", opts: ["in","auf","an","aus"], ans: 0, exp: "'in der Stadt' = Ortsangabe (Dativ). Er ist schon dort." },
+      { type: 4, words: ["Matei","zeigt","Felix","die","Stadt"], answer: ["Matei","zeigt","Felix","die","Stadt"], exp: "Subjekt (Matei) + Verb (zeigt) + Dativobjekt (Felix) + Akkusativobjekt (die Stadt)." },
+      { type: 5, audio: "Ich gehe links.", text: "Ich gehe links." },
+      { type: 1, de: "der Weg", opts: ["bus","way / path","park","street"], ans: 1 },
+      { type: 2, en: "the city", gender: "f", opts: ["die Stadt","der Stadt","das Stadt","den Stadt"], ans: 0 },
+    ],
+    dissect: [
+      { sentence: "Matei zeigt Felix die Stadt.", words: [{ text:"Matei",case_:"Nom",type_:"Nomen",meaning:"Matei" },{ text:"zeigt",case_:"Verb",type_:"Verb",meaning:"shows" },{ text:"Felix",case_:"Dat",type_:"Nomen",meaning:"Felix" },{ text:"die",case_:"Akk",type_:"Artikel",meaning:"the" },{ text:"Stadt",case_:"Akk",type_:"Nomen",meaning:"city" }], exp: "Matei = Nominativ-Subjekt. Felix = Dativ-Objekt (indirektes Objekt, wem?). die Stadt = Akkusativ-Objekt (direktes Objekt, was?)." },
+      { sentence: "Sie gehen die Straße entlang.", words: [{ text:"Sie",case_:"Nom",type_:"Pronomen",meaning:"they" },{ text:"gehen",case_:"Verb",type_:"Verb",meaning:"walk" },{ text:"die",case_:"Akk",type_:"Artikel",meaning:"the" },{ text:"Straße",case_:"Akk",type_:"Nomen",meaning:"street" },{ text:"entlang",case_:"–",type_:"Adverb",meaning:"along" }], exp: "'die Straße' = Akkusativ durch 'entlang' (Richtungsangabe). 'entlang' steht nach dem Nomen." },
+      { sentence: "Die U-Bahn fährt vorbei.", words: [{ text:"Die",case_:"Nom",type_:"Artikel",meaning:"the" },{ text:"U-Bahn",case_:"Nom",type_:"Nomen",meaning:"subway" },{ text:"fährt",case_:"Verb",type_:"Verb",meaning:"drives" },{ text:"vorbei",case_:"–",type_:"Adverb",meaning:"past/by" }], exp: "Die U-Bahn = Nominativ-Subjekt. 'vorbei' ist ein Adverb (vorbeifahren = Trennverb)." },
+      { sentence: "Sie biegen links ab.", words: [{ text:"Sie",case_:"Nom",type_:"Pronomen",meaning:"they" },{ text:"biegen",case_:"Verb",type_:"Verb",meaning:"turn" },{ text:"links",case_:"–",type_:"Adverb",meaning:"left" },{ text:"ab",case_:"–",type_:"Partikel",meaning:"off" }], exp: "'abbiegen' = Trennverb (to turn off). 'links' = Adverb der Richtung. 'ab' = abgetrenntes Präfix." },
+    ],
+    forgePrompts: [
+      { word: "die U-Bahn", checklist: ["Genus: feminin","Transport: mit der U-Bahn (Dativ)","Ortsangabe vs. Richtungsangabe"] },
+      { word: "der Bahnhof", checklist: ["Genus: maskulin","am Bahnhof (an + dem, Dativ)","Vollständiger Satz"] },
+      { word: "das Café", checklist: ["Genus: neutral","Ortsangabe: im Café (in + dem)","Richtung: in das Café (Akkusativ)"] },
+    ],
+    mateiReactions: {
+      perfect: ["„Berlin gehört jetzt auch dir. Du hast alles gesehen."","„Du hast jeden Weg gemerkt. Das kenne ich von dir."","„Der erste Spaziergang. Und du erinnerst dich an alles."","„Der Bahnhof ist groß. Dein Deutsch ist größer.""],
+      high: ["„Fast alle Wege gefunden. Nur einer war schwierig."","„Die Stadt öffnet sich langsam. Wie du."","„Du biegst schon richtig ab — fast immer."","„Der Park war rechts. Aber gut gemacht.""],
+      mid: ["„Geradeaus war einfach. Links war schwerer."","„Die Straße ist lang. Dein Deutsch auch."","„Der Bus fährt weiter. Du auch."","„Fast am Bahnhof angekommen.""],
+      low: ["„Die U-Bahn fährt vorbei. Wie deine Antworten."","„Links und rechts — das ist noch ein weiter Weg."","„Berlin ist groß. Dein Fortschritt noch klein."","„Der Weg ist lang. Fang nochmal an.""]
+    }
+  },
+
+  {
+    num: 4, title: "Menschen beschreiben", subtitle: "Describing People",
+    vocab: [
+      { de: "groß", en: "tall / big", gender: "–", plural: "–", ex: "Er ist groß." },
+      { de: "klein", en: "short / small", gender: "–", plural: "–", ex: "Das Zimmer ist klein." },
+      { de: "jung", en: "young", gender: "–", plural: "–", ex: "Sie ist jung." },
+      { de: "alt", en: "old", gender: "–", plural: "–", ex: "Der Mann ist alt." },
+      { de: "freundlich", en: "friendly", gender: "–", plural: "–", ex: "Er ist freundlich." },
+      { de: "ruhig", en: "calm / quiet", gender: "–", plural: "–", ex: "Sie ist ruhig." },
+      { de: "lustig", en: "funny", gender: "–", plural: "–", ex: "Er ist lustig." },
+      { de: "der Freund", en: "friend (m)", gender: "m", plural: "die Freunde", ex: "Mein Freund ist lustig." },
+      { de: "die Familie", en: "family", gender: "f", plural: "die Familien", ex: "Meine Familie ist groß." },
+      { de: "das Lächeln", en: "smile", gender: "n", plural: "–", ex: "Sein Lächeln ist freundlich." },
+      { de: "die Augen", en: "eyes", gender: "f (pl)", plural: "–", ex: "Ihre Augen sind blau." },
+      { de: "die Stimme", en: "voice", gender: "f", plural: "die Stimmen", ex: "Seine Stimme ist tief." },
+    ],
+    grammar: {
+      title: "Prädikatives Adjektiv (keine Endung) vs. Attributives Adjektiv (mit Endung)",
+      lines: [
+        { label: "Prädikativ (nach sein):", ex: "Er ist groß. • Sie ist freundlich. • Das Kind ist ruhig." },
+        { label: "Attributiv (vor Nomen):", ex: "ein großer Mann (m, Nom) • eine freundliche Frau (f, Nom) • ein kleines Kind (n, Nom)" },
+        { note: "Merke: Nach 'sein/werden/bleiben' — kein Adjektivsuffix. Vor dem Nomen — Suffix je nach Genus und Fall." }
+      ]
+    },
+    storyTitle: "Was Felix sieht",
+    storyDE: `Felix <span class="w-verb">schreibt</span> in sein Notizbuch. <span class="w-thought">Er ist <span class="w-new" onclick="speak('ruhig')">ruhig</span>. Nicht still — <span class="w-new" onclick="speak('ruhig')">ruhig</span>. Es gibt einen Unterschied.</span> Mit anderen ist Matei höflich, aber geschlossen. Mit Felix ist er <span class="w-new" onclick="speak('lustig')">lustig</span>, <span class="w-new" onclick="speak('freundlich')">freundlich</span>, fast ein anderer Mensch. Felix <span class="w-verb">beobachtet</span> alles: das <span class="w-new" onclick="speak('das Lächeln')">Lächeln</span>, wenn Matei <span class="w-verb">denkt</span>, dass niemand <span class="w-verb">hinschaut</span>, die <span class="w-new" onclick="speak('die Augen')">Augen</span>, die <span class="w-verb">leuchten</span>, wenn er von Berlin <span class="w-verb">erzählt</span>, die <span class="w-new" onclick="speak('die Stimme')">Stimme</span>, die leise <span class="w-verb">wird</span>, wenn er müde ist. <span class="w-thought">Er ist nicht <span class="w-new" onclick="speak('groß')">groß</span>, aber er füllt den Raum.</span> Felix <span class="w-verb">schließt</span> das Notizbuch. Er <span class="w-verb">weiß</span>, dass er diese Seiten nie jemandem <span class="w-verb">zeigen</span> wird.`,
+    storyPlain: "Felix schreibt in sein Notizbuch. Er ist ruhig. Nicht still — ruhig. Es gibt einen Unterschied. Mit anderen ist Matei höflich, aber geschlossen. Mit Felix ist er lustig, freundlich, fast ein anderer Mensch. Felix beobachtet alles: das Lächeln, wenn Matei denkt, dass niemand hinschaut, die Augen, die leuchten, wenn er von Berlin erzählt, die Stimme, die leise wird, wenn er müde ist. Er ist nicht groß, aber er füllt den Raum. Felix schließt das Notizbuch. Er weiß, dass er diese Seiten nie jemandem zeigen wird.",
+    quiz: [
+      { q: "Warum hat „ruhig" keine Endung in „Er ist ruhig"?", opts: ["Es ist ein Adverb","Nach 'sein' — prädikatives Adjektiv ohne Endung","Ruhig ist unveränderlich","Es ist Nominativ"], ans: 1, exp: "Prädikative Adjektive nach 'sein/werden/bleiben' haben keine Flexionsendung." },
+      { q: "Welche Endung hat „freundlich" in „eine freundliche Frau"?", opts: ["-er (maskulin)","–e (feminin Nominativ)","–es (neutral)","–en (Genitiv)"], ans: 1, exp: "Feminin Nominativ nach unbestimmtem Artikel: eine freundliche Frau (schwache Flexion: -e)." },
+      { q: "Schreibe „Er ist groß" als attributiven Satz:", opts: ["Er ist ein großer Mann.","Er ist ein groß Mann.","Er ist ein grandes Mann.","Er ist ein großen Mann."], ans: 0, exp: "Attributiv maskulin Nominativ nach 'ein': ein großer Mann (-er Endung)." },
+      { q: "Was bedeutet „still" vs. „ruhig" in diesem Kontext?", opts: ["Sie bedeuten dasselbe","still = physically quiet; ruhig = calm/composed","ruhig = loud; still = calm","still = happy; ruhig = sad"], ans: 1, exp: "Felix: 'Nicht still — ruhig.' Still = physically/temporarily silent. Ruhig = calm by nature." },
+      { q: "Was ist „das Notizbuch"?", opts: ["the notebook","the lamp","the voice","the smile"], ans: 0, exp: "das Notizbuch = the notebook. 'Noten' (notes) + 'Buch' (book)." },
+      { q: "Welcher Fall ist „den Raum" in „er füllt den Raum"?", opts: ["Nominativ","Dativ","Akkusativ — direktes Objekt","Genitiv"], ans: 2, exp: "'füllen' hat ein Akkusativobjekt: was wird gefüllt? → den Raum." },
+      { q: "Warum steht „wenn er müde ist" am Ende des Satzes?", opts: ["Zufall","Das Verb kommt immer zuletzt","'wenn'-Nebensatz schickt Verb ans Ende","'müde' ist betont"], ans: 2, exp: "'wenn' ist eine unterordnende Konjunktion → Nebensatz: Verb steht am Ende." },
+      { q: "Was ist „die Stimme"?", opts: ["the face","the voice","the eyes","the smile"], ans: 1, exp: "die Stimme = the voice." },
+      { q: "Was bedeutet „füllt den Raum"?", opts: ["enters the room","fills the room (metaphorically)","cleans the room","leaves the room"], ans: 1, exp: "'den Raum füllen' = to fill the room (metaphorical: he has a strong presence)." },
+      { q: "Welche Endung hat „groß" in „ein großes Haus"?", opts: ["-er (m Nom)","-e (f Nom)","-es (n Nom)","-en (Genitiv)"], ans: 2, exp: "Neutral Nominativ nach 'ein': ein großes Haus (-es Endung)." },
+    ],
+    drills: [
+      { type: 1, de: "freundlich", opts: ["tall","funny","friendly","old"], ans: 2 },
+      { type: 2, en: "the eyes (f, pl)", gender: "f", opts: ["die Augen","der Augen","das Augen","den Augen"], ans: 0 },
+      { type: 3, sentence: "Er ist ein ___ Mann. (groß)", hint: "maskulin Nominativ", opts: ["großer","große","großes","großen"], ans: 0, exp: "Maskulin Nominativ nach 'ein': großer Mann." },
+      { type: 1, de: "ruhig", opts: ["funny","young","calm","friendly"], ans: 2 },
+      { type: 2, en: "the smile", gender: "n", opts: ["das Lächeln","die Lächeln","der Lächeln","den Lächeln"], ans: 0 },
+      { type: 3, sentence: "Sie ist eine ___ Frau. (freundlich)", hint: "feminin Nominativ", opts: ["freundliche","freundlicher","freundliches","freundlichen"], ans: 0, exp: "Feminin Nominativ nach 'eine': freundliche Frau." },
+      { type: 4, words: ["Sie","ist","eine","freundliche","Frau"], answer: ["Sie","ist","eine","freundliche","Frau"], exp: "Subjekt (Sie) + Verb (ist) + Artikelwort (eine) + Adjektiv (freundliche) + Nomen (Frau)." },
+      { type: 5, audio: "Sein Lächeln ist freundlich.", text: "Sein Lächeln ist freundlich." },
+      { type: 1, de: "lustig", opts: ["sad","old","calm","funny"], ans: 3 },
+      { type: 2, en: "the voice", gender: "f", opts: ["die Stimme","der Stimme","das Stimme","den Stimme"], ans: 0 },
+      { type: 3, sentence: "Das ist ein ___ Kind. (klein)", hint: "neutral Nominativ", opts: ["kleines","kleine","kleiner","kleinen"], ans: 0, exp: "Neutral Nominativ nach 'ein': kleines Kind." },
+      { type: 4, words: ["Er","ist","ruhig","und","freundlich"], answer: ["Er","ist","ruhig","und","freundlich"], exp: "Prädikative Adjektive nach 'ist' ohne Flexionsendung. 'und' verbindet zwei Adjektive." },
+      { type: 5, audio: "Er ist jung und lustig.", text: "Er ist jung und lustig." },
+      { type: 1, de: "groß", opts: ["small","tall / big","young","friendly"], ans: 1 },
+      { type: 2, en: "the friend (m)", gender: "m", opts: ["der Freund","die Freund","das Freund","den Freund"], ans: 0 },
+      { type: 3, sentence: "Ich habe einen ___ Freund. (lustig)", hint: "maskulin Akkusativ", opts: ["lustigen","lustiger","lustiges","lustige"], ans: 0, exp: "Maskulin Akkusativ nach 'einen': lustigen Freund (schwache Flexion: -en)." },
+      { type: 4, words: ["Die","Stimme","ist","leise","und","tief"], answer: ["Die","Stimme","ist","leise","und","tief"], exp: "Subjekt (Die Stimme) + Verb (ist) + prädikative Adjektive ohne Endungen." },
+      { type: 5, audio: "Meine Familie ist groß.", text: "Meine Familie ist groß." },
+      { type: 1, de: "alt", opts: ["young","friendly","old","funny"], ans: 2 },
+      { type: 2, en: "the family", gender: "f", opts: ["die Familie","der Familie","das Familie","den Familie"], ans: 0 },
+    ],
+    dissect: [
+      { sentence: "Er ist ruhig.", words: [{ text:"Er",case_:"Nom",type_:"Pronomen",meaning:"he" },{ text:"ist",case_:"Verb",type_:"Verb",meaning:"is" },{ text:"ruhig",case_:"–",type_:"Adjektiv",meaning:"calm" }], exp: "Er = Nominativ-Subjekt. 'ruhig' = prädikatives Adjektiv nach 'ist' — keine Flexionsendung." },
+      { sentence: "Mit anderen ist Matei höflich.", words: [{ text:"Mit",case_:"–",type_:"Präposition",meaning:"with" },{ text:"anderen",case_:"Dat",type_:"Pronomen",meaning:"others" },{ text:"ist",case_:"Verb",type_:"Verb",meaning:"is" },{ text:"Matei",case_:"Nom",type_:"Nomen",meaning:"Matei" },{ text:"höflich",case_:"–",type_:"Adjektiv",meaning:"polite" }], exp: "'mit anderen' = Dativ-Präpositionalphrase. Matei = Nominativ-Subjekt (V2: Verb nach 'mit anderen'). 'höflich' = prädikativ, ohne Endung." },
+      { sentence: "Sein Lächeln ist freundlich.", words: [{ text:"Sein",case_:"Nom",type_:"Possessiv",meaning:"his" },{ text:"Lächeln",case_:"Nom",type_:"Nomen",meaning:"smile" },{ text:"ist",case_:"Verb",type_:"Verb",meaning:"is" },{ text:"freundlich",case_:"–",type_:"Adjektiv",meaning:"friendly" }], exp: "'Sein Lächeln' = Nominativ-Subjekt (Possessivpronomen + neutrales Nomen). 'freundlich' = prädikativ." },
+      { sentence: "Er füllt den Raum.", words: [{ text:"Er",case_:"Nom",type_:"Pronomen",meaning:"he" },{ text:"füllt",case_:"Verb",type_:"Verb",meaning:"fills" },{ text:"den",case_:"Akk",type_:"Artikel",meaning:"the" },{ text:"Raum",case_:"Akk",type_:"Nomen",meaning:"room" }], exp: "'füllen' = transitives Verb mit Akkusativobjekt. 'den Raum' = maskulin Akkusativ." },
+    ],
+    forgePrompts: [
+      { word: "ruhig", checklist: ["Prädikativ nach sein: kein Suffix","Attributiv vor Nomen: Endung nötig","Bedeutung: calm, nicht nur 'still' (quiet)"] },
+      { word: "das Lächeln", checklist: ["Genus: neutral","Prädikative vs. attributive Verwendung","Vollständiger Satz mit Subjekt und Verb"] },
+      { word: "die Stimme", checklist: ["Genus: feminin","Dativ bei Ortsangaben: in der Stimme — nein, bei Attribut: leise Stimme","Adjektivendung prüfen"] },
+    ],
+    mateiReactions: {
+      perfect: ["„Du hast alles gesehen. Genau wie ich."","„Das Notizbuch ist voll. Und du hast alles richtig."","„Ich bin ruhig. Und du bist gut."","„Sein Lächeln? Das kennst du jetzt.""],
+      high: ["„Fast alles. Nur eine Endung war schwierig."","„Gut gemacht. Die Augen haben nicht gelogen."","„Du siehst mehr als die meisten."","„Ruhig und fast perfekt.""],
+      mid: ["„Die Adjektive sind schwer. Übung macht den Meister."","„Das Notizbuch ist noch nicht voll."","„Weiter beobachten. Weiter lernen."","„Fast freundlich. Noch nicht perfekt.""],
+      low: ["„Ich bin ruhig. Aber nicht so ruhig wie deine Fehler."","„Die Stimme ist leise. Die Fehler sind laut."","„Das Notizbuch wäre enttäuscht."","\"Nicht groß. Aber die Fehler waren groß.\""]
+    }
+  },
+
+  {
+    num: 5, title: "Zeit und Alltag", subtitle: "Time and Daily Life",
+    vocab: [
+      { de: "die Zeit", en: "time", gender: "f", plural: "die Zeiten", ex: "Die Zeit vergeht schnell." },
+      { de: "der Tag", en: "day", gender: "m", plural: "die Tage", ex: "Heute ist ein guter Tag." },
+      { de: "die Woche", en: "week", gender: "f", plural: "die Wochen", ex: "Diese Woche ist lang." },
+      { de: "der Morgen", en: "morning", gender: "m", plural: "die Morgen", ex: "Am Morgen trinke ich Kaffee." },
+      { de: "der Abend", en: "evening", gender: "m", plural: "die Abende", ex: "Am Abend lese ich." },
+      { de: "die Nacht", en: "night", gender: "f", plural: "die Nächte", ex: "In der Nacht schlafe ich." },
+      { de: "jetzt", en: "now", gender: "–", plural: "–", ex: "Ich gehe jetzt." },
+      { de: "heute", en: "today", gender: "–", plural: "–", ex: "Heute ist Montag." },
+      { de: "morgen", en: "tomorrow", gender: "–", plural: "–", ex: "Morgen gehe ich einkaufen." },
+      { de: "früh", en: "early", gender: "–", plural: "–", ex: "Ich stehe früh auf." },
+      { de: "spät", en: "late", gender: "–", plural: "–", ex: "Ich komme spät nach Hause." },
+      { de: "immer", en: "always", gender: "–", plural: "–", ex: "Ich trinke immer Kaffee." },
+    ],
+    grammar: {
+      title: "V2-Regel • Zeitangaben • Trennverb aufstehen",
+      lines: [
+        { label: "V2-Regel (Verb an 2. Position):", ex: "Heute gehe ich einkaufen. • Am Morgen trinkt Matei Kaffee." },
+        { label: "Zeitangaben-Kontraktionen:", ex: "am Morgen (an + dem) • am Abend • in der Nacht" },
+        { label: "Trennverb aufstehen:", ex: "Ich stehe früh auf. (Präsens) • Er steht spät auf." }
+      ]
+    },
+    storyTitle: "Die Tage gehen",
+    storyDE: `Felix <span class="w-verb">zählt</span> die <span class="w-new" onclick="speak('der Tag')">Tage</span>. Fünf <span class="w-new" onclick="speak('der Tag')">Tage</span> noch. Er <span class="w-verb">sagt</span> es nicht laut, aber er <span class="w-verb">denkt</span> es <span class="w-new" onclick="speak('immer')">immer</span>. <span class="w-new" onclick="speak('heute')">Heute</span> ist Dienstag. <span class="w-new" onclick="speak('morgen')">Morgen</span> ist Mittwoch. Die <span class="w-new" onclick="speak('die Woche')">Woche</span> <span class="w-verb">vergeht</span> zu schnell. <span class="w-new" onclick="speak('am Morgen')">Am Morgen</span> <span class="w-verb">trinkt</span> Matei seinen <span class="w-known">Kaffee</span> und <span class="w-verb">liest</span> die Zeitung. <span class="w-new" onclick="speak('am Abend')">Am Abend</span> <span class="w-verb">kochen</span> sie zusammen. Felix <span class="w-verb">beobachtet</span>, wie Matei die <span class="w-new" onclick="speak('die Zeit')">Zeit</span> <span class="w-verb">vergisst</span>, wenn er kocht. <span class="w-thought">Er ist dann ganz woanders</span>, <span class="w-verb">denkt</span> Felix. Die <span class="w-new" onclick="speak('die Nacht')">Nacht</span> ist still. Felix <span class="w-verb">liegt</span> im Bett und <span class="w-verb">hört</span> Matei <span class="w-verb">atmen</span>. <span class="w-thought">Fünf Tage. Und dann?</span>`,
+    storyPlain: "Felix zählt die Tage. Fünf Tage noch. Er sagt es nicht laut, aber er denkt es immer. Heute ist Dienstag. Morgen ist Mittwoch. Die Woche vergeht zu schnell. Am Morgen trinkt Matei seinen Kaffee und liest die Zeitung. Am Abend kochen sie zusammen. Felix beobachtet, wie Matei die Zeit vergisst, wenn er kocht. Er ist dann ganz woanders, denkt Felix. Die Nacht ist still. Felix liegt im Bett und hört Matei atmen. Fünf Tage. Und dann?",
+    quiz: [
+      { q: "Warum steht „gehe" an 2. Stelle in „Heute gehe ich einkaufen"?", opts: ["Zufall","V2-Regel: 'Heute' an Position 1 → Verb an Position 2","'Heute' ist ein Akkusativobjekt","'einkaufen' ist das Hauptverb"], ans: 1, exp: "Deutsch: Verb-Zweit-Regel. Wenn eine Zeitangabe die Satzspitze besetzt, rückt das finite Verb an Position 2." },
+      { q: "Was bedeutet „die Tage gehen"?", opts: ["the days stop","the days pass","the days are many","the days begin"], ans: 1, exp: "'vergehen/gehen' mit Zeit = to pass. Die Tage gehen = the days pass." },
+      { q: "Welcher Fall ist „die Zeitung" in „liest die Zeitung"?", opts: ["Nominativ","Dativ","Genitiv","Akkusativ — direktes Objekt"], ans: 3, exp: "'lesen' hat ein Akkusativobjekt: was liest er? → die Zeitung." },
+      { q: "Was ist „am Morgen"?", opts: ["at night","in the evening","in the morning","tomorrow morning"], ans: 2, exp: "'am Morgen' = an + dem Morgen = in the morning (Dativkontraktion)." },
+      { q: "Wie konjugiert man „aufstehen" in „Ich stehe auf"?", opts: ["Das Verb bleibt ganz","'auf' trennt sich und geht ans Ende","'auf' bleibt vorne","Es ist kein Trennverb"], ans: 1, exp: "'aufstehen' ist ein Trennverb: Ich stehe (früh) auf. Das Präfix 'auf' wandert ans Satzende." },
+      { q: "Was bedeutet „ganz woanders"?", opts: ["right here","somewhere else entirely","very close","always here"], ans: 1, exp: "'ganz' verstärkt 'woanders'. Ganz woanders = completely somewhere else (mentally)." },
+      { q: "Welcher Fall ist „Matei" in „Felix hört Matei atmen"?", opts: ["Nominativ","Dativ","Akkusativ — Objekt von 'hört'","Genitiv"], ans: 2, exp: "'hören' hat ein Akkusativobjekt: wen hört er? → Matei (Akkusativ)." },
+      { q: "Was ist „die Nacht"?", opts: ["the morning","the week","the evening","the night"], ans: 3, exp: "die Nacht = the night." },
+      { q: "Was bedeutet „Und dann?"?", opts: ["And never?","And before?","And then what?","And always?"], ans: 2, exp: "'dann' = then/next. 'Und dann?' = And then? — Felix fragt sich, was nach seiner Abreise kommt." },
+      { q: "Warum steht „Am Abend" groß am Satzanfang?", opts: ["Alle Nomen werden großgeschrieben","Es ist am Satzanfang","Es ist ein Eigenname","Es ist immer groß"], ans: 1, exp: "Alle deutschen Wörter am Satzanfang werden großgeschrieben. 'am Abend' beginnt den Satz." },
+    ],
+    drills: [
+      { type: 1, de: "die Woche", opts: ["day","week","month","year"], ans: 1 },
+      { type: 2, en: "tomorrow", gender: "–", opts: ["morgen","heute","jetzt","früh"], ans: 0 },
+      { type: 3, sentence: "___ Morgen trinke ich Kaffee.", hint: "am = an + dem", opts: ["Am","Im","Um","Zum"], ans: 0, exp: "'am Morgen' = an + dem Morgen. Standardformel für Tageszeiten." },
+      { type: 1, de: "jetzt", opts: ["today","always","now","late"], ans: 2 },
+      { type: 2, en: "the evening", gender: "m", opts: ["der Abend","die Abend","das Abend","den Abend"], ans: 0 },
+      { type: 3, sentence: "Ich stehe früh ___.", hint: "Trennverb aufstehen", opts: ["auf","ab","an","zu"], ans: 0, exp: "'aufstehen' trennt sich: stehe...auf. 'auf' geht ans Satzende." },
+      { type: 4, words: ["Ich","stehe","früh","auf"], answer: ["Ich","stehe","früh","auf"], exp: "Trennverb 'aufstehen': Subjekt + Verbstamm (stehe) + Adverb (früh) + abgetrenntes Präfix (auf)." },
+      { type: 5, audio: "Heute ist ein guter Tag.", text: "Heute ist ein guter Tag." },
+      { type: 1, de: "immer", opts: ["never","sometimes","often","always"], ans: 3 },
+      { type: 2, en: "the night", gender: "f", opts: ["die Nacht","der Nacht","das Nacht","den Nacht"], ans: 0 },
+      { type: 3, sentence: "Heute ___ ich einkaufen.", hint: "V2-Regel: Verb an 2. Stelle", opts: ["gehe","ich gehe","gehen ich","gehe ich"], ans: 0, exp: "'Heute' an Pos. 1 → 'gehe' (Verb) an Pos. 2 → 'ich' (Subjekt) an Pos. 3." },
+      { type: 4, words: ["Am","Abend","kochen","sie","zusammen"], answer: ["Am","Abend","kochen","sie","zusammen"], exp: "Zeitangabe (Am Abend) an Pos. 1 → V2-Regel: Verb (kochen) an Pos. 2 → Subjekt (sie) an Pos. 3." },
+      { type: 5, audio: "Die Zeit vergeht schnell.", text: "Die Zeit vergeht schnell." },
+      { type: 1, de: "spät", opts: ["early","now","late","always"], ans: 2 },
+      { type: 2, en: "the time", gender: "f", opts: ["die Zeit","der Zeit","das Zeit","den Zeit"], ans: 0 },
+      { type: 3, sentence: "In ___ Nacht schläft Felix.", hint: "Dativ: f", opts: ["der","dem","die","das"], ans: 0, exp: "'in' + Ortsangabe → Dativ. Feminin Dativ: in der Nacht." },
+      { type: 4, words: ["Morgen","komme","ich","spät","nach","Hause"], answer: ["Morgen","komme","ich","spät","nach","Hause"], exp: "V2-Regel: 'Morgen' an Pos. 1 → 'komme' an Pos. 2 → 'ich' an Pos. 3." },
+      { type: 5, audio: "Ich stehe früh auf.", text: "Ich stehe früh auf." },
+      { type: 1, de: "früh", opts: ["late","now","always","early"], ans: 3 },
+      { type: 2, en: "the morning", gender: "m", opts: ["der Morgen","die Morgen","das Morgen","den Morgen"], ans: 0 },
+    ],
+    dissect: [
+      { sentence: "Felix zählt die Tage.", words: [{ text:"Felix",case_:"Nom",type_:"Nomen",meaning:"Felix" },{ text:"zählt",case_:"Verb",type_:"Verb",meaning:"counts" },{ text:"die",case_:"Akk",type_:"Artikel",meaning:"the" },{ text:"Tage",case_:"Akk",type_:"Nomen",meaning:"days" }], exp: "Felix = Nominativ-Subjekt. 'die Tage' = Akkusativ-Objekt (Plural). 'zählen' = transitives Verb." },
+      { sentence: "Heute gehe ich einkaufen.", words: [{ text:"Heute",case_:"–",type_:"Adverb",meaning:"today" },{ text:"gehe",case_:"Verb",type_:"Verb",meaning:"go" },{ text:"ich",case_:"Nom",type_:"Pronomen",meaning:"I" },{ text:"einkaufen",case_:"–",type_:"Verb",meaning:"shopping" }], exp: "V2-Regel: 'Heute' an Pos. 1 → 'gehe' an Pos. 2 → 'ich' an Pos. 3. 'einkaufen' = Infinitiv am Satzende." },
+      { sentence: "Am Morgen trinkt Matei Kaffee.", words: [{ text:"Am Morgen",case_:"–",type_:"Adverb",meaning:"in the morning" },{ text:"trinkt",case_:"Verb",type_:"Verb",meaning:"drinks" },{ text:"Matei",case_:"Nom",type_:"Nomen",meaning:"Matei" },{ text:"Kaffee",case_:"Akk",type_:"Nomen",meaning:"coffee" }], exp: "V2 mit Zeitangabe. Kaffee = Akkusativ (unzählbar, kein Artikel). Matei = Nominativ." },
+      { sentence: "Die Nacht ist still.", words: [{ text:"Die",case_:"Nom",type_:"Artikel",meaning:"the" },{ text:"Nacht",case_:"Nom",type_:"Nomen",meaning:"night" },{ text:"ist",case_:"Verb",type_:"Verb",meaning:"is" },{ text:"still",case_:"–",type_:"Adjektiv",meaning:"quiet/still" }], exp: "Die Nacht = Nominativ-Subjekt. 'still' = prädikatives Adjektiv (keine Endung nach 'ist')." },
+    ],
+    forgePrompts: [
+      { word: "heute", checklist: ["Zeitadverb an Pos. 1 → V2-Regel","Vollständiger Satz mit Verb","Welche Aktivität machst du heute?"] },
+      { word: "der Morgen", checklist: ["Genus: maskulin","am Morgen (Dativkontraktion)","V2 wenn 'am Morgen' Satzanfang"] },
+      { word: "die Zeit", checklist: ["Genus: feminin","Zeit als Objekt: die Zeit (Akkusativ)","Idiomat.: Die Zeit vergeht"] },
+    ],
+    mateiReactions: {
+      perfect: ["„Die Zeit vergeht. Aber du machst keine Fehler."","„Fünf Tage. Du hast jede Minute genutzt."","„Heute war perfekt. Und morgen?"","„Der Abend gehört dir. Du hast alles richtig gemacht.""],
+      high: ["„Fast fünf von fünf. Fast."","„Gut gemacht. Die Nacht ist noch lang."","„Am Morgen war es schwer. Am Abend war es besser."","„Die Tage gehen — du auch voran.""],
+      mid: ["„Drei Tage noch. Und mehr Übung."","„Die Zeit hilft. Aber du musst auch helfen."","„Am Morgen immer noch Fehler. Aber weniger."","„Weiter. Die Woche ist noch nicht vorbei.""],
+      low: ["„Die Zeit vergeht. Deine Vokabeln auch."","„Heute war schwer. Morgen auch."","„Die Nacht ist lang. Deine Fehler länger."","\"Spät aufgestanden, früh aufgehört.\""]
+    }
+  },
+
+  {
+    num: 6, title: "Arbeit und Hobby", subtitle: "Work and Hobbies",
+    vocab: [
+      { de: "die Arbeit", en: "work", gender: "f", plural: "die Arbeiten", ex: "Ich habe viel Arbeit." },
+      { de: "der Beruf", en: "profession", gender: "m", plural: "die Berufe", ex: "Mein Beruf ist Lehrer." },
+      { de: "das Hobby", en: "hobby", gender: "n", plural: "die Hobbys", ex: "Mein Hobby ist Lesen." },
+      { de: "lesen", en: "to read", gender: "–", plural: "–", ex: "Ich lese gern." },
+      { de: "schreiben", en: "to write", gender: "–", plural: "–", ex: "Ich schreibe einen Brief." },
+      { de: "hören", en: "to listen / hear", gender: "–", plural: "–", ex: "Ich höre Musik." },
+      { de: "spielen", en: "to play", gender: "–", plural: "–", ex: "Ich spiele Gitarre." },
+      { de: "lernen", en: "to learn", gender: "–", plural: "–", ex: "Ich lerne Deutsch." },
+      { de: "arbeiten", en: "to work", gender: "–", plural: "–", ex: "Ich arbeite im Büro." },
+      { de: "die Musik", en: "music", gender: "f", plural: "–", ex: "Ich höre die Musik." },
+      { de: "das Buch", en: "book", gender: "n", plural: "die Bücher", ex: "Ich lese ein Buch." },
+      { de: "gern", en: "gladly / like to", gender: "–", plural: "–", ex: "Ich lese gern Bücher." },
+    ],
+    grammar: {
+      title: "gern • lieber • Zeitausdrücke im Akkusativ",
+      lines: [
+        { label: "'gern' nach dem Verb (Vorliebe):", ex: "Ich lese gern. • Er hört gern Musik. • Sie spielt gern Gitarre." },
+        { label: "'lieber' = komparativ (Präferenz):", ex: "Ich lese lieber Bücher als Zeitschriften." },
+        { label: "Akkusativ-Zeitausdruck:", ex: "Er arbeitet jeden Abend. • Ich lerne jeden Morgen." }
+      ]
+    },
+    storyTitle: "Freier Tag",
+    storyDE: `Matei hat einen freien Tag. Er <span class="w-verb">liegt</span> auf dem <span class="w-known">Sofa</span> und <span class="w-verb">liest</span> ein <span class="w-new" onclick="speak('das Buch')">Buch</span>. Felix <span class="w-verb">sitzt</span> am <span class="w-known">Tisch</span> und tut so, als würde er Vokabeln <span class="w-new" onclick="speak('lernen')">lernen</span>. Aber er <span class="w-verb">beobachtet</span> Matei. Wie er die Seiten <span class="w-verb">umblättert</span>, wie er manchmal die Stirn <span class="w-verb">runzelt</span>, wie er <span class="w-new" onclick="speak('schreiben')">schreibt</span>, wenn ihm etwas <span class="w-verb">einfällt</span>. <span class="w-thought">Er <span class="w-new" onclick="speak('arbeiten')">arbeitet</span> nie an seinen freien Tagen. Aber er <span class="w-new" onclick="speak('hören')">hört</span> nie auf, nachzudenken.</span> Plötzlich <span class="w-verb">sagt</span> Matei: „Du starrst." Felix <span class="w-verb">errötet</span>. „Ich <span class="w-new" onclick="speak('lesen')">lese</span> <span class="w-new" onclick="speak('gern')">gern</span>." Matei <span class="w-verb">lächelt</span>. „Ich auch. Aber ich <span class="w-new" onclick="speak('hören')">höre</span> <span class="w-new" onclick="speak('gern')">gern</span> <span class="w-new" onclick="speak('die Musik')">Musik</span>, wenn ich lese." Felix <span class="w-verb">nickt</span>. Die Stille zwischen ihnen ist <span class="w-verb">gewachsen</span>. Aber sie ist warm.`,
+    storyPlain: "Matei hat einen freien Tag. Er liegt auf dem Sofa und liest ein Buch. Felix sitzt am Tisch und tut so, als würde er Vokabeln lernen. Aber er beobachtet Matei. Wie er die Seiten umblättert, wie er manchmal die Stirn runzelt, wie er schreibt, wenn ihm etwas einfällt. Er arbeitet nie an seinen freien Tagen. Aber er hört nie auf, nachzudenken. Plötzlich sagt Matei: Du starrst. Felix errötet. Ich lese gern. Matei lächelt. Ich auch. Aber ich höre gern Musik, wenn ich lese. Felix nickt. Die Stille zwischen ihnen ist gewachsen. Aber sie ist warm.",
+    quiz: [
+      { q: "Warum steht „gern" nach dem Verb in „Ich lese gern"?", opts: ["'gern' ist ein Präfix","'gern' ist ein Adverb der Vorliebe — steht nach dem Verb","'gern' steht immer am Ende","Es ist ein Fehler"], ans: 1, exp: "'gern' ist ein Modaladverb für Vorlieben: Subjekt + Verb + gern (+ Objekt). Position: nach dem finiten Verb." },
+      { q: "Was bedeutet „ein freier Tag"?", opts: ["an expensive day","a day off / a free day","a very long day","a cold day"], ans: 1, exp: "'ein freier Tag' = a day off. 'frei' = free (attributiv maskulin Nominativ: freier)." },
+      { q: "Welcher Fall ist „ein Buch" in „er liest ein Buch"?", opts: ["Nominativ","Dativ","Akkusativ — direktes Objekt","Genitiv"], ans: 2, exp: "'lesen' hat ein Akkusativobjekt: was liest er? → ein Buch (neutral, Akkusativ = Nominativ bei n)." },
+      { q: "Was ist „die Stirn runzeln"?", opts: ["to laugh","to furrow one's brow","to smile","to look away"], ans: 1, exp: "'die Stirn runzeln' = to furrow one's brow — Matei denkt intensiv nach." },
+      { q: "Schreibe mit 'lieber': „Ich lese Bücher. Ich höre Musik." →", opts: ["Ich lese lieber Bücher als Musik zu hören.","Ich liebe Bücher lieber.","Ich lese gern lieber.","Lieber ich lese Bücher."], ans: 0, exp: "'lieber...als' = preferring X over Y. Komparativ von 'gern'." },
+      { q: "Welcher Fall ist „die Musik" in „er hört die Musik"?", opts: ["Nominativ","Dativ","Akkusativ — Objekt von 'hört'","Genitiv"], ans: 2, exp: "'hören' hat ein Akkusativobjekt: was hört er? → die Musik." },
+      { q: "Was bedeutet „nachdenken"?", opts: ["to look away","to write down","to think deeply / to ponder","to sleep"], ans: 2, exp: "'nachdenken' = to think about something deeply, to ponder. Trennverb: denkt...nach." },
+      { q: "Welcher Fall ist „mir" in „es fällt mir ein"?", opts: ["Nominativ","Akkusativ","Dativ — indirektes Objekt","Genitiv"], ans: 2, exp: "'einfallen' nimmt Dativobjekt: wem fällt es ein? → mir. (es = Nominativ-Subjekt)." },
+      { q: "Was ist „die Stille"?", opts: ["the silence","the voice","the music","the morning"], ans: 0, exp: "die Stille = the silence. Von 'still' (quiet) → Nominalisierung." },
+      { q: "Warum steht „zwischen ihnen" im Dativ?", opts: ["'zwischen' ist immer Dativ","'zwischen' als Zwei-Wege-Präposition mit Ortsangabe → Dativ","Es ist Akkusativ","Es ist Genitiv"], ans: 1, exp: "'zwischen' als Zwei-Wege-Präposition: Ortsangabe (wo ist die Stille?) → Dativ. 'ihnen' = Dativ-Pronomen." },
+    ],
+    drills: [
+      { type: 1, de: "das Hobby", opts: ["work","hobby","book","music"], ans: 1 },
+      { type: 2, en: "to play", gender: "–", opts: ["spielen","lesen","lernen","schreiben"], ans: 0 },
+      { type: 3, sentence: "Ich ___ gern Bücher. (lesen, ich)", hint: "Konjugation: ich lese", opts: ["lese","lesen","liest","liest"], ans: 0, exp: "ich lese (1. Pers. Sg.). 'gern' nach dem Verb." },
+      { type: 1, de: "die Arbeit", opts: ["book","music","work","hobby"], ans: 2 },
+      { type: 2, en: "the book", gender: "n", opts: ["das Buch","die Buch","der Buch","den Buch"], ans: 0 },
+      { type: 3, sentence: "Er hört ___ Musik.", hint: "gern = Präferenz-Adverb (Position)", opts: ["gern","die gern","gerne die","lieber gern"], ans: 0, exp: "'gern' steht nach dem Verb und vor/nach dem Objekt: er hört gern Musik." },
+      { type: 4, words: ["Ich","höre","gern","Musik"], answer: ["Ich","höre","gern","Musik"], exp: "Subjekt + Verb + gern (Adverb) + Objekt (Musik, unzählbar ohne Artikel)." },
+      { type: 5, audio: "Mein Hobby ist Lesen.", text: "Mein Hobby ist Lesen." },
+      { type: 1, de: "lesen", opts: ["to write","to play","to read","to work"], ans: 2 },
+      { type: 2, en: "the music", gender: "f", opts: ["die Musik","der Musik","das Musik","den Musik"], ans: 0 },
+      { type: 3, sentence: "Ich arbeite ___ Abend. (jeden)", hint: "Akkusativ: m Zeitausdruck", opts: ["jeden","jedem","jeder","jedes"], ans: 0, exp: "'jeden Abend' = Akkusativ-Zeitausdruck (wann? regelmäßig). Maskulin Akkusativ: jeden." },
+      { type: 4, words: ["Matei","hat","einen","freien","Tag"], answer: ["Matei","hat","einen","freien","Tag"], exp: "Subjekt (Matei) + Verb (hat) + Akkusativ-Objekt (einen freien Tag, m. Akk.: -en Endung)." },
+      { type: 5, audio: "Er schreibt einen Brief.", text: "Er schreibt einen Brief." },
+      { type: 1, de: "schreiben", opts: ["to read","to write","to play","to learn"], ans: 1 },
+      { type: 2, en: "the profession", gender: "m", opts: ["der Beruf","die Beruf","das Beruf","den Beruf"], ans: 0 },
+      { type: 3, sentence: "Ich lese ___ Bücher als Zeitschriften. (lieber)", hint: "Komparativ von gern", opts: ["lieber","gern","liebe","liebend"], ans: 0, exp: "'lieber...als' = prefer X over Y. Komparativ: gern → lieber." },
+      { type: 4, words: ["Er","liest","jeden","Abend","ein","Buch"], answer: ["Er","liest","jeden","Abend","ein","Buch"], exp: "Subjekt + Verb + Zeitangabe (jeden Abend, Akkusativ) + Objekt (ein Buch, Akkusativ neutral)." },
+      { type: 5, audio: "Ich lerne jeden Tag Deutsch.", text: "Ich lerne jeden Tag Deutsch." },
+      { type: 1, de: "gern", opts: ["never","gladly / like to","sometimes","always"], ans: 1 },
+      { type: 2, en: "the work", gender: "f", opts: ["die Arbeit","der Arbeit","das Arbeit","den Arbeit"], ans: 0 },
+    ],
+    dissect: [
+      { sentence: "Matei hat einen freien Tag.", words: [{ text:"Matei",case_:"Nom",type_:"Nomen",meaning:"Matei" },{ text:"hat",case_:"Verb",type_:"Verb",meaning:"has" },{ text:"einen",case_:"Akk",type_:"Artikel",meaning:"a" },{ text:"freien",case_:"Akk",type_:"Adjektiv",meaning:"free" },{ text:"Tag",case_:"Akk",type_:"Nomen",meaning:"day" }], exp: "Matei = Nominativ. 'einen freien Tag' = Akkusativ-Objekt. Maskulin Akkusativ nach 'ein': -en Endung beim Adjektiv." },
+      { sentence: "Er liest ein Buch.", words: [{ text:"Er",case_:"Nom",type_:"Pronomen",meaning:"he" },{ text:"liest",case_:"Verb",type_:"Verb",meaning:"reads" },{ text:"ein",case_:"Akk",type_:"Artikel",meaning:"a" },{ text:"Buch",case_:"Akk",type_:"Nomen",meaning:"book" }], exp: "'ein Buch' = Akkusativ-Objekt (neutral: ein/ein identisch für Nom. und Akk.)." },
+      { sentence: "Ich lese gern.", words: [{ text:"Ich",case_:"Nom",type_:"Pronomen",meaning:"I" },{ text:"lese",case_:"Verb",type_:"Verb",meaning:"read" },{ text:"gern",case_:"–",type_:"Adverb",meaning:"gladly" }], exp: "'gern' = Modaladverb der Vorliebe. Steht nach dem finiten Verb." },
+      { sentence: "Er hört die Musik.", words: [{ text:"Er",case_:"Nom",type_:"Pronomen",meaning:"he" },{ text:"hört",case_:"Verb",type_:"Verb",meaning:"listens to" },{ text:"die",case_:"Akk",type_:"Artikel",meaning:"the" },{ text:"Musik",case_:"Akk",type_:"Nomen",meaning:"music" }], exp: "'die Musik' = bestimmtes Akkusativobjekt (feminin: die → die, unverändert im Akkusativ)." },
+    ],
+    forgePrompts: [
+      { word: "das Buch", checklist: ["Genus: neutral","Akkusativ: ein/das Buch","Verb lesen + gern?"] },
+      { word: "gern", checklist: ["Position: nach dem finiten Verb","gern = mögen/Vorliebe","Satz mit einer Aktivität"] },
+      { word: "die Musik", checklist: ["Genus: feminin, unzählbar","hören + die Musik (Akkusativ)","Oder: Musik hören (ohne Artikel)"] },
+    ],
+    mateiReactions: {
+      perfect: ["„Du hast gern gelernt. Das sehe ich."","„Kein freier Tag für deine Fehler."","„Das Buch ist zu. Du warst perfekt."","„Du lernst gern. Ich lese gern. Wir passen zusammen.""],
+      high: ["„Fast perfekt — wie ein fast-fertig-gelesenes Buch."","„Du arbeitest gern. Das ist gut."","„Gute Arbeit. Nur eine falsche Antwort."","„Die Musik war richtig. Die Grammatik fast.""],
+      mid: ["„Mehr Übung. Wie Gitarrespielen."","„Der Beruf ist schwer. Die Vokabeln auch."","„Du lernst. Das ist genug. Weiter so."","\"Die Arbeit ist noch nicht fertig.\""],
+      low: ["\"Ich höre gern Musik. Aber nicht deine Antworten.\"","\"Das Hobby ist Deutsch. Noch nicht gut.\"","\"Lesen hilft. Fang an.\"","\"Die Stille war warm. Dein Deutsch noch nicht.\""]
+    }
+  },
+
+  {
+    num: 7, title: "Gefühle und Abschied", subtitle: "Feelings and Farewell",
+    vocab: [
+      { de: "das Gefühl", en: "feeling", gender: "n", plural: "die Gefühle", ex: "Ich habe ein gutes Gefühl." },
+      { de: "glücklich", en: "happy", gender: "–", plural: "–", ex: "Ich bin glücklich." },
+      { de: "traurig", en: "sad", gender: "–", plural: "–", ex: "Sie ist traurig." },
+      { de: "nervös", en: "nervous", gender: "–", plural: "–", ex: "Ich bin nervös." },
+      { de: "müde", en: "tired", gender: "–", plural: "–", ex: "Er ist müde." },
+      { de: "froh", en: "glad / pleased", gender: "–", plural: "–", ex: "Ich bin froh." },
+      { de: "lieben", en: "to love", gender: "–", plural: "–", ex: "Ich liebe dich." },
+      { de: "fehlen", en: "to be missing / to miss", gender: "–", plural: "–", ex: "Du fehlst mir." },
+      { de: "wiedersehen", en: "to see again", gender: "–", plural: "–", ex: "Ich freue mich auf das Wiedersehen." },
+      { de: "warten", en: "to wait", gender: "–", plural: "–", ex: "Ich warte auf dich." },
+      { de: "hoffen", en: "to hope", gender: "–", plural: "–", ex: "Ich hoffe, dass du kommst." },
+      { de: "bald", en: "soon", gender: "–", plural: "–", ex: "Ich sehe dich bald." },
+    ],
+    grammar: {
+      title: "fehlen + Dativ • gefallen + Dativ • schmecken + Dativ",
+      lines: [
+        { label: "'fehlen' nimmt Dativ:", ex: "Du fehlst mir. (I miss you, lit. 'You are missing to me.') • Das Buch fehlt mir." },
+        { label: "Dieselbe Struktur:", ex: "Das Essen schmeckt mir. • Der Film gefällt mir. • Das Lernen fällt mir leicht." },
+        { note: "Merke: Das grammatische Subjekt = was fehlt/schmeckt/gefällt. Die Person = Dativobjekt." }
+      ]
+    },
+    storyTitle: "Der letzte Abend",
+    storyDE: `<span class="w-new" onclick="speak('der letzte Abend')">Der letzte Abend</span>. Matei <span class="w-verb">sagt</span>: <span class="w-thought">„Du <span class="w-new" onclick="speak('fehlen')">fehlst</span> mir schon."</span> Felix <span class="w-verb">weiß</span> nicht, was er damit machen soll, also <span class="w-verb">lacht</span> er. Matei <span class="w-verb">lächelt</span> — das langsame, kleine Lächeln, das Felix von hundert Fotos <span class="w-verb">kennt</span> und jetzt von hier. <span class="w-thought">Das <span class="w-new" onclick="speak('das Gefühl')">Gefühl</span> ist seltsam: <span class="w-new" onclick="speak('glücklich')">glücklich</span> und <span class="w-new" onclick="speak('traurig')">traurig</span> zugleich.</span> Felix ist <span class="w-new" onclick="speak('nervös')">nervös</span>, aber er <span class="w-verb">versucht</span>, es nicht zu zeigen. Matei ist <span class="w-new" onclick="speak('müde')">müde</span>, aber seine <span class="w-known">Augen</span> sind hell. <span class="w-thought">„Ich <span class="w-new" onclick="speak('hoffen')">hoffe</span>, wir sehen uns <span class="w-new" onclick="speak('bald')">bald</span> wieder"</span>, <span class="w-verb">sagt</span> Felix. Matei <span class="w-verb">nickt</span>. <span class="w-thought">„Ich <span class="w-new" onclick="speak('lieben')">liebe</span> es, wie du das sagst. Als wäre es sicher."</span> Felix <span class="w-verb">zuckt</span> mit den Schultern. <span class="w-thought">„Ich <span class="w-new" onclick="speak('warten')">warte</span> auf dich."</span> Matei <span class="w-verb">steht</span> auf und <span class="w-verb">geht</span> zur <span class="w-known">Tür</span>. <span class="w-thought">„Ich auch."</span>`,
+    storyPlain: "Der letzte Abend. Matei sagt: Du fehlst mir schon. Felix weiß nicht, was er damit machen soll, also lacht er. Matei lächelt — das langsame, kleine Lächeln, das Felix von hundert Fotos kennt und jetzt von hier. Das Gefühl ist seltsam: glücklich und traurig zugleich. Felix ist nervös, aber er versucht, es nicht zu zeigen. Matei ist müde, aber seine Augen sind hell. Ich hoffe, wir sehen uns bald wieder, sagt Felix. Matei nickt. Ich liebe es, wie du das sagst. Als wäre es sicher. Felix zuckt mit den Schultern. Ich warte auf dich. Matei steht auf und geht zur Tür. Ich auch.",
+    quiz: [
+      { q: "Warum steht „mir" im Dativ in „Du fehlst mir"?", opts: ["'mir' ist immer Dativ","'fehlen' verlangt ein Dativobjekt","Felix sagt das","Es ist eine Höflichkeitsform"], ans: 1, exp: "'fehlen' = Dativverb. Das grammatische Subjekt (Du) fehlt der Dativ-Person (mir). 'Ich vermisse dich' → 'Du fehlst mir'." },
+      { q: "Was bedeutet „schon" in „Du fehlst mir schon"?", opts: ["certainly","soon","already","very much"], ans: 2, exp: "'schon' = already. Matei vermisst Felix bereits, bevor er abgereist ist." },
+      { q: "Welcher Fall ist „dich" in „Ich warte auf dich"?", opts: ["Nominativ","Dativ","Akkusativ","Genitiv"], ans: 2, exp: "'warten auf' + Akkusativ. 'auf' nimmt hier Akkusativ (Richtung/Bezug): ich warte auf dich." },
+      { q: "Was ist „zugleich"?", opts: ["never","at the same time","very much","almost"], ans: 1, exp: "'zugleich' = at the same time / simultaneously." },
+      { q: "Schreibe „Ich vermisse dich" mit 'fehlen' um:", opts: ["Du fehlst mir.","Mir fehle du.","Du fehlst mich.","Ich fehle dir."], ans: 0, exp: "'Ich vermisse dich' → 'Du fehlst mir.' Du = Subjekt (Nominativ), mir = Dativobjekt." },
+      { q: "Welcher Fall ist „auf dich" in „Ich warte auf dich"?", opts: ["Dativ (Ort)","Nominativ","Akkusativ ('auf' bei warten + Akk.)","Genitiv"], ans: 2, exp: "'warten auf' ist eine feste Verbpräposition mit Akkusativ: auf dich." },
+      { q: "Was bedeutet „als wäre es sicher"?", opts: ["because it is certain","as if it were certain (Konjunktiv II)","although it is uncertain","since it seems certain"], ans: 1, exp: "'als wäre' = Konjunktiv II (irrealis) von 'sein'. Als wäre = as if it were (hypothetisch)." },
+      { q: "Was ist „die Tür"?", opts: ["the window","the key","the door","the wall"], ans: 2, exp: "die Tür = the door." },
+      { q: "Schreibe das Gegenteil von „glücklich":", opts: ["nervös","müde","traurig","froh"], ans: 2, exp: "'traurig' = sad = Gegenteil von 'glücklich' (happy)." },
+      { q: "Warum steht „wieder" am Ende in „sehen uns bald wieder"?", opts: ["Es ist immer am Ende","'wieder' ist ein Adverb — Satzende bei Modalverben","Das Verb muss ans Ende","Es ist der Akzent"], ans: 1, exp: "'wiedersehen' (Trennverb) oder 'wieder' als Adverb → geht ans Satzende. 'wir sehen uns bald wieder' = we'll see each other again soon." },
+    ],
+    drills: [
+      { type: 1, de: "fehlen", opts: ["to love","to miss / to be missing","to hope","to wait"], ans: 1 },
+      { type: 2, en: "I miss you (mit fehlen)", gender: "–", opts: ["Du fehlst mir.","Ich vermisse dich.","Mir fehlst du nicht.","Du fehlst mich."], ans: 0 },
+      { type: 3, sentence: "Ich warte ___ dich.", hint: "warten auf + Akkusativ", opts: ["auf","für","mit","nach"], ans: 0, exp: "'warten auf' + Akkusativ: auf dich." },
+      { type: 1, de: "glücklich", opts: ["sad","tired","nervous","happy"], ans: 3 },
+      { type: 2, en: "the feeling", gender: "n", opts: ["das Gefühl","die Gefühl","der Gefühl","den Gefühl"], ans: 0 },
+      { type: 3, sentence: "Ich bin sehr ___ müde.", hint: "sehr = verstärkendes Adverb", opts: ["sehr","zu","ganz","gar"], ans: 0, exp: "'sehr' = very. 'Ich bin sehr müde.' 'zu müde' = too tired (anderer Sinn)." },
+      { type: 4, words: ["Ich","hoffe","wir","sehen","uns","bald"], answer: ["Ich","hoffe","wir","sehen","uns","bald"], exp: "Hauptsatz (Ich hoffe) + Nebensatz (wir sehen uns bald). 'dass' kann entfallen → Verb bleibt bei 'sehen'." },
+      { type: 5, audio: "Du fehlst mir schon.", text: "Du fehlst mir schon." },
+      { type: 1, de: "traurig", opts: ["happy","tired","sad","nervous"], ans: 2 },
+      { type: 2, en: "soon", gender: "–", opts: ["bald","jetzt","immer","noch"], ans: 0 },
+      { type: 3, sentence: "Das ___ mir. (gefallen)", hint: "gefallen + Dativ", opts: ["gefällt","gefalle","gefallen","mag"], ans: 0, exp: "'gefallen' + Dativ: Das gefällt mir. (3. Pers. Sg.: gefällt)." },
+      { type: 4, words: ["Ich","warte","auf","dich"], answer: ["Ich","warte","auf","dich"], exp: "Subjekt (Ich) + Verb (warte) + Präpositionalphrase (auf dich, Akkusativ)." },
+      { type: 5, audio: "Ich liebe dich.", text: "Ich liebe dich." },
+      { type: 1, de: "hoffen", opts: ["to love","to miss","to wait","to hope"], ans: 3 },
+      { type: 2, en: "to wait", gender: "–", opts: ["warten","hoffen","lieben","fehlen"], ans: 0 },
+      { type: 3, sentence: "Das Essen ___ mir. (schmecken)", hint: "schmecken + Dativ", opts: ["schmeckt","schmecke","schmecken","mag"], ans: 0, exp: "'schmecken' + Dativ: Das Essen schmeckt mir. Gleiche Struktur wie 'fehlen' und 'gefallen'." },
+      { type: 4, words: ["Du","fehlst","mir","schon"], answer: ["Du","fehlst","mir","schon"], exp: "Du = Nominativ-Subjekt. fehlst = Verb. mir = Dativobjekt. schon = Adverb (already)." },
+      { type: 5, audio: "Wir sehen uns bald.", text: "Wir sehen uns bald." },
+      { type: 1, de: "warten", opts: ["to see again","to wait","to hope","to love"], ans: 1 },
+      { type: 2, en: "to love", gender: "–", opts: ["lieben","warten","hoffen","fehlen"], ans: 0 },
+    ],
+    dissect: [
+      { sentence: "Du fehlst mir schon.", words: [{ text:"Du",case_:"Nom",type_:"Pronomen",meaning:"you" },{ text:"fehlst",case_:"Verb",type_:"Verb",meaning:"are missing" },{ text:"mir",case_:"Dat",type_:"Pronomen",meaning:"to me" },{ text:"schon",case_:"–",type_:"Adverb",meaning:"already" }], exp: "'fehlen' = Dativverb. Du (Nom.) = grammatisches Subjekt. mir (Dat.) = die vermissende Person. 'schon' = already." },
+      { sentence: "Ich bin glücklich und traurig zugleich.", words: [{ text:"Ich",case_:"Nom",type_:"Pronomen",meaning:"I" },{ text:"bin",case_:"Verb",type_:"Verb",meaning:"am" },{ text:"glücklich",case_:"–",type_:"Adjektiv",meaning:"happy" },{ text:"und",case_:"–",type_:"Konjunktion",meaning:"and" },{ text:"traurig",case_:"–",type_:"Adjektiv",meaning:"sad" },{ text:"zugleich",case_:"–",type_:"Adverb",meaning:"at the same time" }], exp: "Prädikative Adjektive (keine Endungen nach 'bin'). 'und' koordiniert. 'zugleich' = Adverb." },
+      { sentence: "Ich hoffe, wir sehen uns bald.", words: [{ text:"Ich",case_:"Nom",type_:"Pronomen",meaning:"I" },{ text:"hoffe",case_:"Verb",type_:"Verb",meaning:"hope" },{ text:"wir",case_:"Nom",type_:"Pronomen",meaning:"we" },{ text:"sehen",case_:"Verb",type_:"Verb",meaning:"see" },{ text:"uns",case_:"Akk",type_:"Pronomen",meaning:"each other" },{ text:"bald",case_:"–",type_:"Adverb",meaning:"soon" }], exp: "Hauptsatz (Ich hoffe) + Nebensatz ohne 'dass'. Nebensatz hat normale Wortstellung hier. 'uns' = reziprokes Pronomen (each other)." },
+      { sentence: "Ich warte auf dich.", words: [{ text:"Ich",case_:"Nom",type_:"Pronomen",meaning:"I" },{ text:"warte",case_:"Verb",type_:"Verb",meaning:"wait" },{ text:"auf",case_:"–",type_:"Präposition",meaning:"for" },{ text:"dich",case_:"Akk",type_:"Pronomen",meaning:"you" }], exp: "'warten auf' = feste Verbpräposition mit Akkusativ. 'auf dich' = Akkusativ-Präpositionalphrase." },
+    ],
+    forgePrompts: [
+      { word: "fehlen", checklist: ["Du fehlst mir (nicht: Ich vermisse dich)","Subjekt = die fehlende Person","Dativobjekt = die vermissende Person"] },
+      { word: "das Gefühl", checklist: ["Genus: neutral","ein Gefühl haben (Akkusativ)","Adjektiv: ein gutes/seltsames Gefühl"] },
+      { word: "warten", checklist: ["warten auf + Akkusativ","Auf wen wartest du?","Vollständiger Satz"] },
+    ],
+    mateiReactions: {
+      perfect: ["„Du fehlst mir — aber nicht wegen deiner Fehler."","„Perfekt. Ich bin froh. Und traurig. Zugleich."","„Das Gefühl kenne ich. Du auch jetzt."","„Wir sehen uns bald. Das ist sicher.""],
+      high: ["„Fast perfekt. Ich warte noch auf eine Antwort."","„Du bist nervös. Aber dein Deutsch ist gut."","„Ich hoffe, du übst weiter."","\"Glücklich und fast richtig — das reicht.\""],
+      mid: ["\"Ich bin müde von deinen Fehlern. Aber weiter.\"","\"Hoffen hilft. Üben auch.\"","\"Traurig? Nein — lern nochmal.\"","\"Das Gefühl ist da. Die Grammatik noch nicht.\""],
+      low: ["\"Du fehlst mir — aber dein Deutsch fehlt mir mehr.\"","\"Ich bin nicht glücklich mit diesem Ergebnis.\"","\"Warten. Üben. Wiederholen.\"","\"Der letzte Abend war besser als dein Ergebnis.\""]
+    }
+  }
+];
+
+const BOSS_DATA = {
+  epilogueDE: `Sechs Monate später. Felix sitzt in einem Sprachkurs in Lagos und starrt auf sein Handy. Eine Nachricht von Matei leuchtet auf dem Bildschirm auf. Er öffnet sie, ohne zu zögern. Die Worte sind kurz, aber sie wiegen mehr als der Schlüssel, den er damals in Berlin in der Hand hielt. Ich vermisse dich. Felix lächelt. Er hat das Gefühl, dass er gleich fliegen kann.`,
+  epilogueEN: `Six months later. Felix sits in a language class in Lagos, staring at his phone. A message from Matei lights up the screen. He opens it without hesitation. The words are short, but they weigh more than the key he held in his hand that day in Berlin. I miss you. Felix smiles. He feels like he could fly.`
+};
+
+// =====================================================================
+// NAVIGATION
+// =====================================================================
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function goHome() {
+  updateHomeUI();
+  showScreen('home');
+}
+
+function updateHomeUI() {
+  document.getElementById('stat-xp').textContent = state.xp;
+  document.getElementById('stat-days').textContent = state.daysCompleted.length;
+  document.getElementById('stat-words').textContent = Object.keys(state.vocabSRS).length;
+  document.getElementById('streak-num').textContent = state.streak;
+
+  const due = getDueWords();
+  const wb = document.getElementById('warmup-banner');
+  if (due.length >= 7) {
+    wb.classList.add('show');
+    document.getElementById('warmup-count').textContent = due.length;
+  } else {
+    wb.classList.remove('show');
+  }
+
+  const grid = document.getElementById('day-grid');
+  grid.innerHTML = '';
+  DAYS.forEach((d, i) => {
+    const done = state.daysCompleted.includes(d.num);
+    const locked = i > 0 && !state.daysCompleted.includes(DAYS[i-1].num);
+    const div = document.createElement('div');
+    div.className = 'day-btn' + (done ? ' completed' : '') + (locked ? ' locked' : '');
+    div.innerHTML = `<div><div class="day-label">Tag ${d.num} — ${d.title}</div><div class="day-theme">${d.subtitle}</div></div><div>${done ? '<span class="day-check">✓</span>' : locked ? '<span class="day-lock">🔒</span>' : '<span style="color:var(--gold)">→</span>'}</div>`;
+    if (!locked) div.onclick = () => startDay(i);
+    grid.appendChild(div);
+  });
+
+  // Boss button
+  const allDone = DAYS.every(d => state.daysCompleted.includes(d.num));
+  const bossDiv = document.createElement('div');
+  bossDiv.className = 'day-btn boss' + (allDone ? '' : ' locked');
+  bossDiv.innerHTML = `<div><div class="day-label">⚔ Boss — Tag 7</div><div class="day-theme">Alle 7 Tage · 20 Fragen · 90s/Frage</div></div><div>${allDone ? '<span style="color:var(--purple)">→</span>' : '<span class="day-lock">🔒</span>'}</div>`;
+  if (allDone) bossDiv.onclick = startBoss;
+  if (state.epilogueUnlocked) {
+    const epiDiv = document.createElement('div');
+    epiDiv.className = 'day-btn';
+    epiDiv.style.borderColor = 'var(--gold)';
+    epiDiv.innerHTML = `<div><div class="day-label">★ Epilog: Sechs Monate später</div><div class="day-theme">Die Geschichte geht weiter...</div></div><div><span style="color:var(--gold)">→</span></div>`;
+    epiDiv.onclick = showEpilogue;
+    grid.appendChild(epiDiv);
+  }
+  grid.appendChild(bossDiv);
+
+  // Update streak
+  updateStreak();
+}
+
+// =====================================================================
+// STREAK
+// =====================================================================
+function updateStreak() {
+  const today = todayStr();
+  if (state.lastStudyDate === today) return;
+  const yesterday = futureDateStr(-1);
+  if (state.lastStudyDate === yesterday) {
+    state.streak++;
+  } else if (state.lastStudyDate && state.lastStudyDate < yesterday) {
+    state.streak = 1;
+  } else if (!state.lastStudyDate) {
+    state.streak = 1;
+  }
+  state.lastStudyDate = today;
+  saveState();
+}
+
+// =====================================================================
+// DAY FLOW
+// =====================================================================
+function startDay(dayIdx) {
+  const due = getDueWords();
+  if (due.length >= 7) {
+    startWarmup(dayIdx);
+  } else {
+    currentDay = dayIdx;
+    showLesson();
+  }
+}
+
+function showLesson() {
+  const d = DAYS[currentDay];
+  document.getElementById('lesson-title').textContent = `Tag ${d.num} — ${d.title}`;
+
+  const grid = document.getElementById('vocab-grid');
+  grid.innerHTML = '';
+  d.vocab.forEach(w => {
+    const key = srsKey(w.de);
+    initSRS(key);
+    const card = document.createElement('div');
+    card.className = 'vocab-card';
+    card.innerHTML = `
+      <button class="audio-btn" onclick="speak('${w.de.replace(/'/g,"\\'")}', this)">🔊</button>
+      <div style="flex:2">
+        <div class="vocab-de">${w.de} <small style="color:var(--dim);font-size:11px;font-weight:400">${w.gender}</small></div>
+        <div class="vocab-en">${w.en} · Pl: ${w.plural}</div>
+        <div class="vocab-ex">${w.ex}</div>
+      </div>`;
+    grid.appendChild(card);
+  });
+
+  const gd = document.getElementById('grammar-display');
+  const g = d.grammar;
+  let html = `<div class="grammar-box"><h4>📖 Grammatik: ${g.title}</h4>`;
+  g.lines.forEach(l => {
+    if (l.label) html += `<p><strong style="color:var(--text)">${l.label}</strong> <span class="example">${l.ex}</span></p>`;
+    if (l.note) html += `<p class="note">⚡ ${l.note}</p>`;
+  });
+  html += '</div>';
+  gd.innerHTML = html;
+
+  showScreen('lesson');
+}
+
+function showStory() {
+  const d = DAYS[currentDay];
+  document.getElementById('story-title').textContent = `${d.storyTitle}`;
+  document.getElementById('story-text').innerHTML = d.storyDE;
+  document.getElementById('story-audio-btn').textContent = '🔊 Geschichte anhören';
+  showScreen('story');
+}
+
+function playStoryAudio() {
+  const d = DAYS[currentDay];
+  const btn = document.getElementById('story-audio-btn');
+  btn.textContent = '⏹ Wiedergabe stoppen';
+  speak(d.storyPlain, btn, () => { btn.textContent = '🔊 Geschichte anhören'; });
+}
+
+// =====================================================================
+// STORY QUIZ
+// =====================================================================
+function showStoryQuiz() {
+  sqQ = shuffle([...DAYS[currentDay].quiz]);
+  sqIdx = 0; sessionScore = 0; sessionTotal = sqQ.length;
+  answerLocked = false;
+  renderSQ();
+  showScreen('storyquiz');
+}
+
+function renderSQ() {
+  if (sqIdx >= sqQ.length) {
+    showResult(sessionScore, sessionTotal, 'drills', 'Weiter → Drills');
+    return;
+  }
+  const q = sqQ[sqIdx];
+  updateBar('sq-progress', sqIdx, sqQ.length);
+  const c = document.getElementById('sq-content');
+  let html = `<div class="question-card">
+    <div class="question-type">FRAGE ${sqIdx+1} / ${sqQ.length}</div>
+    <div class="question-text">${q.q}</div>
+    <div class="options-list">`;
+  q.opts.forEach((o,i) => {
+    html += `<button class="option-btn" onclick="answerSQ(${i})">${String.fromCharCode(65+i)}) ${o}</button>`;
+  });
+  html += `</div><div class="feedback-box" id="sq-fb"></div></div>`;
+  html += `<div id="sq-next" style="display:none"><button class="btn btn-gold" onclick="nextSQ()">Weiter →</button></div>`;
+  c.innerHTML = html;
+  answerLocked = false;
+}
+
+function answerSQ(idx) {
+  if (answerLocked) return;
+  answerLocked = true;
+  const q = sqQ[sqIdx];
+  const btns = document.querySelectorAll('#sq-content .option-btn');
+  btns.forEach(b => b.disabled = true);
+  btns[idx].classList.add(idx === q.ans ? 'correct' : 'wrong');
+  btns[q.ans].classList.add('correct');
+  const fb = document.getElementById('sq-fb');
+  fb.className = 'feedback-box show ' + (idx === q.ans ? 'correct-fb' : 'wrong-fb');
+  if (idx === q.ans) {
+    fb.innerHTML = `<div class="fb-label">✓ Richtig</div>${q.exp}`;
+    sessionScore++;
+    showXP('+10 XP');
+    state.xp += 10;
+  } else {
+    fb.innerHTML = `<div class="fb-label">✗ Falsch</div>${q.exp}`;
+  }
+  saveState();
+  document.getElementById('sq-next').style.display = 'block';
+}
+
+function nextSQ() { sqIdx++; renderSQ(); }
+
+// =====================================================================
+// DRILLS
+// =====================================================================
+function showDrills() {
+  drillQ = shuffle([...DAYS[currentDay].drills]);
+  drillIdx = 0; sessionScore = 0; sessionTotal = drillQ.length;
+  scramblePool = []; scrambleAnswer = [];
+  answerLocked = false;
+  renderDrill();
+  showScreen('drills');
+}
+
+function renderDrill() {
+  if (drillIdx >= drillQ.length) {
+    showResult(sessionScore, sessionTotal, 'dissect', 'Weiter → Satzanalyse');
+    return;
+  }
+  const q = drillQ[drillIdx];
+  updateBar('drill-progress', drillIdx, drillQ.length);
+  const c = document.getElementById('drill-content');
+  let html = '';
+
+  if (q.type === 1) {
+    html = `<div class="question-card">
+      <div class="question-type">TYP 1 · ERKENNUNG</div>
+      <div class="question-text">Was bedeutet: <strong>${q.de}</strong>?</div>
+      <div class="options-list">`;
+    q.opts.forEach((o,i) => {
+      html += `<button class="option-btn" onclick="answerMC(${i}, ${q.ans}, 'drill')">${String.fromCharCode(65+i)}) ${o}</button>`;
+    });
+    html += `</div><div class="feedback-box" id="drill-fb"></div></div>`;
+    html += `<div id="drill-next" style="display:none"><button class="btn btn-gold" onclick="nextDrill()">Weiter →</button></div>`;
+  } else if (q.type === 2) {
+    html = `<div class="question-card">
+      <div class="question-type">TYP 2 · PRODUKTION</div>
+      <div class="question-text">Wähle die richtige Form: <strong>"${q.en}"</strong></div>
+      <div class="options-list">`;
+    q.opts.forEach((o,i) => {
+      html += `<button class="option-btn" onclick="answerMC(${i}, ${q.ans}, 'drill')">${String.fromCharCode(65+i)}) ${o}</button>`;
+    });
+    html += `</div><div class="feedback-box" id="drill-fb"></div></div>`;
+    html += `<div id="drill-next" style="display:none"><button class="btn btn-gold" onclick="nextDrill()">Weiter →</button></div>`;
+  } else if (q.type === 3) {
+    html = `<div class="question-card">
+      <div class="question-type">TYP 3 · LÜCKENTEXT</div>
+      <div class="question-text">${q.sentence.replace('___','<span style="color:var(--gold)">___</span>')}</div>
+      <div style="color:var(--dim);font-size:11px;margin-bottom:12px">Hinweis: ${q.hint}</div>
+      <div class="options-list">`;
+    q.opts.forEach((o,i) => {
+      html += `<button class="option-btn" onclick="answerMC(${i}, ${q.ans}, 'drill', '${(q.exp||'').replace(/'/g,"\\'")}' )">${String.fromCharCode(65+i)}) ${o}</button>`;
+    });
+    html += `</div><div class="feedback-box" id="drill-fb"></div></div>`;
+    html += `<div id="drill-next" style="display:none"><button class="btn btn-gold" onclick="nextDrill()">Weiter →</button></div>`;
+  } else if (q.type === 4) {
+    scramblePool = shuffle([...q.words]);
+    scrambleAnswer = [];
+    html = `<div class="question-card">
+      <div class="question-type">TYP 4 · SATZ-PUZZLE</div>
+      <div class="question-text">Baue den Satz — klicke die Wörter in der richtigen Reihenfolge:</div>
+      <div style="color:var(--dim);font-size:11px;margin-bottom:12px">Antwort-Zeile:</div>
+      <div class="scramble-answer" id="scramble-answer"></div>
+      <div style="color:var(--dim);font-size:11px;margin-bottom:8px">Wörter:</div>
+      <div class="scramble-pool" id="scramble-pool"></div>
+      <div class="feedback-box" id="drill-fb"></div>
+    </div>
+    <button class="btn btn-gold" onclick="checkScramble()" id="scramble-submit" style="display:none;margin-top:8px">Prüfen</button>
+    <div id="drill-next" style="display:none;margin-top:8px"><button class="btn btn-gold" onclick="nextDrill()">Weiter →</button></div>`;
+  } else if (q.type === 5) {
+    html = `<div class="question-card">
+      <div class="question-type">TYP 5 · DIKTAT</div>
+      <div class="question-text">Hör zu und schreibe, was du hörst:</div>
+      <button class="audio-btn" style="margin-bottom:16px;padding:10px 16px;font-size:14px" onclick="speak('${q.audio.replace(/'/g,"\\'")}', this)">🔊 Abspielen</button>
+      <input class="dictation-input" id="dictation-input" placeholder="Schreibe den Satz..." autocomplete="off" autocorrect="off" spellcheck="false">
+      <div class="feedback-box" id="drill-fb"></div>
+    </div>
+    <button class="btn btn-gold" onclick="checkDictation('${q.text.replace(/'/g,"\\'")}')">Prüfen</button>
+    <div id="drill-next" style="display:none;margin-top:8px"><button class="btn btn-gold" onclick="nextDrill()">Weiter →</button></div>`;
+  }
+
+  c.innerHTML = html;
+
+  if (q.type === 4) renderScramble(q);
+  if (q.type === 5) {
+    setTimeout(() => speak(q.audio), 400);
+    document.getElementById('dictation-input').addEventListener('keydown', e => { if (e.key === 'Enter') checkDictation(q.text); });
+  }
+  answerLocked = false;
+}
+
+function renderScramble(q) {
+  const pool = document.getElementById('scramble-pool');
+  const ans = document.getElementById('scramble-answer');
+  pool.innerHTML = '';
+  ans.innerHTML = '';
+  scramblePool.forEach((w,i) => {
+    const chip = document.createElement('div');
+    chip.className = 'chip';
+    chip.textContent = w;
+    chip.dataset.idx = i;
+    chip.onclick = () => addToAnswer(i, w, chip);
+    pool.appendChild(chip);
+  });
+  updateScrambleSubmit();
+}
+
+function addToAnswer(idx, word, chip) {
+  if (chip.classList.contains('in-answer')) {
+    // Remove from answer
+    const pos = scrambleAnswer.indexOf(idx);
+    if (pos !== -1) scrambleAnswer.splice(pos, 1);
+    chip.classList.remove('in-answer');
+  } else {
+    scrambleAnswer.push(idx);
+    chip.classList.add('in-answer');
+  }
+  const ans = document.getElementById('scramble-answer');
+  ans.innerHTML = scrambleAnswer.map(i => `<div class="chip in-answer">${scramblePool[i]}</div>`).join('');
+  // Add click to remove from answer row
+  ans.querySelectorAll('.chip').forEach((c,pos) => {
+    c.onclick = () => {
+      const idx2 = scrambleAnswer[pos];
+      scrambleAnswer.splice(pos, 1);
+      const poolChips = document.getElementById('scramble-pool').querySelectorAll('.chip');
+      poolChips.forEach(pc => { if (parseInt(pc.dataset.idx) === idx2) pc.classList.remove('in-answer'); });
+      renderAnswerRow();
+    };
+  });
+  updateScrambleSubmit();
+}
+
+function renderAnswerRow() {
+  const ans = document.getElementById('scramble-answer');
+  ans.innerHTML = scrambleAnswer.map(i => `<div class="chip in-answer">${scramblePool[i]}</div>`).join('');
+  ans.querySelectorAll('.chip').forEach((c,pos) => {
+    c.onclick = () => {
+      const idx2 = scrambleAnswer[pos];
+      scrambleAnswer.splice(pos, 1);
+      document.getElementById('scramble-pool').querySelectorAll('.chip').forEach(pc => {
+        if (parseInt(pc.dataset.idx) === idx2) pc.classList.remove('in-answer');
+      });
+      renderAnswerRow();
+      updateScrambleSubmit();
+    };
+  });
+  updateScrambleSubmit();
+}
+
+function updateScrambleSubmit() {
+  const btn = document.getElementById('scramble-submit');
+  if (btn) btn.style.display = scrambleAnswer.length > 0 ? 'block' : 'none';
+}
+
+function checkScramble() {
+  const q = drillQ[drillIdx];
+  const userAns = scrambleAnswer.map(i => scramblePool[i]);
+  const correct = q.answer;
+  const isCorrect = JSON.stringify(userAns.map(w=>w.toLowerCase())) === JSON.stringify(correct.map(w=>w.toLowerCase()));
+  const fb = document.getElementById('drill-fb');
+  if (isCorrect) {
+    fb.className = 'feedback-box show correct-fb';
+    fb.innerHTML = `<div class="fb-label">✓ Richtig!</div><span style="color:var(--bright)">${correct.join(' ')}</span><br><br>${q.exp||''}`;
+    sessionScore++;
+    showXP('+15 XP'); state.xp += 15;
+    const wordKey = srsKey(correct.join(' '));
+    updateSM2(wordKey, true);
+  } else {
+    fb.className = 'feedback-box show wrong-fb';
+    fb.innerHTML = `<div class="fb-label">✗ Falsch</div>Richtig: <span style="color:var(--green)">${correct.join(' ')}</span><br><br>${q.exp||''}`;
+    const wordKey = srsKey(correct.join(' '));
+    updateSM2(wordKey, false);
+  }
+  document.getElementById('drill-next').style.display = 'block';
+  document.getElementById('scramble-submit').style.display = 'none';
+  saveState();
+}
+
+function checkDictation(correctText) {
+  const input = document.getElementById('dictation-input').value;
+  if (!input) return;
+  const normalize = s => s.toLowerCase().replace(/[.,!?;:"'„"]/g,'').replace(/ß/g,'ss').trim().replace(/\s+/g,' ');
+  const n1 = normalize(input), n2 = normalize(correctText);
+  const dist = levenshtein(n1, n2);
+  const fb = document.getElementById('drill-fb');
+  let correct = false;
+  if (n1 === n2) {
+    fb.className = 'feedback-box show correct-fb';
+    fb.innerHTML = `<div class="fb-label">✓ Perfekt!</div>${correctText}`;
+    correct = true;
+    sessionScore++;
+    showXP('+15 XP'); state.xp += 15;
+  } else if (dist <= 2) {
+    fb.className = 'feedback-box show correct-fb';
+    fb.innerHTML = `<div class="fb-label">✓ Fast richtig (Tippfehler OK)</div>Richtig: <span style="color:var(--green)">${correctText}</span>`;
+    correct = true;
+    sessionScore++;
+    showXP('+10 XP'); state.xp += 10;
+  } else {
+    fb.className = 'feedback-box show wrong-fb';
+    fb.innerHTML = `<div class="fb-label">✗ Falsch</div>Richtig: <span style="color:var(--green)">${correctText}</span>`;
+  }
+  updateSM2(srsKey(correctText), correct);
+  document.getElementById('drill-next').style.display = 'block';
+  saveState();
+}
+
+function answerMC(idx, ans, mode, expOverride) {
+  if (answerLocked) return;
+  answerLocked = true;
+  const btns = document.querySelectorAll(`#${mode}-content .option-btn`);
+  btns.forEach(b => b.disabled = true);
+  btns[idx].classList.add(idx === ans ? 'correct' : 'wrong');
+  btns[ans].classList.add('correct');
+  const fb = document.getElementById(`${mode}-fb`);
+  const q = mode === 'drill' ? drillQ[drillIdx] : sqQ[sqIdx];
+  const exp = expOverride || (q && q.exp) || '';
+  if (idx === ans) {
+    fb.className = `feedback-box show correct-fb`;
+    fb.innerHTML = `<div class="fb-label">✓ Richtig!</div>${exp}`;
+    sessionScore++;
+    showXP('+10 XP'); state.xp += 10;
+    if (mode === 'drill') {
+      const wordKey = srsKey(q.de || q.en || '');
+      updateSM2(wordKey, true);
+    }
+  } else {
+    fb.className = `feedback-box show wrong-fb`;
+    fb.innerHTML = `<div class="fb-label">✗ Falsch</div>${exp}`;
+    if (mode === 'drill') {
+      const wordKey = srsKey(q.de || q.en || '');
+      updateSM2(wordKey, false);
+    }
+  }
+  saveState();
+  document.getElementById(`${mode}-next`).style.display = 'block';
+}
+
+function nextDrill() { drillIdx++; renderDrill(); }
+
+// =====================================================================
+// DISSECTION
+// =====================================================================
+function showDissect() {
+  disQ = DAYS[currentDay].dissect;
+  disIdx = 0;
+  renderDis();
+  showScreen('dissect');
+}
+
+function renderDis() {
+  if (disIdx >= disQ.length) {
+    markDayComplete();
+    showResult(sessionScore, sessionTotal, 'home', 'Tag abgeschlossen ✓');
+    return;
+  }
+  const q = disQ[disIdx];
+  updateBar('dis-progress', disIdx, disQ.length);
+  const c = document.getElementById('dis-content');
+
+  let wordsHTML = q.words.map((w,i) => `
+    <div class="dissect-word" id="dw-${i}">
+      <div class="dw-text">${w.text}</div>
+      <div class="dw-tags">
+        <input class="tag-input" placeholder="Fall" id="case-${i}" data-correct="${w.case_}">
+        <input class="tag-input" placeholder="Typ" id="type-${i}" data-correct="${w.type_}">
+        <input class="tag-input" placeholder="Bedeutung" id="mean-${i}" data-correct="${w.meaning}">
+      </div>
+    </div>`).join('');
+
+  c.innerHTML = `
+    <div class="phase-label">Satz ${disIdx+1} / ${disQ.length}</div>
+    <div class="dissect-sentence">${q.sentence}</div>
+    <div class="dissect-word-grid">${wordsHTML}</div>
+    <div class="feedback-box" id="dis-fb"></div>
+    <div class="nav-row">
+      <button class="btn btn-gold" onclick="checkDis()">Prüfen</button>
+      <div id="dis-next" style="display:none"><button class="btn btn-outline" onclick="nextDis()">Weiter →</button></div>
+    </div>`;
+}
+
+function checkDis() {
+  const q = disQ[disIdx];
+  let correct = 0, total = q.words.length * 3;
+  q.words.forEach((w,i) => {
+    const cv = document.getElementById(`case-${i}`).value.trim();
+    const tv = document.getElementById(`type-${i}`).value.trim();
+    const mv = document.getElementById(`mean-${i}`).value.trim().toLowerCase();
+    const cOk = cv.toLowerCase() === w.case_.toLowerCase();
+    const tOk = tv.toLowerCase() === w.type_.toLowerCase();
+    const mOk = mv === w.meaning.toLowerCase() || mv.includes(w.meaning.toLowerCase().split('/')[0]);
+    if (cOk) correct++;
+    if (tOk) correct++;
+    if (mOk) correct++;
+    const dw = document.getElementById(`dw-${i}`);
+    dw.style.borderColor = (cOk && tOk && mOk) ? 'var(--green)' : 'var(--red)';
+    if (!cOk) document.getElementById(`case-${i}`).style.color = 'var(--red)';
+    if (!tOk) document.getElementById(`type-${i}`).style.color = 'var(--red)';
+    if (!mOk) document.getElementById(`mean-${i}`).style.color = 'var(--red)';
+  });
+  const pct = Math.round(correct/total*100);
+  const fb = document.getElementById('dis-fb');
+  fb.className = `feedback-box show ${pct >= 70 ? 'correct-fb' : 'wrong-fb'}`;
+  fb.innerHTML = `<div class="fb-label">${pct}% richtig</div>
+    ${q.words.map(w=>`<div style="margin-bottom:4px"><strong>${w.text}</strong>: ${w.case_} · ${w.type_} · ${w.meaning}</div>`).join('')}
+    <hr style="border-color:var(--border);margin:8px 0">
+    <div style="color:var(--text)">${q.exp}</div>`;
+  sessionScore += pct >= 70 ? 1 : 0;
+  sessionTotal = disQ.length;
+  document.getElementById('dis-next').style.display = 'block';
+}
+
+function nextDis() { disIdx++; renderDis(); }
+
+function markDayComplete() {
+  const dayNum = DAYS[currentDay].num;
+  if (!state.daysCompleted.includes(dayNum)) {
+    state.daysCompleted.push(dayNum);
+    state.xp += 50;
+  }
+  saveState();
+}
+
+// =====================================================================
+// RESULT SCREEN
+// =====================================================================
+function showResult(score, total, nextId, nextLabel) {
+  const pct = total > 0 ? Math.round(score/total*100) : 0;
+  const el = document.getElementById('result-pct');
+  el.textContent = pct + '%';
+  el.className = 'result-pct ' + (pct >= 100 ? 'perfect' : pct >= 80 ? 'high' : pct >= 50 ? 'mid' : 'low');
+
+  const xpGain = Math.round(pct * 2);
+  document.getElementById('xp-earned').textContent = `+${xpGain} XP`;
+  state.xp += xpGain; saveState();
+
+  // Matei reaction
+  const pool = DAYS[currentDay].mateiReactions;
+  const tier = pct >= 100 ? 'perfect' : pct >= 80 ? 'high' : pct >= 50 ? 'mid' : 'low';
+  const lines = pool[tier];
+  document.getElementById('matei-line').textContent = lines[Math.floor(Math.random()*lines.length)];
+
+  const nb = document.getElementById('next-phase-btn');
+  nb.textContent = nextLabel;
+  if (nextId === 'drills') resultNextFn = showDrills;
+  else if (nextId === 'dissect') resultNextFn = showDissect;
+  else resultNextFn = goHome;
+  nb.onclick = resultNextFn;
+
+  showScreen('result');
+}
+
+// =====================================================================
+// BOSS
+// =====================================================================
+function buildBossQuestions() {
+  const all = [];
+  DAYS.forEach(d => {
+    // Add scrambles
+    d.drills.filter(q=>q.type===4).forEach(q => all.push({...q, day:d.num}));
+    // Add dictations
+    d.drills.filter(q=>q.type===5).forEach(q => all.push({...q, day:d.num}));
+    // Add productions
+    d.drills.filter(q=>q.type===2).forEach(q => all.push({...q, day:d.num}));
+    // Mixed
+    d.drills.filter(q=>q.type===1||q.type===3).forEach(q => all.push({...q, day:d.num}));
+  });
+
+  const scrambles = shuffle(all.filter(q=>q.type===4)).slice(0,2);
+  const dictations = shuffle(all.filter(q=>q.type===5)).slice(0,2);
+  const productions = shuffle(all.filter(q=>q.type===2)).slice(0,2);
+  const mixed = shuffle(all.filter(q=>q.type===1||q.type===3)).slice(0,14);
+  return shuffle([...scrambles, ...dictations, ...productions, ...mixed]);
+}
+
+function startBoss() {
+  bossQ = buildBossQuestions();
+  bossIdx = 0; sessionScore = 0; sessionTotal = bossQ.length;
+  showScreen('boss');
+  renderBoss();
+}
+
+function renderBoss() {
+  if (bossIdx >= bossQ.length) {
+    clearTimeout(bossTimer);
+    state.epilogueUnlocked = true; saveState();
+    showEpilogue();
+    return;
+  }
+  updateBar('boss-progress', bossIdx, bossQ.length);
+  startBossTimer();
+  const q = bossQ[bossIdx];
+  const c = document.getElementById('boss-content');
+
+  // Reuse drill render logic
+  currentDay = DAYS.findIndex(d => d.num === q.day) || 0;
+  drillQ = bossQ; drillIdx = bossIdx;
+  const tempDiv = { innerHTML: '' };
+
+  // Simplified boss render
+  let html = '';
+  if (q.type === 1 || q.type === 2 || q.type === 3) {
+    const qText = q.type===1 ? `Was bedeutet: <strong>${q.de}</strong>?` :
+                  q.type===2 ? `Richtige Form für: <strong>"${q.en}"</strong>` :
+                  q.sentence.replace('___','<span style="color:var(--gold)">___</span>');
+    html = `<div class="question-card">
+      <div class="question-type">TAG ${q.day} · ${['','ERKENNUNG','PRODUKTION','LÜCKENTEXT'][q.type]}</div>
+      <div class="question-text">${qText}</div>
+      ${q.hint ? `<div style="color:var(--dim);font-size:11px;margin-bottom:12px">Hinweis: ${q.hint}</div>` : ''}
+      <div class="options-list">`;
+    q.opts.forEach((o,i) => {
+      html += `<button class="option-btn" onclick="answerBoss(${i}, ${q.ans})">${String.fromCharCode(65+i)}) ${o}</button>`;
+    });
+    html += `</div><div class="feedback-box" id="boss-fb"></div></div>
+    <div id="boss-next" style="display:none;margin-top:8px"><button class="btn btn-gold" onclick="nextBoss()">Weiter →</button></div>`;
+  } else if (q.type === 4) {
+    scramblePool = shuffle([...q.words]);
+    scrambleAnswer = [];
+    html = `<div class="question-card">
+      <div class="question-type">TAG ${q.day} · SATZ-PUZZLE</div>
+      <div class="question-text">Baue den Satz:</div>
+      <div class="scramble-answer" id="scramble-answer"></div>
+      <div class="scramble-pool" id="scramble-pool"></div>
+      <div class="feedback-box" id="boss-fb"></div>
+    </div>
+    <button class="btn btn-gold" onclick="checkBossScramble()" id="scramble-submit" style="margin-top:8px">Prüfen</button>
+    <div id="boss-next" style="display:none;margin-top:8px"><button class="btn btn-gold" onclick="nextBoss()">Weiter →</button></div>`;
+  } else if (q.type === 5) {
+    html = `<div class="question-card">
+      <div class="question-type">TAG ${q.day} · DIKTAT</div>
+      <div class="question-text">Hör zu und schreibe:</div>
+      <button class="audio-btn" style="margin-bottom:16px;padding:10px 16px" onclick="speak('${q.audio.replace(/'/g,"\\'")}', this)">🔊 Abspielen</button>
+      <input class="dictation-input" id="dictation-input" placeholder="Schreibe den Satz..." autocomplete="off" autocorrect="off" spellcheck="false">
+      <div class="feedback-box" id="boss-fb"></div>
+    </div>
+    <button class="btn btn-gold" onclick="checkBossDictation('${q.text.replace(/'/g,"\\'")}')">Prüfen</button>
+    <div id="boss-next" style="display:none;margin-top:8px"><button class="btn btn-gold" onclick="nextBoss()">Weiter →</button></div>`;
+  }
+
+  c.innerHTML = html;
+  if (q.type === 4) renderScramble(q);
+  if (q.type === 5) setTimeout(() => speak(q.audio), 400);
+  answerLocked = false;
+}
+
+function startBossTimer() {
+  clearTimeout(bossTimer);
+  bossTime = 90;
+  document.getElementById('boss-timer').textContent = bossTime;
+  bossTimer = setInterval(() => {
+    bossTime--;
+    const t = document.getElementById('boss-timer');
+    if (t) t.textContent = bossTime;
+    if (bossTime <= 0) {
+      clearInterval(bossTimer);
+      timeoutBoss();
+    }
+  }, 1000);
+}
+
+function timeoutBoss() {
+  const q = bossQ[bossIdx];
+  const fb = document.getElementById('boss-fb');
+  if (fb) {
+    fb.className = 'feedback-box show wrong-fb';
+    fb.innerHTML = `<div class="fb-label">⏱ Zeit abgelaufen!</div>`;
+  }
+  document.querySelectorAll('#boss-content .option-btn').forEach(b => b.disabled = true);
+  const nxt = document.getElementById('boss-next');
+  if (nxt) nxt.style.display = 'block';
+  updateSM2(srsKey(q.de||q.en||q.audio||''), false);
+}
+
+function answerBoss(idx, ans) {
+  if (answerLocked) return;
+  answerLocked = true;
+  clearInterval(bossTimer);
+  const q = bossQ[bossIdx];
+  const btns = document.querySelectorAll('#boss-content .option-btn');
+  btns.forEach(b => b.disabled = true);
+  btns[idx].classList.add(idx === ans ? 'correct' : 'wrong');
+  btns[ans].classList.add('correct');
+  const fb = document.getElementById('boss-fb');
+  if (idx === ans) {
+    fb.className = 'feedback-box show correct-fb';
+    fb.innerHTML = `<div class="fb-label">✓ Richtig!</div>${q.exp||''}`;
+    sessionScore++; showXP('+15 XP'); state.xp += 15;
+    updateSM2(srsKey(q.de||q.en||''), true);
+  } else {
+    fb.className = 'feedback-box show wrong-fb';
+    fb.innerHTML = `<div class="fb-label">✗ Falsch</div>${q.exp||''}`;
+    updateSM2(srsKey(q.de||q.en||''), false);
+  }
+  saveState();
+  document.getElementById('boss-next').style.display = 'block';
+}
+
+function checkBossScramble() {
+  const q = bossQ[bossIdx];
+  clearInterval(bossTimer);
+  const userAns = scrambleAnswer.map(i => scramblePool[i]);
+  const isCorrect = JSON.stringify(userAns.map(w=>w.toLowerCase())) === JSON.stringify(q.answer.map(w=>w.toLowerCase()));
+  const fb = document.getElementById('boss-fb');
+  if (isCorrect) {
+    fb.className = 'feedback-box show correct-fb';
+    fb.innerHTML = `<div class="fb-label">✓ Richtig!</div>${q.answer.join(' ')}<br>${q.exp||''}`;
+    sessionScore++; showXP('+15 XP'); state.xp += 15;
+  } else {
+    fb.className = 'feedback-box show wrong-fb';
+    fb.innerHTML = `<div class="fb-label">✗ Falsch</div>Richtig: <span style="color:var(--green)">${q.answer.join(' ')}</span><br>${q.exp||''}`;
+  }
+  document.getElementById('boss-next').style.display = 'block';
+  document.getElementById('scramble-submit').style.display = 'none';
+  saveState();
+}
+
+function checkBossDictation(correctText) {
+  const input = document.getElementById('dictation-input').value;
+  if (!input) return;
+  clearInterval(bossTimer);
+  const normalize = s => s.toLowerCase().replace(/[.,!?;:"'„"]/g,'').replace(/ß/g,'ss').trim().replace(/\s+/g,' ');
+  const dist = levenshtein(normalize(input), normalize(correctText));
+  const fb = document.getElementById('boss-fb');
+  let correct = false;
+  if (dist <= 2) {
+    fb.className = 'feedback-box show correct-fb';
+    fb.innerHTML = `<div class="fb-label">✓ Richtig!</div>${correctText}`;
+    correct = true; sessionScore++; showXP('+15 XP'); state.xp += 15;
+  } else {
+    fb.className = 'feedback-box show wrong-fb';
+    fb.innerHTML = `<div class="fb-label">✗ Falsch</div>Richtig: <span style="color:var(--green)">${correctText}</span>`;
+  }
+  updateSM2(srsKey(correctText), correct);
+  document.getElementById('boss-next').style.display = 'block';
+  saveState();
+}
+
+function nextBoss() { bossIdx++; renderBoss(); }
+
+// =====================================================================
+// WARM-UP
+// =====================================================================
+function startWarmup(dayIdx) {
+  const due = getDueWords();
+  const allVocab = DAYS.flatMap(d => d.vocab);
+  warmupQ = due.slice(0,10).map(key => {
+    const w = allVocab.find(v => srsKey(v.de) === key);
+    return w ? w : null;
+  }).filter(Boolean);
+  warmupIdx = 0;
+  sessionScore = 0; sessionTotal = warmupQ.length;
+  answerLocked = false;
+  renderWarmup(dayIdx);
+  showScreen('warmup');
+}
+
+function renderWarmup(dayIdx) {
+  if (warmupIdx >= warmupQ.length) {
+    currentDay = dayIdx || 0;
+    showLesson();
+    return;
+  }
+  const w = warmupQ[warmupIdx];
+  updateBar('warmup-progress', warmupIdx, warmupQ.length);
+  const c = document.getElementById('warmup-content');
+  c.innerHTML = `
+    <div class="phase-label">Wiederholung ${warmupIdx+1} / ${warmupQ.length}</div>
+    <div class="question-card">
+      <div class="question-type">PRODUKTION</div>
+      <div class="question-text">Wie sagt man auf Deutsch: <strong>"${w.en}"</strong>?</div>
+      <input class="text-input" id="warmup-input" placeholder="Schreibe: Artikel + Wort..." autocorrect="off" autocomplete="off">
+      <div class="feedback-box" id="warmup-fb"></div>
+    </div>
+    <button class="btn btn-gold" onclick="checkWarmup('${w.de.replace(/'/g,"\\'")}', ${dayIdx||0})">Prüfen</button>
+    <div id="warmup-next" style="display:none;margin-top:8px">
+      <button class="btn btn-gold" onclick="nextWarmup(${dayIdx||0})">Weiter →</button>
+    </div>`;
+  document.getElementById('warmup-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') checkWarmup(w.de, dayIdx||0);
+  });
+}
+
+function checkWarmup(correctDe, dayIdx) {
+  const input = document.getElementById('warmup-input').value.trim().toLowerCase();
+  const correct = correctDe.toLowerCase();
+  const isOk = input === correct || input.replace('ß','ss') === correct.replace('ß','ss');
+  const fb = document.getElementById('warmup-fb');
+  if (isOk) {
+    fb.className = 'feedback-box show correct-fb';
+    fb.innerHTML = `<div class="fb-label">✓ Richtig!</div>${correctDe}`;
+    updateSM2(srsKey(correctDe), true);
+    showXP('+5 XP'); state.xp += 5;
+  } else {
+    fb.className = 'feedback-box show wrong-fb';
+    fb.innerHTML = `<div class="fb-label">✗ Falsch</div>Richtig: <span style="color:var(--green)">${correctDe}</span>`;
+    updateSM2(srsKey(correctDe), false);
+  }
+  document.getElementById('warmup-next').style.display = 'block';
+  saveState();
+}
+
+function nextWarmup(dayIdx) { warmupIdx++; renderWarmup(dayIdx); }
+
+// =====================================================================
+// FORGE
+// =====================================================================
+function showForge() {
+  newForgePrompt();
+  renderForgeHistory();
+  showScreen('forge');
+}
+
+function newForgePrompt() {
+  const allPrompts = DAYS.flatMap(d => d.forgePrompts);
+  const p = allPrompts[Math.floor(Math.random() * allPrompts.length)];
+  document.getElementById('forge-prompt').textContent = p.word;
+  const cl = document.getElementById('forge-checklist');
+  cl.innerHTML = `<p>Vor dem Schreiben prüfen:</p><ul>${p.checklist.map(c=>`<li>${c}</li>`).join('')}</ul>`;
+  document.getElementById('forge-input').value = '';
+  document.getElementById('forge-input').dataset.word = p.word;
+}
+
+function gradeForge(result) {
+  const input = document.getElementById('forge-input').value.trim();
+  const word = document.getElementById('forge-input').dataset.word;
+  if (!input) return;
+  state.forgeHistory.unshift({ sentence: input, word, result, date: todayStr() });
+  if (state.forgeHistory.length > 10) state.forgeHistory.pop();
+  if (result === 'wrong') updateSM2(srsKey(word), false);
+  if (result === 'correct') { state.xp += 20; showXP('+20 XP'); }
+  saveState();
+  renderForgeHistory();
+  newForgePrompt();
+}
+
+function renderForgeHistory() {
+  const h = document.getElementById('forge-history');
+  if (!state.forgeHistory.length) { h.innerHTML = ''; return; }
+  h.innerHTML = '<div class="section-title">Letzte 10 Sätze</div>' +
+    state.forgeHistory.map(e => `<div class="forge-entry fe-${e.result}">
+      <div class="fe-sentence">${e.sentence}</div>
+      <div style="font-size:10px;color:var(--dim)">${e.word} · ${e.result}</div>
+    </div>`).join('');
+}
+
+// =====================================================================
+// EPILOGUE
+// =====================================================================
+function showEpilogue() {
+  const el = document.getElementById('epilogue-text');
+  el.innerHTML = `<p style="color:var(--gold);font-size:13px;letter-spacing:2px;text-transform:uppercase;margin-bottom:20px">Sechs Monate später</p>` +
+    BOSS_DATA.epilogueDE.split('. ').map(s => `<p style="margin-bottom:12px">${s.trim()}${s.trim().endsWith('.') ? '' : '.'}</p>`).join('') +
+    `<hr style="border-color:var(--border);margin:24px 0">` +
+    `<p style="color:var(--dim);font-style:italic">${BOSS_DATA.epilogueEN}</p>`;
+  showScreen('epilogue');
+}
+
+// =====================================================================
+// UTILITIES
+// =====================================================================
+function srsKey(de) {
+  return de.replace(/\s+/g, '_').replace(/[^a-zA-ZäöüÄÖÜß_]/g, '').toLowerCase();
+}
+
+function updateBar(id, idx, total) {
+  const el = document.getElementById(id);
+  if (el) el.style.width = (total > 0 ? (idx/total*100) : 0) + '%';
+}
+
+function shuffle(arr) {
+  for (let i = arr.length-1; i > 0; i--) {
+    const j = Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]] = [arr[j],arr[i]];
+  }
+  return arr;
+}
+
+let currentUtterance = null;
+function speak(text, btn, onEnd) {
+  if (!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text.replace(/<[^>]*>/g,''));
+  u.lang = 'de-DE'; u.rate = 0.82; u.pitch = 0.95;
+  if (btn) { btn.classList.add('playing'); u.onend = () => { btn.classList.remove('playing'); if (onEnd) onEnd(); }; }
+  currentUtterance = u;
+  window.speechSynthesis.speak(u);
+}
+
+function showXP(text) {
+  const el = document.createElement('div');
+  el.className = 'xp-pop';
+  el.textContent = text;
+  el.style.left = (Math.random() * 60 + 20) + '%';
+  el.style.top = '40%';
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 1200);
+}
+
+function levenshtein(a, b) {
+  const m = a.length, n = b.length;
+  const dp = Array.from({length:m+1}, (_,i) => Array.from({length:n+1}, (_,j) => i===0?j:j===0?i:0));
+  for (let i=1;i<=m;i++) for (let j=1;j<=n;j++)
+    dp[i][j] = a[i-1]===b[j-1] ? dp[i-1][j-1] : 1+Math.min(dp[i-1][j], dp[i][j-1], dp[i-1][j-1]);
+  return dp[m][n];
+}
+
+// =====================================================================
+// INIT
+// =====================================================================
+updateHomeUI();
+</script>
+</body>
+</html>
